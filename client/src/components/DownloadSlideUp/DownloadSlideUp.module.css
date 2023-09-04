@@ -2,7 +2,7 @@
     overflow: hidden;
 }
 
-.ipButton {
+.downloadButton {
     position: absolute;
     display: none;
     flex-direction: row;
@@ -18,17 +18,17 @@
     left: 0;
     z-index: 100;
 }
-.ipButton:hover {
+.downloadButton:hover {
     cursor: pointer;
 }
-.ipButton > span {
+.downloadButton > span {
     width: 100%;
     text-align: center;
     font-size: 18px;
     color: var(--primaryColor);
 }
 
-.playerCount {
+.otherStats {
     display: flex;
     justify-content: space-between;
     align-items: center;

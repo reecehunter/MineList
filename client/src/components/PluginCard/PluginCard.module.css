@@ -54,7 +54,7 @@
     font-size: 14px;
 }
 
-.description {
+.shortDescription {
     margin-top: 10px;
 }
 
@@ -64,11 +64,8 @@
     align-items: center;
     gap: 10px;
 }
-.coin:hover {
-    color: var(--coinColor);
-    cursor: pointer;
-}
-.upArrowCircle:hover {
+
+.downloadIcon:hover {
     color: var(--secondaryColor);
     cursor: pointer;
 }
