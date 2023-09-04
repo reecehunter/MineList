@@ -1,0 +1,151 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Roboto, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+:root {
+    --primaryColor: #e0e0e0;
+    --secondaryColor: #1684df;
+    --tertiaryColor: rgba(90, 108, 143, 0.3);
+    --quaternaryColor: #6f7075;
+
+    --backgroundColor: #03101d;
+    --coinColor: #ffae00;
+
+    --green: rgb(91, 204, 91);
+    --red: rgb(243, 80, 80);
+
+    --borderRadius: 5px;
+}
+
+/* LAYOUT */
+.container {
+    max-width: 1140px !important;
+}
+.mainBg {
+    background-color: var(--backgroundColor) !important;
+    /* width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, #000308, #000308, #000308, #01192e);
+    background-size: 100% 400%; */
+    /* animation: gradient 15s ease infinite; */
+}
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* BUTTONS */
+.button {
+    padding: 5px 15px;
+    border: none;
+    border-radius: var(--borderRadius);
+    transition: filter 0.1s linear;
+}
+.button-primary {
+    color: var(--secondaryColor);
+    background-color: var(--primaryColor);
+}
+.button-primary:hover {
+    color: var(--primaryColor);
+    background-color: var(--secondaryColor);
+}
+.button-secondary {
+    color: var(--primaryColor);
+    background-color: var(--secondaryColor);
+}
+.button-secondary:hover {
+    filter: grayscale(40%);
+}
+.button-quaternary {
+    color: var(--primaryColor);
+    background-color: var(--quaternaryColor);
+}
+.button-quaternary:hover {
+    filter: grayscale(40%);
+}
+
+/* TEXT COLORS */
+.text-primaryy {
+    color: var(--primaryColor) !important;
+}
+.text-secondaryy {
+    color: var(--secondaryColor);
+}
+.text-tertiary {
+    color: var(--tertiaryColor);
+}
+.text-quaternary {
+    color: var(--quaternaryColor);
+}
+
+/* BACKGROND COLORS */
+.bg-primary {
+    background-color: var(--primaryColor);
+}
+.bg-secondary {
+    background-color: var(--secondaryColor);
+}
+.bg-tertiary {
+    background-color: var(--tertiaryColor);
+}
+.bg-quaternary {
+    background-color: var(--quaternaryColor);
+}
+
+/* LINKS */
+.link {
+    text-decoration: none;
+    transition: filter 0.1s linear;
+}
+.link-primaryy {
+    color: var(--primaryColor) !important;
+}
+.link-primaryy:hover {
+    filter: grayscale(60%);
+}
+
+/* MARGINS */
+.ml-3 {
+    margin-left: 15px;
+}
+.mx-3 {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.mb-4 {
+    margin-bottom: 20px;
+}
+.mb-5 {
+    margin-bottom: 25px;
+}
+.mt-5 {
+    margin-top: 25px;
+}
+
+/* PADDING */
+.py-5 {
+    padding: 30px 0;
+}
+
+/* WIDTH & HEIGHT */
+.w-100 {
+    width: 100%;
+}
+
+/* TRANSITIONS */
+.hover-grayscale {
+    transition: filter 0.1s linear;
+}
+.hover-grayscale:hover {
+    filter: grayscale(60%);
+}
