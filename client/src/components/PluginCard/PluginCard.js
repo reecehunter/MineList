@@ -5,7 +5,7 @@ import DownloadSlideUp from '../DownloadSlideUp/DownloadSlideUp'
 import { Link } from 'react-router-dom'
 
 const ServerCard = (props) => {
-  const { className, id, imgSrc, name, shortDescription, downloads, stars, views } = props;
+  const { className, id, imgSrc, name, description, downloads, stars, views } = props;
   const [hovering, setHovering] = useState(false);
   const link = `/plugins/${id}`;
 
@@ -25,7 +25,7 @@ const ServerCard = (props) => {
             <p className={styles.downloadIcon}><Download /> {downloads}</p>
           </div>
         </div>
-        <p className={styles.shortDescription}>{shortDescription}</p>
+        <p className={styles.description}>{description}</p>
         <DownloadSlideUp id={id} hovering={hovering} stars={stars} views={views} />
       </div>
     </article>

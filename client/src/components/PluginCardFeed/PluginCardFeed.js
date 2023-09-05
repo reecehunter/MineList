@@ -13,7 +13,7 @@ const PluginCardFeed = (props) => {
                 id={plugin.id}
                 imgSrc={plugin.imgSrc}
                 name={plugin.name}
-                shortDescription={plugin.shortDescription}
+                description={plugin.description}
                 downloads={plugin.downloads}
                 stars={plugin.stars}
                 views={plugin.views}

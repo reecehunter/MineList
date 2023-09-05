@@ -16,9 +16,8 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-light" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/plugins" className="link link-primaryy">Plugins</Nav.Link>
-            <Nav.Link href="/mods" className="link link-primaryy">Mods</Nav.Link>
-            <Nav.Link href="/servers" className="link link-primaryy">Servers</Nav.Link>
+            <Nav.Link href="/explore" className="link link-primaryy">Explore</Nav.Link>
+            <Nav.Link href="/create" className="link link-primaryy">Create</Nav.Link>
             <Nav.Link href="/minelist+" className="link link-primaryy">MineList+</Nav.Link>
           </Nav>
         </Navbar.Collapse>

@@ -23,7 +23,17 @@ const HomePage = () => {
         <FilterOptions />
       </div>
       <div className="py-5">
-        <h2 className="text-primaryy">Top Plugins</h2>
+        {/* TODO: MAKE THIS A FLEXBOX. */}
+        <div>
+          <h2 className="text-primaryy">Top Plugins</h2>
+          <div>
+            <select>
+              <option>Top</option>
+              <option>Hot</option>
+              <option>New</option>
+            </select>
+          </div>
+        </div>
         <p className="text-quaternary mb-4">Top servers on MineList.gg</p>
         {serverData ? <PluginCardFeed serverData={serverData} /> : "x"}
       </div>

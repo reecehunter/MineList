@@ -16,8 +16,8 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<HomePage />} />
-      <Route path='/plugins' element={<HomePage />} />
-      <Route path='/plugins/:id' element={<SinglePluginPage />} />
+      <Route path='/explore' element={<HomePage />} />
+      <Route path='/plugin/:id' element={<SinglePluginPage />} />
       <Route path='/register' element={<RegistrationPage />} />
       <Route path='/login' element={<LoginPage />} />
       <Route path='/profile' element={<ProfilePage />} />
