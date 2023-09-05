@@ -15,12 +15,12 @@ const CopyIPButton = (props) => {
       const nextDiv = currentDiv.nextSibling;
       if(hovering) {
         nextDiv.style.display = "flex";
-        nextDiv.style.animation = `${styles.slideUpAnimation} 0.2s ease-in-out forwards`;
+        nextDiv.style.animation = `${styles.slideUpAnimation} 0.1s ease-in-out forwards`;
       } else {
         setTimeout(() => {
           nextDiv.style.display = "none";
         }, 200);
-        nextDiv.style.animation = `${styles.slideDownAnimation} 0.2s ease-in-out forwards`;
+        nextDiv.style.animation = `${styles.slideDownAnimation} 0.1s ease-in-out forwards`;
       }
     }
 

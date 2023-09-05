@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 const ServerCard = (props) => {
   const { className, id, imgSrc, name, shortDescription, downloads, stars, views } = props;
   const [hovering, setHovering] = useState(false);
-  const link = `/plugin/${id}`;
+  const link = `/plugins/${id}`;
 
   return (
     <article className={`${className} ${styles.serverCard} text-primaryy`} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>

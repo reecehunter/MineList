@@ -16,10 +16,10 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-light" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/explore" className="link link-primaryy">Explore</Nav.Link>
-            <Nav.Link href="/add" className="link link-primaryy">Add Server</Nav.Link>
-            <Nav.Link href="/advertise" className="link link-primaryy">Advertise</Nav.Link>
-            <Nav.Link href="/faq" className="link link-primaryy">FAQ</Nav.Link>
+            <Nav.Link href="/plugins" className="link link-primaryy">Plugins</Nav.Link>
+            <Nav.Link href="/mods" className="link link-primaryy">Mods</Nav.Link>
+            <Nav.Link href="/servers" className="link link-primaryy">Servers</Nav.Link>
+            <Nav.Link href="/minelist+" className="link link-primaryy">MineList+</Nav.Link>
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
