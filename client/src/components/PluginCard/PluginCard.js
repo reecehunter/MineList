@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom'
 const ServerCard = (props) => {
   const { className, id, imgSrc, name, description, downloads, stars, views } = props;
   const [hovering, setHovering] = useState(false);
-  const link = `/plugins/${id}`;
+  const link = `/plugin/${id}`;
 
   return (
     <article className={`${className} ${styles.serverCard} text-primaryy`} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
@@ -22,7 +22,7 @@ const ServerCard = (props) => {
             <h5 className={styles.name}>{name}</h5>
           </Link>
           <div className={styles.stats}>
-            <p className={styles.downloadIcon}><Download /> {downloads}</p>
+            <p className={styles.downloadIcon}><Download width={22} height={22} /> {downloads}</p>
           </div>
         </div>
         <p className={styles.description}>{description}</p>

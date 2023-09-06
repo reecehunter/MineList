@@ -6,22 +6,94 @@ import Star from '../../components/icons/Star'
 import Button from '../../components/Button/Button'
 import Download from '../../components/icons/Download'
 import Eye from '../../components/icons/Eye'
+import Tag from '../../components/Tag/Tag'
 
 const SingleServerPage = () => {
     const { id } = useParams();
-    const [pluginData, setPluginData] = useState([{imgSrc:"", name:"", stars:0, downloads:0, views:0}]);
+    const [pluginData, setPluginData] = useState([{ imgSrc:"", name:"", stars:0, downloads:0, views:0 }]);
+    const [sections, setSections] = useState([]);
+    const [authors, setAuthors] = useState([]);
+    const [tags, setTags] = useState([]);
+
+    const addView = async () => {
+        const key = `view_${id}`;
+        const views = localStorage.getItem(key);
+        if(views < 25) {
+            const res = await axios.post(`http://localhost:5000/api/plugins/views/add/${id}`);
+            if(res.status === 200) {
+                if(views) localStorage.setItem(key, parseInt(views) + 1);
+                else localStorage.setItem(key, 1);
+            }
+        }
+    }
+
+    const downloadJar = async (event) => {
+        const key = `download_${id}`;
+        const downloads = localStorage.getItem(key);
+        if(downloads < 25) {
+            const res = await axios.post(`http://localhost:5000/api/plugins/downloads/add/${id}`);
+            if(res.status === 200) {
+                if(downloads) localStorage.setItem(key, parseInt(downloads) + 1);
+                else localStorage.setItem(key, 1);
+            }
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
+            const startTime = Date.now();
+            
+            addView();
+
             const pluginDataResult = await axios.get(`http://localhost:5000/api/sections/${id}`);
             setPluginData(pluginDataResult.data);
-            console.log(pluginDataResult.data);
+
+            const sectionsOutput = [];
+            const authorsOutput = [];
+            const tagOutput = [];
+
+            for(const dataSet of pluginDataResult.data) {
+                const sectionTitle = dataSet.section_title;
+                const sectionText = dataSet.section_text;
+                const authorUsername = dataSet.username;
+
+                const sectionData = { title: sectionTitle, text: sectionText };
+                const authorData = { username: dataSet.username, pfpImgSrc: dataSet.pfpImgSrc };
+
+                let isSectionPresent = false;
+                for(const entry of sectionsOutput) {
+                    if(entry.title === sectionTitle)
+                        isSectionPresent = true;
+                }
+                if(!isSectionPresent) {
+                    sectionsOutput.push(sectionData);
+                    isSectionPresent = false;
+                }
+
+                let isAuthorPresent = false;
+                for(const entry of authorsOutput) {
+                    if(entry.username === authorUsername)
+                        isAuthorPresent = true;
+                }
+                if(!isAuthorPresent) {
+                    authorsOutput.push(authorData);
+                    isAuthorPresent = false;
+                }
+
+                const tagName = dataSet.tag_name;
+                if(!tagOutput.includes(tagName))
+                    tagOutput.push(tagName);
+            }
+
+            setSections(sectionsOutput);
+            setAuthors(authorsOutput);
+            setTags(tagOutput);
+
+            const timeTaken = Date.now() - startTime;
+            console.log(`Fetched data in ${timeTaken} ms.`);
         }
         fetchData();
     }, []);
-
-    const downloadJar = async (event) => {
-    }
 
     return (
         <div className='py-5'>
@@ -51,14 +123,23 @@ const SingleServerPage = () => {
                         <div className={styles.infoCardHeader}>
                             <h5>Authors</h5>
                         </div>
-                        <Link to={`/users/${pluginData[0].username}`} className={styles.link}>
-                            <img src={pluginData[0].pfpImgSrc ? pluginData[0].pfpImgSrc : "https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg"} />
-                            <p>{pluginData[0].username}</p>
-                        </Link>
+                        <div className={styles.authorsContainer}>
+                            {authors.map((author, index) => (
+                                <Link key={index} to={`/users/${author.username}`} className={styles.link}>
+                                    <img src={author.pfpImgSrc ? author.pfpImgSrc : "https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg"} />
+                                    <p>{author.username}</p>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                     <div className={styles.infoCard}>
                         <div className={styles.infoCardHeader}>
                             <h5>Tags</h5>
+                        </div>
+                        <div className={styles.tagContainer}>
+                            {tags.map((tag, index) => (
+                                <Tag key={index} name={tag} />
+                            ))}
                         </div>
                     </div>
                     <div className={styles.infoCard}>
@@ -68,7 +149,7 @@ const SingleServerPage = () => {
                     </div>
                 </div>
                 <div>
-                    {pluginData.map((section, index) => (
+                    {sections.map((section, index) => (
                         <div key={index} className={`${styles.section}`}>
                             <h2>{section.title}</h2>
                             <hr />
@@ -77,6 +158,10 @@ const SingleServerPage = () => {
                     ))}
                 </div>
             </div>
+
+            {/* <div className={styles.reviewsContainer}>
+                <h2>Reviews</h2>
+            </div> */}
         </div>
     )
 }

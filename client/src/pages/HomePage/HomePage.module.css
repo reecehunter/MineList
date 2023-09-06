@@ -1,0 +1,26 @@
+.heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selectContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.select {
+    border: none;
+    border-radius: var(--borderRadius);
+    padding: 10px 15px;
+    font-size: 16px;
+    color: var(--primaryColor);
+    background-color: var(--secondaryColor);
+    align-self: flex-end;
+}
+
+.select ~ p {
+    color: var(--quaternaryColor);
+    margin-top: 5px;
+}

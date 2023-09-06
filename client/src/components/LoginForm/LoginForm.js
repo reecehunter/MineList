@@ -22,11 +22,11 @@ const LoginForm = () => {
             password: event.target[1].value,
           })
           .then((res) => {
-            localStorage.setItem("username", res.data.user.username);
-            // localStorage.setItem("jwt", res.data.jwt);
+            document.cookie = `token=${res.data.token}`;
             navigate("/profile");
           })
           .catch((err) => {
+            console.log(err);
             const errMessage = err.response.statusText.toLowerCase();
             let output = "";
             if(errMessage.includes("unauthorized")) output = "Invalid login credentials.";

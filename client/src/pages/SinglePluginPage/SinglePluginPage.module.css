@@ -42,21 +42,6 @@
     margin: 0;
     padding: 5px 20px;
 }
-/* .section > h2:after {
-	content: "";
-	position: absolute;
-	height: 10px;
-	width: 20px;
-	bottom: 0;
-}
-.section > h2:after {
-	right: -20px;
-	border-radius: 0 0 0 10px;
-	-moz-border-radius: 0 0 0 10px;
-	-webkit-border-radius: 0 0 0 10px;
-	-webkit-box-shadow: -10px 0 0 0 var(--tertiaryColor);
-	box-shadow: -10px 0 0 0 var(--tertiaryColor);
-} */
 .section > hr {
     margin: 0 0 10px 0;
 }
@@ -69,6 +54,7 @@
     align-items: flex-start;
     gap: 50px;
     padding: 50px 0;
+    /* border-bottom: 1px solid var(--quaternaryColor); */
 }
 
 .infoCard {
@@ -85,15 +71,20 @@
 }
 .infoCardHeader > h5 {
     padding: 10px;
+    margin: 0;
     background-color: var(--tertiaryColor);
     color: var(--primaryColor);
+}
+
+.authorsContainer {
+    padding: 10px;
 }
 
 .link {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    margin: 10px;
+    margin-right: 10px;
     color: var(--primaryColor);
     text-decoration: none;
 }
@@ -107,4 +98,23 @@
 }
 .link > p {
     margin: 0;
+}
+
+/*  */
+.tagContainer {
+    padding: 10px;
+}
+
+.tagContainer > span {
+    margin: 0 10px 10px 0;
+}
+
+/*  */
+
+.reviewsContainer {
+    padding: 50px 0;
+}
+
+.reviewsContainer > h2 {
+    color: var(--primaryColor);
 }

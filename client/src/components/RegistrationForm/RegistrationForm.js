@@ -30,7 +30,7 @@ const RegistrationForm = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-        axios.post("http://localhost:5000/api/users", {
+        axios.post("http://localhost:5000/api/users/register", {
             username: event.target[0].value,
             email: event.target[1].value,
             password: event.target[2].value,

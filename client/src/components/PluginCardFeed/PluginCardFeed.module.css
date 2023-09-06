@@ -2,9 +2,8 @@
     display: grid;
     grid-template-columns: auto auto auto;
     justify-content: space-between;
-    column-gap: 20px;
-    row-gap: 20px;
-    height: 800px;
+    gap: 20px;
+    height: 750px;
 }
 
 .gridItem {

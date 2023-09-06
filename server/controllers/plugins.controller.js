@@ -21,6 +21,18 @@ const fetchAll = async () => {
     }
 }
 
+module.exports.addView = async (req, res) => {
+    const id = req.params.id;
+    const result = await db.query(`UPDATE plugins SET views=views+1 WHERE id=${id};`);
+    return res.json( result );
+}
+
+module.exports.addDownload = async (req, res) => {
+    const id = req.params.id;
+    const result = await db.query(`UPDATE plugins SET downloads=downloads+1 WHERE id=${id};`);
+    return res.json( result );
+}
+
 // Update cache on start
 fetchAll();
 // Update the cache every so often

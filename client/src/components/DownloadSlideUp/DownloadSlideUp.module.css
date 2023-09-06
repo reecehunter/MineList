@@ -22,6 +22,10 @@
     cursor: pointer;
 }
 .downloadButton > span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     width: 100%;
     text-align: center;
     font-size: 18px;
@@ -32,6 +36,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 16px;
+}
+.otherStats > span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-size: 16px;
 }
 

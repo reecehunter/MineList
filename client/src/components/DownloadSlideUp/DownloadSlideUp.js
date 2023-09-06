@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import styles from './DownloadSlideUp.module.css'
 import Star from '../icons/Star';
 import Eye from '../icons/Eye';
+import Download from '../icons/Download';
 
 const CopyIPButton = (props) => {
     const { id, hovering, stars, views } = props;
@@ -35,7 +36,7 @@ const CopyIPButton = (props) => {
           <span><Eye /> {views}</span>
         </div>
         <div className={`${styles.downloadButton} hover-grayscale`} onClick={downloadJar}>
-          <span>Download</span>
+          <span><Download color="var(--primaryColor)" /> Download</span>
         </div>
       </div>
     )

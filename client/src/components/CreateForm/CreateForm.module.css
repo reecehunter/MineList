@@ -1,0 +1,23 @@
+.form {
+    width: 500px;
+    padding: 30px;
+    border-radius: var(--borderRadius);
+    background-color: var(--tertiaryColor);
+}
+
+.form > div {
+    margin: 10px 0;
+}
+
+.form > div > * {
+    display: block;
+    width: 100%;
+}
+
+.form > div > label {
+    color: var(--primaryColor);
+}
+
+.form > input[type="submit"] {
+    width: 100%;
+}

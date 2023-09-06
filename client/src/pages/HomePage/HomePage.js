@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import FilterOptions from '../components/FilterOptions/FilterOptions'
-import PluginCardFeed from '../components/PluginCardFeed/PluginCardFeed'
+import styles from './HomePage.module.css'
+import FilterOptions from '../../components/FilterOptions/FilterOptions'
+import PluginCardFeed from '../../components/PluginCardFeed/PluginCardFeed'
+import UpArrowCircle from '../../components/icons/UpArrowCircle'
 
 const HomePage = () => {
   const [serverData, setServerData] = useState([]);
@@ -23,19 +25,21 @@ const HomePage = () => {
         <FilterOptions />
       </div>
       <div className="py-5">
-        {/* TODO: MAKE THIS A FLEXBOX. */}
-        <div>
-          <h2 className="text-primaryy">Top Plugins</h2>
+        <div className={styles.heading}>
           <div>
-            <select>
+            <h2 className="text-primaryy">Top Plugins</h2>
+            <p className="text-quaternary mb-4">Top servers on MineList.gg</p>
+          </div>
+          <div className={styles.selectContainer}>
+            <select className={styles.select}>
               <option>Top</option>
               <option>Hot</option>
               <option>New</option>
             </select>
+            <p>Filter your search</p>
           </div>
         </div>
-        <p className="text-quaternary mb-4">Top servers on MineList.gg</p>
-        {serverData ? <PluginCardFeed serverData={serverData} /> : "x"}
+        {serverData ? <PluginCardFeed serverData={serverData} /> : "Loading..."}
       </div>
     </>
   )
