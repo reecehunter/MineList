@@ -1,20 +1,15 @@
 # MineList
-A modern Minecraft server list website designed to be unique, fun, and visually & functionally better than the current competition.
+A modern Minecraft plugin list website designed to be unique, fun, and more visually appealing than the competition.
 
 ## Table of Contents
 - [MineList](#minelist)
   - [Table of Contents](#table-of-contents)
-  - [How It Works](#how-it-works)
   - [Technologies](#technologies)
       - [Frontend](#frontend)
       - [Backend](#backend)
   - [Features](#features)
       - [Users \& Payments](#users--payments)
       - [Listings](#listings)
-      - [Voting](#voting)
-
-## How It Works
-Blah blah blah.
 
 ## Technologies
 #### Frontend
@@ -39,13 +34,10 @@ MineList is packed full of features that make the website fun, secure, and wonde
 - Registration
 - Bcrypt password hashing
 - JWT authentication
-- Stripe payments to buy "coins"
+- Stripe payments
 #### Listings
-- Post listings
+- Post your plugins
+- Create a fancy listing page
 - Edit listings
 - Explore listings
 - Sort & filter listings
-#### Voting
-- Vote for listings to put them further up on the lists
-- Receive rewards in game for voting (votifier)
-- Spend "coins" on listings to promote them further
