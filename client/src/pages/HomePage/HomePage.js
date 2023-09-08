@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios';
-import styles from './HomePage.module.css'
-import FilterOptions from '../../components/FilterOptions/FilterOptions'
-import PluginCardFeed from '../../components/PluginCardFeed/PluginCardFeed'
-import UpArrowCircle from '../../components/icons/UpArrowCircle'
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import styles from "./HomePage.module.css";
+import FilterOptions from "../../components/FilterOptions/FilterOptions";
+import PluginCardFeed from "../../components/PluginCardFeed/PluginCardFeed";
 
 const HomePage = () => {
   const [serverData, setServerData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:5000/api/plugins");
+      const res = await axios.get("http://localhost:5050/api/plugins");
       setServerData(res.data);
-    }
+    };
     fetchData();
-  }, [])
-  
+  }, []);
 
   return (
     <>
@@ -42,7 +40,7 @@ const HomePage = () => {
         {serverData ? <PluginCardFeed serverData={serverData} /> : "Loading..."}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default HomePage
+export default HomePage;
