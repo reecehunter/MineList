@@ -4,12 +4,17 @@ A modern Minecraft plugin list website designed to be unique, fun, and more visu
 ## Table of Contents
 - [MineList](#minelist)
   - [Table of Contents](#table-of-contents)
+  - [Screenshots](#screenshots)
   - [Technologies](#technologies)
       - [Frontend](#frontend)
       - [Backend](#backend)
   - [Features](#features)
       - [Users \& Payments](#users--payments)
       - [Listings](#listings)
+
+## Screenshots
+![Home Page](https://i.imgur.com/uceCDyp.png)
+![Listing Page](https://i.imgur.com/kHUZBoU.png)
 
 ## Technologies
 #### Frontend
