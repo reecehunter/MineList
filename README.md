@@ -1,5 +1,5 @@
 # MineList
-A modern Minecraft plugin list website designed to be unique, fun, and more visually appealing than the competition.
+A modern Minecraft plugin list website designed to be unique, fun, and more visually appealing than the competition. This project is a work in progress!
 
 ## Table of Contents
 - [MineList](#minelist)
