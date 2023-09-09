@@ -1,9 +1,7 @@
-import React from 'react'
+import React from "react";
 
 const HomePage = () => {
-  return (
-    <div>Page not found!</div>
-  )
-}
+  return <div className="text-primaryy">Page not found!</div>;
+};
 
-export default HomePage
+export default HomePage;

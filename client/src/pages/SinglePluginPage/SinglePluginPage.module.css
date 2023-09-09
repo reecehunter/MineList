@@ -1,120 +1,210 @@
 .heading {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    background-color: var(--tertiaryColor);
-    padding: 15px;
-    border-radius: var(--borderRadius);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  width: 100%;
+  background-color: var(--tertiaryColor);
+  padding: 15px;
+  border-radius: var(--borderRadius);
 }
 
 .headingInfo {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
 }
 
 .headingButtons > button {
-    font-size: 20px;
-    padding: 10px 20px;
+  font-size: 20px;
+  padding: 10px 20px;
 }
 
 .logo {
-    width: 100px;
-    height: 100px;
-    aspect-ratio: 1 / 1;
-    border-radius: var(--borderRadius);
+  width: 100px;
+  height: 100px;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--borderRadius);
 }
 
-/*  */
-
-.section {
-    color: var(--primaryColor);
-    margin-bottom: 50px;
-}
-.section > h2 {
-    position: relative;
-    /* display: inline-block; */
-    background-color: var(--tertiaryColor);
-    border-radius: var(--borderRadius) var(--borderRadius) 0 0;
-    margin: 0;
-    padding: 5px 20px;
-}
-.section > hr {
-    margin: 0 0 10px 0;
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--primaryColor);
+  margin: 0;
 }
 
-/*  */
+/* Info Selector */
+
+.infoSelector {
+  color: var(--primaryColor);
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
+  margin-bottom: 30px;
+  padding: 10px;
+}
+
+.infoSelector > p {
+  position: relative;
+  display: inline-block;
+  font-size: 1.25rem;
+  margin-bottom: 0;
+  padding: 5px 10px;
+  border-radius: var(--borderRadius);
+}
+
+.selected::after,
+.infoSelector > p::after {
+  position: absolute;
+  content: "";
+  background-color: var(--secondaryColor);
+  bottom: 0;
+  left: 7.5%;
+  width: 0%;
+  height: 3px;
+  border-radius: var(--borderRadius);
+  transition: width 0.2s ease;
+}
+.selected::after {
+  width: 85% !important;
+}
+
+.infoSelector > p:hover::after {
+  width: 85%;
+}
+
+.infoSelector > p:not(:last-of-type) {
+  margin-right: 15px;
+}
+
+.infoSelector > p:hover {
+  cursor: pointer;
+}
+
+/* Info Card */
 
 .info {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    align-items: flex-start;
-    gap: 50px;
-    padding: 50px 0;
-    /* border-bottom: 1px solid var(--quaternaryColor); */
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  align-items: flex-start;
+  gap: 50px;
+  padding: 50px 0;
 }
 
 .infoCard {
-    border: 1px solid var(--quaternaryColor);
-    border-radius: var(--borderRadius);
-    margin-bottom: 30px;
+  border-radius: var(--borderRadius);
+  margin-bottom: 30px;
+  background-color: var(--tertiaryColor);
+}
+.infoCard > div:not(:first-child) {
+  padding: 10px;
 }
 .infoCard > p {
-    color: var(--quaternaryColor);
+  color: var(--quaternaryColor);
 }
 
 .infoCardHeader {
-
 }
 .infoCardHeader > h5 {
-    padding: 10px;
-    margin: 0;
-    background-color: var(--tertiaryColor);
-    color: var(--primaryColor);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  margin: 0;
+  background-color: var(--tertiaryColor);
+  color: var(--primaryColor);
 }
-
-.authorsContainer {
-    padding: 10px;
+.infoCardHeader > h5 > a {
+  font-size: 14px;
+  color: var(--secondaryColor);
+  text-decoration: none;
+}
+.infoCardHeader > h5 > a:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .link {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    margin-right: 10px;
-    color: var(--primaryColor);
-    text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 10px;
+  color: var(--primaryColor);
+  text-decoration: none;
 }
 .link:hover {
-    color: var(--secondaryColor);
-    text-decoration: underline;
+  color: var(--secondaryColor);
+  text-decoration: underline;
 }
 .link > img {
-    width: 50px;
-    border-radius: var(--borderRadius);
+  width: 50px;
+  border-radius: var(--borderRadius);
 }
 .link > p {
-    margin: 0;
+  margin: 0;
 }
 
-/*  */
-.tagContainer {
-    padding: 10px;
+/* Description */
+
+.description {
+  color: var(--quaternaryColor);
+  padding: 20px;
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
 }
+
+.description h3 {
+  color: var(--primaryColor);
+}
+
+/* Tags */
 
 .tagContainer > span {
-    margin: 0 10px 10px 0;
+  margin: 0 10px 10px 0;
 }
 
-/*  */
+/* Updates */
+
+.updatesContainer p {
+  color: var(--primaryColor);
+  margin: 0;
+}
+
+.updateTitle {
+  position: relative;
+  background-color: var(--tertiaryColor);
+  border-radius: var(--borderRadius) var(--borderRadius) 0 0;
+  font-size: 24px;
+  margin: 0 0 10px 0;
+  padding: 5px 20px;
+}
+
+.update {
+  background-color: var(--tertiaryColor);
+  border-bottom-left-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+}
+.update > div {
+  padding: 20px;
+}
+.update:not(:first-child) {
+  margin-top: 30px;
+}
+
+.updateVersion {
+  color: var(--quaternaryColor);
+  font-size: 18px;
+  margin-left: 5px;
+}
+
+/* Reviews */
 
 .reviewsContainer {
-    padding: 50px 0;
+  padding: 50px 0;
 }
 
 .reviewsContainer > h2 {
-    color: var(--primaryColor);
+  color: var(--primaryColor);
 }

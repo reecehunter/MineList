@@ -8,13 +8,17 @@ import Button from "../../components/Button/Button";
 import Download from "../../components/icons/Download";
 import Eye from "../../components/icons/Eye";
 import Tag from "../../components/Tag/Tag";
+import formatVersion from "../../helpers/versionFormatter";
+import parseMarkdown from "../../helpers/markdownParser";
 
 const SingleServerPage = () => {
   const { id } = useParams();
+  const [selectedInfo, setSelectedInfo] = useState("Description");
   const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", stars: 0, downloads: 0, views: 0 }]);
-  const [sections, setSections] = useState([]);
   const [authors, setAuthors] = useState([]);
   const [tags, setTags] = useState([]);
+  const [updates, setUpdates] = useState([]);
+  const [downloads, setDownloads] = useState([]);
 
   const addView = async () => {
     const key = `view_${id}`;
@@ -29,6 +33,10 @@ const SingleServerPage = () => {
   };
 
   const downloadJar = async (event) => {
+    addDownload();
+  };
+
+  const addDownload = async () => {
     const key = `download_${id}`;
     const downloads = localStorage.getItem(key);
     if (downloads < 25) {
@@ -49,28 +57,22 @@ const SingleServerPage = () => {
       const pluginDataResult = await axios.get(`${config.api_url}/api/sections/${id}`);
       setPluginData(pluginDataResult.data);
 
-      const sectionsOutput = [];
+      window.document.title = pluginDataResult.data[0].name + " - Description";
+
       const authorsOutput = [];
       const tagOutput = [];
+      const updateOutput = [];
 
       for (const dataSet of pluginDataResult.data) {
-        const sectionTitle = dataSet.section_title;
-        const sectionText = dataSet.section_text;
         const authorUsername = dataSet.username;
 
-        const sectionData = { title: sectionTitle, text: sectionText };
-        const authorData = { username: dataSet.username, pfpImgSrc: dataSet.pfpImgSrc };
+        const updateList = dataSet.updateList;
+        const updateTitle = dataSet.updateTitle;
+        const updateVersion = { major: dataSet.versionMajor, minor: dataSet.versionMinor, patch: dataSet.versionPatch };
 
-        let isSectionPresent = false;
-        for (const entry of sectionsOutput) {
-          if (entry.title === sectionTitle) isSectionPresent = true;
-        }
-        if (!isSectionPresent) {
-          sectionsOutput.push(sectionData);
-          isSectionPresent = false;
-        }
-
+        // Authors
         let isAuthorPresent = false;
+        const authorData = { username: dataSet.username, pfpImgSrc: dataSet.pfpImgSrc };
         for (const entry of authorsOutput) {
           if (entry.username === authorUsername) isAuthorPresent = true;
         }
@@ -79,19 +81,70 @@ const SingleServerPage = () => {
           isAuthorPresent = false;
         }
 
+        // Tags
         const tagName = dataSet.tag_name;
         if (!tagOutput.includes(tagName)) tagOutput.push(tagName);
+
+        // Updates
+        let isUpdatePresent = false;
+        const updateData = { updateList, updateVersion, updateTitle };
+        for (const update of updateOutput) {
+          if (update.updateList === updateData.updateList) isUpdatePresent = true;
+        }
+        if (!isUpdatePresent) {
+          updateOutput.push(updateData);
+          isUpdatePresent = false;
+        }
       }
 
-      setSections(sectionsOutput);
       setAuthors(authorsOutput);
       setTags(tagOutput);
+      setUpdates(updateOutput);
 
       const timeTaken = Date.now() - startTime;
       console.log(`Fetched data in ${timeTaken} ms.`);
     };
     fetchData();
   }, []);
+
+  const handleInfoSelector = (event) => {
+    const element = event.currentTarget;
+    const text = element.innerText;
+    setSelectedInfo(text);
+
+    const allSelected = element.parentElement.getElementsByClassName(styles.selected);
+    for (const child of allSelected) {
+      child.classList.remove(styles.selected);
+    }
+    element.classList.add(styles.selected);
+  };
+
+  const renderContent = () => {
+    switch (selectedInfo) {
+      case "Description":
+        return pluginData[0] ? <div className={styles.description}>{parseMarkdown(pluginData[0].longDescription)}</div> : "";
+
+      case "Updates":
+        window.document.title = pluginData[0].name + " - Updates";
+        return (
+          <div className={styles.updatesContainer}>
+            {" "}
+            {updates.map((updateObj, index1) => (
+              <div key={index1} className={styles.update}>
+                <p className={styles.updateTitle}>
+                  {updateObj.updateTitle} <span className={styles.updateVersion}>{formatVersion(updateObj.updateVersion)}</span>
+                </p>
+                <div>
+                  {updateObj.updateList.split("|").map((updateBullet, index2) => {
+                    return <p key={index2}>{updateBullet}</p>;
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+    }
+  };
 
   return (
     <div className="py-5">
@@ -101,14 +154,20 @@ const SingleServerPage = () => {
           <div>
             <h1 className="text-primaryy">{pluginData[0].name}</h1>
             <p className="text-quaternary">{pluginData[0].description}</p>
-            <p className="text-primaryy">
-              <Star /> {pluginData[0].stars}
-              <span className="text-primaryy mx-3"></span>
-              <Download /> {pluginData[0].downloads}
-              <span className="text-primaryy mx-3"></span>
-              <Eye /> {pluginData[0].views}
-            </p>
           </div>
+        </div>
+        <div>
+          <p className={styles.stats}>
+            <span>
+              <Star /> {pluginData[0].stars} Stars
+            </span>
+            <span>
+              <Download /> {pluginData[0].downloads} Downloads
+            </span>
+            <span>
+              <Eye /> {pluginData[0].views} Views
+            </span>
+          </p>
         </div>
         <div className={styles.headingButtons}>
           <Button className="button-secondary" onClick={downloadJar} icon={<Download color="var(--primaryColor)" />}>
@@ -123,7 +182,7 @@ const SingleServerPage = () => {
             <div className={styles.infoCardHeader}>
               <h5>Authors</h5>
             </div>
-            <div className={styles.authorsContainer}>
+            <div>
               {authors.map((author, index) => (
                 <Link key={index} to={`/users/${author.username}`} className={styles.link}>
                   <img
@@ -140,9 +199,15 @@ const SingleServerPage = () => {
           </div>
           <div className={styles.infoCard}>
             <div className={styles.infoCardHeader}>
+              <h5>Links</h5>
+            </div>
+            <div></div>
+          </div>
+          <div className={styles.infoCard}>
+            <div className={styles.infoCardHeader}>
               <h5>Tags</h5>
             </div>
-            <div className={styles.tagContainer}>
+            <div>
               {tags.map((tag, index) => (
                 <Tag key={index} name={tag} />
               ))}
@@ -150,24 +215,37 @@ const SingleServerPage = () => {
           </div>
           <div className={styles.infoCard}>
             <div className={styles.infoCardHeader}>
-              <h5>Updates</h5>
+              <h5>
+                Downloads <Link to={`/plugin/${id}/updates`}>See All</Link>
+              </h5>
+            </div>
+            <div className={styles.updatesContainer}>
+              {updates.map((updateObj, index1) => {
+                return (
+                  <div key={index1} className={styles.update}>
+                    <p>
+                      {updateObj.updateTitle} <span className={styles.updateVersion}>{formatVersion(updateObj.updateVersion)}</span>
+                    </p>
+                    {updateObj.updateList.split("|").map((updateBullet, index2) => {
+                      return <p key={index2}>{updateBullet}</p>;
+                    })}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
         <div>
-          {sections.map((section, index) => (
-            <div key={index} className={`${styles.section}`}>
-              <h2>{section.title}</h2>
-              <hr />
-              <p>{section.text}</p>
-            </div>
-          ))}
+          <div className={styles.infoSelector}>
+            <p className={styles.selected} onClick={handleInfoSelector}>
+              Description
+            </p>
+            <p onClick={handleInfoSelector}>Updates</p>
+            <p onClick={handleInfoSelector}>Reviews</p>
+          </div>
+          {renderContent()}
         </div>
       </div>
-
-      {/* <div className={styles.reviewsContainer}>
-                <h2>Reviews</h2>
-            </div> */}
     </div>
   );
 };
