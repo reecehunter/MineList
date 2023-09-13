@@ -1,0 +1,50 @@
+.infoCard {
+  border-radius: var(--borderRadius);
+  margin-bottom: var(--contentGap);
+  background-color: var(--tertiaryColor);
+}
+.infoCard > div:not(:first-child) {
+  padding: 10px;
+}
+.infoCard > p {
+  color: var(--quaternaryColor);
+}
+
+.infoCardHeader > h5 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--contentGap);
+  margin: 0;
+  background-color: var(--tertiaryColor);
+  color: var(--primaryColor);
+}
+.infoCardHeader > h5 > a {
+  font-size: 14px;
+  color: var(--secondaryColor);
+  text-decoration: none;
+}
+.infoCardHeader > h5 > a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: var(--contentGap);
+  color: var(--primaryColor);
+  text-decoration: none;
+}
+.link:hover {
+  color: var(--secondaryColor);
+  text-decoration: underline;
+}
+.link > img {
+  width: 50px;
+  border-radius: var(--borderRadius);
+}
+.link > p {
+  margin: 0;
+}

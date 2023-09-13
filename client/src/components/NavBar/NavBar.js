@@ -13,7 +13,7 @@ const NavBar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const handleAuthCheck = (link) => {
-    if (!isAuthenticated) navigate("/login");
+    if (!isAuthenticated) navigate("/auth/sign-in");
     else navigate(link);
   };
 

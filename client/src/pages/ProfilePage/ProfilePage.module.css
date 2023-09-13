@@ -1,7 +1,9 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 20px;
+  align-items: flex-start;
+  width: 100%;
+  gap: var(--contentGap);
 }
 
 .pfpAndUsernameContainer {
@@ -21,12 +23,21 @@
   border-radius: var(--borderRadius);
   background-color: var(--tertiaryColor);
 }
+.userInfoContainer:not(:last-of-type) {
+  margin-bottom: var(--contentGap);
+}
+.userInfoContainer > p {
+  margin: 0;
+}
 
 .stats {
-  padding: 20px 0;
-  margin: 20px 0;
+  padding: var(--contentGap) 0;
+  margin: var(--contentGap) 0;
   border-top: 1px solid var(--tertiaryColor);
   border-bottom: 1px solid var(--tertiaryColor);
+}
+.stats > p:not(:last-of-type) {
+  margin-bottom: 10px;
 }
 
 .pluginsContainer > h3 {
@@ -35,4 +46,8 @@
   margin-bottom: 20px;
   border-radius: var(--borderRadius);
   background-color: var(--tertiaryColor);
+}
+
+.contentNav {
+  margin-bottom: var(--contentGap);
 }

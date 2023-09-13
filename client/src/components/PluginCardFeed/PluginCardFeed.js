@@ -17,6 +17,7 @@ const PluginCardFeed = (props) => {
         downloads={plugin.downloads}
         stars={plugin.stars}
         views={plugin.views}
+        author={plugin.username}
       />
     ));
   };

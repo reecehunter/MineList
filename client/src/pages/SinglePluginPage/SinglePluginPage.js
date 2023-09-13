@@ -10,6 +10,9 @@ import Eye from "../../components/icons/Eye";
 import Tag from "../../components/Tag/Tag";
 import formatVersion from "../../helpers/versionFormatter";
 import parseMarkdown from "../../helpers/markdownParser";
+import Statistic from "../../components/Statistic/Statistic";
+import ContentNav from "../../components/ContentNav/ContentNav";
+import InfoCard from "../../components/InfoCard/InfoCard";
 
 const SingleServerPage = () => {
   const { id } = useParams();
@@ -107,18 +110,6 @@ const SingleServerPage = () => {
     fetchData();
   }, []);
 
-  const handleInfoSelector = (event) => {
-    const element = event.currentTarget;
-    const text = element.innerText;
-    setSelectedInfo(text);
-
-    const allSelected = element.parentElement.getElementsByClassName(styles.selected);
-    for (const child of allSelected) {
-      child.classList.remove(styles.selected);
-    }
-    element.classList.add(styles.selected);
-  };
-
   const renderContent = () => {
     switch (selectedInfo) {
       case "Description":
@@ -147,7 +138,7 @@ const SingleServerPage = () => {
   };
 
   return (
-    <div className="py-5">
+    <div>
       <div className={styles.heading}>
         <div className={styles.headingInfo}>
           <img src={pluginData[0].imgSrc ? pluginData[0].imgSrc : "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"} alt={`${pluginData[0].name} logo`} className={styles.logo} />
@@ -157,17 +148,11 @@ const SingleServerPage = () => {
           </div>
         </div>
         <div>
-          <p className={styles.stats}>
-            <span>
-              <Star /> {pluginData[0].stars} Stars
-            </span>
-            <span>
-              <Download /> {pluginData[0].downloads} Downloads
-            </span>
-            <span>
-              <Eye /> {pluginData[0].views} Views
-            </span>
-          </p>
+          <div className={styles.stats}>
+            <Statistic icon={<Download />} number={pluginData[0].downloads} text="downloads" />
+            <Statistic icon={<Eye />} number={pluginData[0].views} text="views" />
+            <Statistic icon={<Star />} number={pluginData[0].stars} text="stars" />
+          </div>
         </div>
         <div className={styles.headingButtons}>
           <Button className="button-secondary" onClick={downloadJar} icon={<Download color="var(--primaryColor)" />}>
@@ -178,58 +163,32 @@ const SingleServerPage = () => {
 
       <div className={styles.info}>
         <div>
-          <div className={styles.infoCard}>
-            <div className={styles.infoCardHeader}>
-              <h5>Authors</h5>
-            </div>
-            <div>
-              {authors.map((author, index) => (
-                <Link key={index} to={`/users/${author.username}`} className={styles.link}>
-                  <img
-                    src={
-                      author.pfpImgSrc
-                        ? author.pfpImgSrc
-                        : "https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg"
-                    }
-                  />
-                  <p>{author.username}</p>
-                </Link>
-              ))}
-            </div>
-          </div>
-          <div className={styles.infoCard}>
-            <div className={styles.infoCardHeader}>
-              <h5>Links</h5>
-            </div>
-            <div></div>
-          </div>
-          <div className={styles.infoCard}>
-            <div className={styles.infoCardHeader}>
-              <h5>Tags</h5>
-            </div>
-            <div>
-              {tags.map((tag, index) => (
-                <Tag key={index} name={tag} />
-              ))}
-            </div>
-          </div>
-          <div className={styles.infoCard}>
-            <div className={styles.infoCardHeader}>
-              <h5>
-                Downloads <Link to={`/plugin/${id}/updates`}>See All</Link>
-              </h5>
-            </div>
-            <div></div>
-          </div>
+          <InfoCard
+            title="Authors"
+            content={authors.map((author, index) => (
+              <Link key={index} to={`/user/${author.username}`} className={styles.link}>
+                <img
+                  src={
+                    author.pfpImgSrc
+                      ? author.pfpImgSrc
+                      : "https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg"
+                  }
+                />
+                <p>{author.username}</p>
+              </Link>
+            ))}
+          />
+          <InfoCard title="Links" content={<div></div>} />
+          <InfoCard
+            title="Tags"
+            content={tags.map((tag, index) => (
+              <Tag key={index} name={tag} />
+            ))}
+          />
+          <InfoCard title="Downloads" content={<div></div>} />
         </div>
         <div>
-          <div className={styles.infoSelector}>
-            <p className={styles.selected} onClick={handleInfoSelector}>
-              Description
-            </p>
-            <p onClick={handleInfoSelector}>Updates</p>
-            <p onClick={handleInfoSelector}>Reviews</p>
-          </div>
+          <ContentNav options={["Description", "Updates", "Reviews"]} handleClick={setSelectedInfo} className={styles.contentNav} />
           {renderContent()}
         </div>
       </div>

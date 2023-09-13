@@ -1,0 +1,14 @@
+.stat {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  gap: 7px;
+  color: var(--quaternaryColor);
+}
+
+.number {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--primaryColor);
+  margin-right: 2px;
+}

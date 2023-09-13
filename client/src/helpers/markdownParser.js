@@ -5,8 +5,6 @@ const parseMarkdown = (string) => {
   const childElements = [];
   const allLines = string.split("\n");
 
-  console.log(allLines);
-
   let index = 0;
   for (const line of allLines) {
     if (line.charAt(0) === "#") {

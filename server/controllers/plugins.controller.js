@@ -24,7 +24,7 @@ module.exports.getAllByUserID = async (req, res) => {
 };
 
 const fetchAll = async () => {
-  const result = await db.query(`SELECT * FROM plugins;`);
+  const result = await db.query(`SELECT plugins.*, users.username FROM plugins LEFT JOIN users ON plugins.userID = users.id;`);
   for (const plugin of result) {
     cache.set(plugin.id, plugin);
   }

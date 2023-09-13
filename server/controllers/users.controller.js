@@ -55,7 +55,7 @@ module.exports.login = (req, res) => {
         if (!isMatch) return res.status(401).json("Invalid login credentials.");
         // Create token
         const expiresIn = config.jwt.expiresIn;
-        const token = jwt.sign(user, config.jwt.secret, { expiresIn: expiresIn + "m" });
+        const token = jwt.sign(user, config.jwt.secret, { expiresIn: expiresIn + "d" });
         req.user = user;
         res.cookie("token", token, { httpOnly: true, secure: true, SameSite: "strict", expires: new Date(Number(new Date()) + expiresIn * 60 * 1000) }); // add 'secure: true', when using https
 

@@ -11,6 +11,7 @@ const HomePage = () => {
     const fetchData = async () => {
       const res = await axios.get("http://localhost:5050/api/plugins");
       setPluginData(res.data);
+      console.log(res.data);
     };
     fetchData();
   }, []);

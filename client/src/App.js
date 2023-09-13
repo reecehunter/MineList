@@ -19,10 +19,11 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/explore" element={<HomePage />} />
       <Route path="/plugin/:id" element={<SinglePluginPage />} />
-      <Route path="/register" element={<RegistrationPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/profile" element={<ProfilePage />} /> {/* TODO: Make intermediary which sends you to your own profile */}
+      <Route path="/auth/sign-up" element={<RegistrationPage />} />
+      <Route path="/auth/sign-in" element={<LoginPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="/profile/:username" element={<ProfilePage />} />
+      <Route path="/user/:username" element={<ProfilePage />} />
       <Route path="/create" element={<CreatePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

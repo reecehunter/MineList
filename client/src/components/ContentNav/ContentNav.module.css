@@ -1,0 +1,43 @@
+.infoSelector {
+  color: var(--primaryColor);
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
+  padding: 10px;
+}
+
+.infoSelector > p {
+  position: relative;
+  display: inline-block;
+  font-size: 1.25rem;
+  margin-bottom: 0;
+  padding: 5px 10px;
+  border-radius: var(--borderRadius);
+}
+
+.selected::after,
+.infoSelector > p::after {
+  position: absolute;
+  content: "";
+  background-color: var(--secondaryColor);
+  bottom: 0;
+  left: 7.5%;
+  width: 0%;
+  height: 3px;
+  border-radius: var(--borderRadius);
+  transition: width 0.2s ease;
+}
+.selected::after {
+  width: 85% !important;
+}
+
+.infoSelector > p:hover::after {
+  width: 85%;
+}
+
+.infoSelector > p:not(:last-of-type) {
+  margin-right: 15px;
+}
+
+.infoSelector > p:hover {
+  cursor: pointer;
+}

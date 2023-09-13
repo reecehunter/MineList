@@ -7,7 +7,10 @@ import PluginCardFeed from "../../components/PluginCardFeed/PluginCardFeed";
 import styles from "./ProfilePage.module.css";
 import Download from "../../components/icons/Download";
 import Eye from "../../components/icons/Eye";
-import Star from "../../components/icons/Star";
+import User from "../../components/icons/User";
+import Statistic from "../../components/Statistic/Statistic";
+import ContentNav from "../../components/ContentNav/ContentNav";
+import InfoCard from "../../components/InfoCard/InfoCard";
 
 const ProfilePage = (props) => {
   const params = useParams();
@@ -16,18 +19,34 @@ const ProfilePage = (props) => {
   const [userStats, setUserStats] = useState({ downloads: 0, views: 0, stars: 0 });
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [userPlugins, setUserPlugins] = useState([]);
+  const [selectedInfo, setSelectedInfo] = useState("Plugins");
+
+  const renderContent = () => {
+    switch (selectedInfo) {
+      case "Plugins":
+        return <PluginCardFeed pluginData={userPlugins} />;
+      default:
+        return "";
+    }
+  };
 
   useEffect(() => {
-    // Check Auth
+    // Fetch data for authenticated user
     if (!params.username) {
       checkAuth((res) => {
         if (!res) {
-          navigate("/login");
+          navigate("/auth/sign-in");
         } else {
           setUserData(res.data);
           setIsOwnProfile(true);
         }
       });
+    } else {
+      // Fetch data for queried user
+      axios
+        .get(`${config.api_url}/api/users/${params.username}`)
+        .then((res) => setUserData(res.data))
+        .catch((err) => console.error(err));
     }
   }, []);
 
@@ -51,38 +70,35 @@ const ProfilePage = (props) => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.userInfoContainer}>
-        <div className={styles.pfpAndUsernameContainer}>
-          <img
-            src={
-              userData.pfpImgSrc
-                ? userData.pfpImgSrc
-                : "https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg"
-            }
-            alt={`${userData.username}'s Profile`}
-          />
-          <h1 className="text-primaryy">
-            {userData.username}
-            {isOwnProfile ? "*" : ""}
-          </h1>
+      <div>
+        <div className={styles.userInfoContainer}>
+          <div className={styles.pfpAndUsernameContainer}>
+            <img
+              src={
+                userData.pfpImgSrc
+                  ? userData.pfpImgSrc
+                  : "https://static.vecteezy.com/system/resources/thumbnails/002/534/006/small/social-media-chatting-online-blank-profile-picture-head-and-body-icon-people-standing-icon-grey-background-free-vector.jpg"
+              }
+              alt={`${userData.username}'s Profile`}
+            />
+            <h1 className="text-primaryy">
+              {userData.username}
+              {isOwnProfile ? "*" : ""}
+            </h1>
+          </div>
+          <div className={styles.stats}>
+            <Statistic icon={<Download />} number={userStats.downloads} text="downloads" />
+            <Statistic icon={<Eye />} number={userStats.views} text="views" />
+            <Statistic icon={<User />} number={userStats.stars} text="followers" />
+          </div>
+          <p className="text-quaternary ">Joined: {userData.dateCreated}</p>
         </div>
-        <div className={styles.stats}>
-          <p>
-            <Download /> {userStats.downloads} downloads
-          </p>
-          <p>
-            <Eye /> {userStats.views} views
-          </p>
-          <p>
-            <Star /> {userStats.stars} / 5 stars
-          </p>
-        </div>
-        <p className="text-quaternary ">Joined: {userData.dateCreated}</p>
+        <InfoCard title="Links" content={<div></div>} />
       </div>
 
       <div className={styles.pluginsContainer}>
-        <h3>Plugins by {userData.username}</h3>
-        <PluginCardFeed pluginData={userPlugins} />
+        <ContentNav options={["Plugins"]} handleClick={setSelectedInfo} className={styles.contentNav} />
+        {renderContent()}
       </div>
     </div>
   );

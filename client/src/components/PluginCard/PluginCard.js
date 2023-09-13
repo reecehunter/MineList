@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./PluginCard.module.css";
 import Download from "../icons/Download";
-import DownloadSlideUp from "../DownloadSlideUp/DownloadSlideUp";
 import { Link } from "react-router-dom";
 import Star from "../icons/Star";
 import Eye from "../icons/Eye";
+import Statistic from "../Statistic/Statistic";
+import config from "../../config/config";
 
 const ServerCard = (props) => {
-  const { className, id, imgSrc, name, description, downloads, stars, views } = props;
+  const { className, id, imgSrc, name, description, downloads, stars, views, author } = props;
   const link = `/plugin/${id}`;
 
   return (
@@ -15,25 +16,22 @@ const ServerCard = (props) => {
       <div className={styles.container}>
         <div className={styles.imgTitleDesc}>
           <Link to={link} className={styles.imgContainer}>
-            <img src={imgSrc ? imgSrc : "https://cdn.modrinth.com/data/Lu3KuzdV/b2c4b7b0033ab09cc166f2848003ef3a02c70a83.png"} className={styles.img} alt={`${name} server banner`} />
+            <img src={imgSrc ? imgSrc : config.default_plugin_image} className={styles.img} alt={`${name} server banner`} />
           </Link>
-          <div>
+          <div className={styles.header}>
             <Link to={link} style={{ textDecoration: "none" }}>
               <h3 className={styles.name}>{name}</h3>
             </Link>
+            <span>
+              by <Link to={`/profile/${author}`}>{author}</Link>
+            </span>
             <p className={styles.description}>{description}</p>
           </div>
         </div>
         <div className={styles.stats}>
-          <p>
-            <Download width={22} height={22} /> <span className={styles.statNumber}>{downloads}</span> downloads
-          </p>
-          <p>
-            <Star /> <span className={styles.statNumber}>{stars}</span> stars
-          </p>
-          <p>
-            <Eye /> <span className={styles.statNumber}>{views}</span> views
-          </p>
+          <Statistic icon={<Download />} number={downloads} text="downloads" />
+          <Statistic icon={<Eye />} number={views} text="views" />
+          <Statistic icon={<Star />} number={stars} text="stars" />
         </div>
       </div>
     </article>
