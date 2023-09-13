@@ -1,31 +1,27 @@
-import React from 'react';
-import styles from './PluginCardFeed.module.css';
-import PluginCard from '../PluginCard/PluginCard';
+import React from "react";
+import styles from "./PluginCardFeed.module.css";
+import PluginCard from "../PluginCard/PluginCard";
 
 const PluginCardFeed = (props) => {
-    const { serverData } = props;
+  const { pluginData } = props;
 
-    const renderServerdata = () => {
-        return serverData.map((plugin, index) => (
-            <PluginCard
-                className={styles.gridItem}
-                key={index}
-                id={plugin.id}
-                imgSrc={plugin.imgSrc}
-                name={plugin.name}
-                description={plugin.description}
-                downloads={plugin.downloads}
-                stars={plugin.stars}
-                views={plugin.views}
-            />
-        ));
-    }
+  const renderPluginData = () => {
+    return pluginData.map((plugin, index) => (
+      <PluginCard
+        className={styles.gridItem}
+        key={index}
+        id={plugin.id}
+        imgSrc={plugin.imgSrc}
+        name={plugin.name}
+        description={plugin.description}
+        downloads={plugin.downloads}
+        stars={plugin.stars}
+        views={plugin.views}
+      />
+    ));
+  };
 
-    return (
-        <section className={styles.container}>
-            { renderServerdata() }
-        </section>
-    )
-}
+  return <section className={styles.container}>{renderPluginData()}</section>;
+};
 
-export default PluginCardFeed
+export default PluginCardFeed;

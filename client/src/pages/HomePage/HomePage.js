@@ -5,12 +5,12 @@ import FilterOptions from "../../components/FilterOptions/FilterOptions";
 import PluginCardFeed from "../../components/PluginCardFeed/PluginCardFeed";
 
 const HomePage = () => {
-  const [serverData, setServerData] = useState([]);
+  const [pluginData, setPluginData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const res = await axios.get("http://localhost:5050/api/plugins");
-      setServerData(res.data);
+      setPluginData(res.data);
     };
     fetchData();
   }, []);
@@ -37,7 +37,7 @@ const HomePage = () => {
             <p>Filter your search</p>
           </div>
         </div>
-        {serverData ? <PluginCardFeed serverData={serverData} /> : "Loading..."}
+        {pluginData ? <PluginCardFeed pluginData={pluginData} /> : "Loading..."}
       </div>
     </>
   );

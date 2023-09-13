@@ -1,0 +1,38 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+.pfpAndUsernameContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pfpAndUsernameContainer > img {
+  width: 75px;
+  height: 75px;
+  border-radius: var(--borderRadius);
+}
+
+.userInfoContainer {
+  color: var(--primaryColor);
+  padding: 20px;
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
+}
+
+.stats {
+  padding: 20px 0;
+  margin: 20px 0;
+  border-top: 1px solid var(--tertiaryColor);
+  border-bottom: 1px solid var(--tertiaryColor);
+}
+
+.pluginsContainer > h3 {
+  color: var(--primaryColor);
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
+}

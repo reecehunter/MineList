@@ -105,8 +105,6 @@
   color: var(--quaternaryColor);
 }
 
-.infoCardHeader {
-}
 .infoCardHeader > h5 {
   display: flex;
   justify-content: space-between;
@@ -157,6 +155,10 @@
 
 .description h3 {
   color: var(--primaryColor);
+  margin: 0;
+}
+.description hr {
+  margin: 5px 0 10px 0;
 }
 
 /* Tags */

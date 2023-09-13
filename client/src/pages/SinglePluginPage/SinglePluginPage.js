@@ -219,20 +219,7 @@ const SingleServerPage = () => {
                 Downloads <Link to={`/plugin/${id}/updates`}>See All</Link>
               </h5>
             </div>
-            <div className={styles.updatesContainer}>
-              {updates.map((updateObj, index1) => {
-                return (
-                  <div key={index1} className={styles.update}>
-                    <p>
-                      {updateObj.updateTitle} <span className={styles.updateVersion}>{formatVersion(updateObj.updateVersion)}</span>
-                    </p>
-                    {updateObj.updateList.split("|").map((updateBullet, index2) => {
-                      return <p key={index2}>{updateBullet}</p>;
-                    })}
-                  </div>
-                );
-              })}
-            </div>
+            <div></div>
           </div>
         </div>
         <div>

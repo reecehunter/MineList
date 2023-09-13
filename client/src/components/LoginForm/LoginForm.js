@@ -28,7 +28,7 @@ const LoginForm = () => {
         navigate("/profile");
       })
       .catch((err) => {
-        console.log(err);
+        console.error(err);
         const errMessage = err.response.statusText.toLowerCase();
         let output = "";
         if (errMessage.includes("unauthorized")) output = "Invalid login credentials.";

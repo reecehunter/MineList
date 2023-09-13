@@ -11,7 +11,9 @@ const parseMarkdown = (string) => {
   for (const line of allLines) {
     if (line.charAt(0) === "#") {
       const newElement = React.createElement("h3", { key: index++ }, line.replace("#", ""));
+      const hr = React.createElement("hr", { key: index + "hr" }, null);
       childElements.push(newElement);
+      childElements.push(hr);
     } else if (line.charAt(0) === "-") {
       const newElement = React.createElement("li", { key: index++ }, line.replace("-", ""));
       childElements.push(newElement);
