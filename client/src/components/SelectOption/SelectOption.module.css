@@ -1,0 +1,23 @@
+.contents {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 3px;
+  padding: 5px 15px;
+  color: var(--primaryColor);
+  background-color: var(--septenaryColor);
+  border-radius: var(--borderRadius);
+  font-size: 16px;
+}
+
+.contents:hover {
+  cursor: pointer;
+}
+
+.selected {
+  background-color: var(--secondaryOverlay);
+  border: 2px solid var(--secondaryColor);
+}
+.selected > svg {
+  margin-right: 5px;
+}

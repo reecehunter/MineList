@@ -5,7 +5,7 @@ module.exports.getOne = async (req, res) => {
   const result = await db.query(`
         SELECT
 
-        plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.views, plugins.stars, plugins.imgSrc, plugins.date_created,
+        plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.views, plugins.imgSrc, plugins.date_created,
         users.username, users.pfpImgSrc,
         tags.name AS tag_name,
         updates.updateList, updates.download AS updateDownload, updates.versionMajor, updates.versionMinor, updates.versionPatch, updates.title AS updateTitle

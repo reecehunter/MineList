@@ -8,6 +8,7 @@ import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import CreatePage from "./pages/CreatePage/CreatePage";
+import DashboardPage from "./pages/DashboardPage/DashboardPage";
 
 function App() {
   useEffect(() => {
@@ -21,8 +22,7 @@ function App() {
       <Route path="/plugin/:id" element={<SinglePluginPage />} />
       <Route path="/auth/sign-up" element={<RegistrationPage />} />
       <Route path="/auth/sign-in" element={<LoginPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/profile/:username" element={<ProfilePage />} />
+      <Route path="/dashboard/" element={<DashboardPage />} />
       <Route path="/user/:username" element={<ProfilePage />} />
       <Route path="/create" element={<CreatePage />} />
       <Route path="*" element={<NotFoundPage />} />

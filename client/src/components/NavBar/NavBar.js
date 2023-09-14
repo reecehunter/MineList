@@ -6,11 +6,14 @@ import Navbar from "react-bootstrap/Navbar";
 import logo from "../../images/logo.png";
 import Button from "../Button/Button";
 import { useNavigate } from "react-router-dom";
-import User from "../icons/User";
+import ProfileNav from "../../components/ProfileNav/ProfileNav";
+import SignIn from "../icons/SignIn";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [hoveringProfile, setHoveringProfile] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleAuthCheck = (link) => {
     if (!isAuthenticated) navigate("/auth/sign-in");
@@ -42,15 +45,15 @@ const NavBar = () => {
           </Nav>
         </Navbar.Collapse>
         <Navbar.Collapse className="justify-content-end">
-          <Nav.Link id="profileLink" onClick={() => handleAuthCheck("/profile")}>
+          <div>
             {isAuthenticated ? (
-              <Button className="button-secondary" icon={<User />}>
-                Profile
-              </Button>
+              <ProfileNav show={showPopup} isAuthenticated={isAuthenticated} />
             ) : (
-              <Button className="button-secondary">Log In</Button>
+              <Button className="button-secondary" icon={<SignIn color="var(--primaryColor)" width={20} height={20} />}>
+                Log In
+              </Button>
             )}
-          </Nav.Link>
+          </div>
         </Navbar.Collapse>
       </Container>
     </Navbar>

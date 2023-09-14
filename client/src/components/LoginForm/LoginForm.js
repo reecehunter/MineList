@@ -25,7 +25,7 @@ const LoginForm = () => {
       })
       .then((res) => {
         document.cookie = `token=${res.data.token}`;
-        navigate("/profile");
+        navigate("/dashboard");
       })
       .catch((err) => {
         console.error(err);

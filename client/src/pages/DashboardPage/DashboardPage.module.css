@@ -38,14 +38,10 @@
   margin-bottom: 10px;
 }
 
-.pluginsContainer > h3 {
-  color: var(--primaryColor);
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: var(--borderRadius);
-  background-color: var(--tertiaryColor);
-}
+/*   */
 
-.contentNav {
-  margin-bottom: var(--contentGap);
+.overviewContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--contentGap);
 }

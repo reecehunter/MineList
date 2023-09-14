@@ -1,23 +1,117 @@
 .form {
-    width: 500px;
-    padding: 30px;
-    border-radius: var(--borderRadius);
-    background-color: var(--tertiaryColor);
+  width: 500px;
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
 }
 
-.form > div {
-    margin: 10px 0;
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--contentGap);
+  background-color: var(--septenaryColor);
+  border-top-left-radius: var(--borderRadius);
+  border-top-right-radius: var(--borderRadius);
 }
 
-.form > div > * {
-    display: block;
-    width: 100%;
+.xButton {
+  color: var(--quaternaryColor);
+  transition: color 0.1s ease;
+}
+.xButton:hover {
+  cursor: pointer;
+  color: var(--primaryColor);
 }
 
-.form > div > label {
-    color: var(--primaryColor);
+.form h2 {
+  color: var(--primaryColor);
+  font-weight: bold;
+  margin: 0;
 }
 
-.form > input[type="submit"] {
-    width: 100%;
+.formContent {
+  padding: var(--contentGap);
+}
+
+.formContent > div {
+  margin-bottom: var(--contentGap);
+}
+
+.formContent > div > * {
+  display: block;
+  width: 100%;
+}
+
+.form input[type="text"],
+.form textarea {
+  padding: 5px 15px;
+  color: var(--primaryColor);
+  background-color: var(--septenaryColor);
+  caret-color: var(--primaryColor);
+  border: none;
+  border-radius: var(--borderRadius);
+}
+
+.form textarea {
+  height: 100px;
+}
+
+.form input[type="text"]:focus,
+.form textarea:focus {
+  outline: 2px solid var(--secondaryColor);
+}
+
+.form label {
+  color: var(--primaryColor);
+  font-size: 20px;
+  font-weight: bold;
+}
+.form label {
+  margin-bottom: 10px;
+}
+
+.form p {
+  color: var(--quaternaryColor);
+  margin-top: -5px;
+  margin-bottom: 5px;
+}
+
+.url {
+  padding: 5px 15px;
+  background-color: var(--septenaryColor);
+  border-radius: var(--borderRadius);
+}
+
+.urlInput {
+  padding: 0 !important;
+  outline: none !important;
+  border: none !important;
+}
+.urlInput:focus {
+  outline: none;
+  border: none !important;
+}
+
+.nameInput {
+  width: 60% !important;
+}
+
+.buttons {
+  display: flex;
+  gap: var(--contentGap);
+}
+
+/*   */
+
+.required {
+  color: var(--dangerColor);
+  font-weight: normal;
+  margin-left: 3px;
+}
+
+.typeOptions {
+  display: inline-block;
+}
+.typeOptions > span {
+  margin-right: 5px;
 }

@@ -40,7 +40,7 @@ const RegistrationForm = () => {
       .then((res) => {
         localStorage.setItem("username", res.data.user.username);
         // localStorage.setItem("jwt", res.data.jwt);
-        navigate("/profile");
+        navigate("/dashboard");
       })
       .catch((err) => {
         const errMessage = err.response.statusText.toLowerCase();

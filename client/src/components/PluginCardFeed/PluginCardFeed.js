@@ -15,7 +15,7 @@ const PluginCardFeed = (props) => {
         name={plugin.name}
         description={plugin.description}
         downloads={plugin.downloads}
-        stars={plugin.stars}
+        followers={plugin.followers}
         views={plugin.views}
         author={plugin.username}
       />

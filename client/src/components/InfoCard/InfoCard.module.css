@@ -16,7 +16,9 @@
   align-items: center;
   padding: var(--contentGap);
   margin: 0;
-  background-color: var(--tertiaryColor);
+  border-top-left-radius: var(--borderRadius);
+  border-top-right-radius: var(--borderRadius);
+  background-color: var(--septenaryColor);
   color: var(--primaryColor);
 }
 .infoCardHeader > h5 > a {

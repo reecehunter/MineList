@@ -41,7 +41,7 @@
   color: var(--quaternaryColor);
 }
 .header > span > a:hover {
-  color: var(--secondaryColor);
+  color: var(--quaternaryColor);
 }
 
 .imgContainer {
