@@ -37,6 +37,11 @@ const fetchAll = async () => {
   }
 };
 
+module.exports.createOne = async (req, res) => {
+  console.log(req.body);
+  return res.json({ hi: "hi" });
+};
+
 module.exports.addView = async (req, res) => {
   const id = req.params.id;
   const result = await db.query(`UPDATE plugins SET views=views+1 WHERE id=${id};`);

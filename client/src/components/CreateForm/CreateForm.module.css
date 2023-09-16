@@ -37,7 +37,9 @@
   margin-bottom: var(--contentGap);
 }
 
-.formContent > div > *:not(button) {
+.formContent input,
+.formContent textarea,
+.formContent label {
   display: block;
   width: 100%;
 }
@@ -77,6 +79,7 @@
 }
 
 .url {
+  display: flex;
   padding: 5px 15px;
   background-color: var(--septenaryColor);
   border-radius: var(--borderRadius);
@@ -108,12 +111,31 @@
   grid-template-columns: 1fr 1fr 1fr;
 }
 
+.versions input {
+  width: fit-content;
+  margin-right: 5px;
+}
+
+.versions > div > * {
+  display: inline-block;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .versions span {
   color: var(--primaryColor);
   margin-left: 5px;
 }
 
-/*  */
+/*   */
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+/*   */
 
 .link > div {
   display: flex;
