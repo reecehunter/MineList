@@ -1,4 +1,6 @@
 const db = require("../db/db");
+const mysql = require("mysql2/promise");
+const config = require("../config/config");
 
 const cache = new Map();
 
@@ -38,8 +40,43 @@ const fetchAll = async () => {
 };
 
 module.exports.createOne = async (req, res) => {
-  console.log(req.body);
-  return res.json({ hi: "hi" });
+  const userID = res.locals.userID;
+
+  const connection = await mysql.createConnection(config.db);
+  await connection.query("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+  await connection.beginTransaction();
+
+  try {
+    const insertPlugin = await connection.query(
+      `INSERT INTO plugins (userID, name, description, longDescription, imgSrc, vanity_url)
+      VALUES (?, ?, ?, ?, ?, ?);`,
+      [userID, req.body.title, req.body.summary, req.body.description, req.body.image, req.body.url]
+    );
+
+    const pluginID = insertPlugin[0].insertId;
+
+    const tags = [];
+    for (const tag of req.body.tags) tags.push([parseInt(tag), pluginID]);
+    const insertTags = await connection.query(`INSERT INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
+
+    const versions = [];
+    for (const version of req.body.versions) versions.push([pluginID, parseInt(version)]);
+    const insertVersions = await connection.query(`INSERT INTO plugin_versions (plugin_id, version_id) VALUES ?;`, [versions]);
+
+    const links = [];
+    for (const link of Object.values(req.body.links)) links.push([link.title, link.url]);
+    const insertLinks = await connection.query(`INSERT INTO links (title, url) VALUES ?;`, [links]);
+    console.log(insertLinks);
+
+    await connection.commit();
+    res.send("Success");
+  } catch (err) {
+    await connection.rollback();
+    console.error(`Error occurred while creating plugin: ${err.message}`, err);
+    res.status(400).send({ err });
+  }
+
+  connection.destroy();
 };
 
 module.exports.addView = async (req, res) => {

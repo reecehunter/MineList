@@ -86,17 +86,19 @@ const SingleServerPage = () => {
 
         // Tags
         const tagName = dataSet.tag_name;
-        if (!tagOutput.includes(tagName)) tagOutput.push(tagName);
+        if (tagName != null && !tagOutput.includes(tagName)) tagOutput.push(tagName);
 
         // Updates
-        let isUpdatePresent = false;
-        const updateData = { updateList, updateVersion, updateTitle };
-        for (const update of updateOutput) {
-          if (update.updateList === updateData.updateList) isUpdatePresent = true;
-        }
-        if (!isUpdatePresent) {
-          updateOutput.push(updateData);
-          isUpdatePresent = false;
+        if (updateList != null) {
+          let isUpdatePresent = false;
+          const updateData = { updateList, updateVersion, updateTitle };
+          for (const update of updateOutput) {
+            if (update.updateList === updateData.updateList) isUpdatePresent = true;
+          }
+          if (!isUpdatePresent) {
+            updateOutput.push(updateData);
+            isUpdatePresent = false;
+          }
         }
       }
 
@@ -117,23 +119,27 @@ const SingleServerPage = () => {
 
       case "Updates":
         window.document.title = pluginData[0].name + " - Updates";
-        return (
-          <div className={styles.updatesContainer}>
-            {" "}
-            {updates.map((updateObj, index1) => (
-              <div key={index1} className={styles.update}>
-                <p className={styles.updateTitle}>
-                  {updateObj.updateTitle} <span className={styles.updateVersion}>{formatVersion(updateObj.updateVersion)}</span>
-                </p>
-                <div>
-                  {updateObj.updateList.split("|").map((updateBullet, index2) => {
-                    return <p key={index2}>{updateBullet}</p>;
-                  })}
+        if (updates.length > 0) {
+          return (
+            <div className={styles.updatesContainer}>
+              {" "}
+              {updates.map((updateObj, index1) => (
+                <div key={index1} className={styles.update}>
+                  <p className={styles.updateTitle}>
+                    {updateObj.updateTitle} <span className={styles.updateVersion}>{formatVersion(updateObj.updateVersion)}</span>
+                  </p>
+                  <div>
+                    {updateObj.updateList.split("|").map((updateBullet, index2) => {
+                      return <p key={index2}>{updateBullet}</p>;
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        );
+              ))}
+            </div>
+          );
+        } else {
+          return <></>;
+        }
     }
   };
 
@@ -179,12 +185,11 @@ const SingleServerPage = () => {
             ))}
           />
           <InfoCard title="Links" content={<div></div>} />
-          <InfoCard
-            title="Tags"
-            content={tags.map((tag, index) => (
+          <InfoCard title="Tags" className={styles.tags}>
+            {tags.map((tag, index) => (
               <Tag key={index} name={tag} />
             ))}
-          />
+          </InfoCard>
           <InfoCard title="Downloads" content={<div></div>} />
         </div>
         <div>

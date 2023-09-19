@@ -86,9 +86,9 @@ module.exports.getOneByUsername = (req, res) => {
     });
 };
 
-function parseJwt(token) {
+module.exports.parseJWT = (token) => {
   return JSON.parse(Buffer.from(token.split(".")[1], "base64").toString());
-}
+};
 
 module.exports.verifyToken = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -106,7 +106,12 @@ module.exports.verifyToken = async (req, res, next) => {
   } else {
     jwt.verify(token, config.jwt.secret, (err, authData) => {
       if (err) return res.status(403).end();
-      else return res.json(parseJwt(token));
+      else {
+        const parsedToken = this.parseJWT(token);
+        // res.json(parsedToken); // REMOVED BECAUSE YOU CAN'T SEND THE RES TWICE (WHEN USING NEXT())
+        res.locals.userID = parsedToken.id;
+        return next();
+      }
     });
   }
 };

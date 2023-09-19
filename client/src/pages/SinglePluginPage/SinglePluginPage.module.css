@@ -116,8 +116,9 @@
 
 /* Tags */
 
-.tagContainer > span {
-  margin: 0 var(--contentGap) var(--contentGap) 0;
+.tags > div:last-of-type {
+  display: flex;
+  gap: 5px;
 }
 
 /* Updates */

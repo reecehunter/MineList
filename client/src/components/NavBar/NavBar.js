@@ -5,7 +5,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import logo from "../../images/logo.png";
 import Button from "../Button/Button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ProfileNav from "../../components/ProfileNav/ProfileNav";
 import SignIn from "../icons/SignIn";
 
@@ -49,9 +49,11 @@ const NavBar = () => {
             {isAuthenticated ? (
               <ProfileNav show={showPopup} isAuthenticated={isAuthenticated} />
             ) : (
-              <Button className="button-secondary" icon={<SignIn color="var(--primaryColor)" width={20} height={20} />}>
-                Log In
-              </Button>
+              <Link to="/auth/sign-in">
+                <Button className="button-secondary" icon={<SignIn color="var(--primaryColor)" width={20} height={20} />}>
+                  Log In
+                </Button>
+              </Link>
             )}
           </div>
         </Navbar.Collapse>

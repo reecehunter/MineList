@@ -23,14 +23,27 @@ const LoginForm = () => {
   const [step, setStep] = useState(1);
   const [descriptionMode, setDescriptionMode] = useState("Edit");
   const [description, setDescription] = useState("");
+  const [versions, setVersions] = useState([]);
   const [tags, setTags] = useState([]);
+  const [links, setLinks] = useState([]);
 
-  const handleChange = (e) => {
+  const handleChange = (event) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     });
   };
+
+  const handleLinkChange = (event, index, titleOrURL) => {
+    setLinks({
+      ...links,
+      [index]: { ...links[index], [titleOrURL]: event.target.value },
+    });
+  };
+
+  useEffect(() => {
+    setFormData({ ...formData, links: links });
+  }, [links]);
 
   useEffect(() => console.log(formData), [formData]);
 
@@ -65,13 +78,32 @@ const LoginForm = () => {
     }
   };
 
-  const addLink = () => {
+  const toggleVersion = (version) => {
+    const index = versions.indexOf(version);
+    if (index > -1) {
+      const newVersions = [...versions];
+      newVersions.splice(index, 1);
+      setVersions(newVersions);
+    } else {
+      setVersions([...versions, version]);
+    }
+  };
+
+  const addLinkInput = () => {
     if (linkCount < 5) setLinkCount((prev) => prev + 1);
   };
 
   useEffect(() => {
     handleChange({ target: { name: "type", value: type } });
   }, [type]);
+
+  useEffect(() => {
+    handleChange({ target: { name: "tags", value: tags } });
+  }, [tags]);
+
+  useEffect(() => {
+    handleChange({ target: { name: "versions", value: versions } });
+  }, [versions]);
 
   useEffect(() => {
     const typeElement = document.getElementById("createFormType");
@@ -248,63 +280,21 @@ const LoginForm = () => {
           <label htmlFor="versions">
             Working Versions<span className={styles.required}>*</span>
           </label>
-          <div className={styles.versions}>
-            <div>
-              <input type="checkbox" name="versions" value="1.7" onChange={handleChange} />
-              <span>1.7</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.8" onChange={handleChange} />
-              <span>1.8</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.9" onChange={handleChange} />
-              <span>1.9</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.10" onChange={handleChange} />
-              <span>1.10</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.11" onChange={handleChange} />
-              <span>1.11</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.12" onChange={handleChange} />
-              <span>1.12</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.13" onChange={handleChange} />
-              <span>1.13</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.14" onChange={handleChange} />
-              <span>1.14</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.15" onChange={handleChange} />
-              <span>1.15</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.16" onChange={handleChange} />
-              <span>1.16</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.17" onChange={handleChange} />
-              <span>1.17</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.18" onChange={handleChange} />
-              <span>1.18</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.19" onChange={handleChange} />
-              <span>1.19</span>
-            </div>
-            <div>
-              <input type="checkbox" name="versions" value="1.20" onChange={handleChange} />
-              <span>1.20</span>
-            </div>
+          <div className={styles.tags}>
+            <SelectOption name="1.7" icon="" selected={versions.includes(1)} onClick={() => toggleVersion(1)} />
+            <SelectOption name="1.8" icon="" selected={versions.includes(2)} onClick={() => toggleVersion(2)} />
+            <SelectOption name="1.9" icon="" selected={versions.includes(3)} onClick={() => toggleVersion(3)} />
+            <SelectOption name="1.10" icon="" selected={versions.includes(4)} onClick={() => toggleVersion(4)} />
+            <SelectOption name="1.11" icon="" selected={versions.includes(5)} onClick={() => toggleVersion(5)} />
+            <SelectOption name="1.12" icon="" selected={versions.includes(6)} onClick={() => toggleVersion(6)} />
+            <SelectOption name="1.13" icon="" selected={versions.includes(7)} onClick={() => toggleVersion(7)} />
+            <SelectOption name="1.14" icon="" selected={versions.includes(8)} onClick={() => toggleVersion(8)} />
+            <SelectOption name="1.15" icon="" selected={versions.includes(9)} onClick={() => toggleVersion(9)} />
+            <SelectOption name="1.16" icon="" selected={versions.includes(10)} onClick={() => toggleVersion(10)} />
+            <SelectOption name="1.17" icon="" selected={versions.includes(11)} onClick={() => toggleVersion(11)} />
+            <SelectOption name="1.18" icon="" selected={versions.includes(12)} onClick={() => toggleVersion(12)} />
+            <SelectOption name="1.19" icon="" selected={versions.includes(13)} onClick={() => toggleVersion(13)} />
+            <SelectOption name="1.20" icon="" selected={versions.includes(14)} onClick={() => toggleVersion(14)} />
           </div>
         </div>
 
@@ -313,19 +303,19 @@ const LoginForm = () => {
             Tags<span className={styles.required}>*</span>
           </label>
           <div className={styles.tags}>
-            <SelectOption name="Chat" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Chat")} onClick={() => toggleTag("Chat")} />
-            <SelectOption name="Utility" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Utility")} onClick={() => toggleTag("Utility")} />
-            <SelectOption name="Economy" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Economy")} onClick={() => toggleTag("Economy")} />
-            <SelectOption name="Fun" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Fun")} onClick={() => toggleTag("Fun")} />
-            <SelectOption name="Management" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Management")} onClick={() => toggleTag("Management")} />
-            <SelectOption name="Adventure" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Adventure")} onClick={() => toggleTag("Adventure")} />
-            <SelectOption name="Cursed" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Cursed")} onClick={() => toggleTag("Cursed")} />
-            <SelectOption name="Equipment" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Equipment")} onClick={() => toggleTag("Equipment")} />
-            <SelectOption name="Magic" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Magic")} onClick={() => toggleTag("Magic")} />
-            <SelectOption name="Minigame" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Minigame")} onClick={() => toggleTag("Minigame")} />
-            <SelectOption name="Mobs" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Mobs")} onClick={() => toggleTag("Mobs")} />
-            <SelectOption name="Optimization" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("Optimization")} onClick={() => toggleTag("Optimization")} />
-            <SelectOption name="World Generation" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("World Generation")} onClick={() => toggleTag("World Generation")} />
+            <SelectOption name="Chat" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("1")} onClick={() => toggleTag("1")} />
+            <SelectOption name="Utility" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("2")} onClick={() => toggleTag("2")} />
+            <SelectOption name="Economy" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("3")} onClick={() => toggleTag("3")} />
+            <SelectOption name="Fun" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("4")} onClick={() => toggleTag("4")} />
+            <SelectOption name="Management" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("5")} onClick={() => toggleTag("5")} />
+            <SelectOption name="Adventure" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("6")} onClick={() => toggleTag("6")} />
+            <SelectOption name="Cursed" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("7")} onClick={() => toggleTag("7")} />
+            <SelectOption name="Equipment" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("8")} onClick={() => toggleTag("8")} />
+            <SelectOption name="Magic" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("9")} onClick={() => toggleTag("9")} />
+            <SelectOption name="Minigame" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("10")} onClick={() => toggleTag("10")} />
+            <SelectOption name="Mobs" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("11")} onClick={() => toggleTag("11")} />
+            <SelectOption name="Optimization" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("12")} onClick={() => toggleTag("12")} />
+            <SelectOption name="World Generation" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("13")} onClick={() => toggleTag("13")} />
           </div>
         </div>
 
@@ -339,14 +329,14 @@ const LoginForm = () => {
           {[...Array(linkCount)].map((input, index) => (
             <div key={index} className={styles.link}>
               <div>
-                <input name={`linkTitle${index}`} type="text" placeholder="Link Title" onChange={handleChange} />
+                <input name={`linkTitle${index}`} type="text" placeholder="Link Title" onChange={(e) => handleLinkChange(e, index, "title")} />
                 <RightArrow width={22} height={22} />
-                <input name={`link${index}`} type="text" placeholder="URL" onChange={handleChange} />
+                <input name={`linkURL${index}`} type="text" placeholder="URL" onChange={(e) => handleLinkChange(e, index, "url")} />
                 <Trashcan width={28} height={28} color="var(--primaryColor)" className={styles.deleteLinkButton} onClick={() => setLinkCount((prev) => prev - 1)} />
               </div>
             </div>
           ))}
-          <Button onClick={addLink} icon={<Link width={16} height={16} color="var(--primaryColor)" />} className={`${styles.addLinkButton} button-quaternary`}>
+          <Button onClick={addLinkInput} icon={<Link width={16} height={16} color="var(--primaryColor)" />} className={`${styles.addLinkButton} button-quaternary`}>
             Add Link
           </Button>
         </div>
