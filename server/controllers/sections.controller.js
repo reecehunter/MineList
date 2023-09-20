@@ -8,12 +8,15 @@ module.exports.getOne = async (req, res) => {
         plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.views, plugins.imgSrc, plugins.date_created,
         users.username, users.pfpImgSrc,
         tags.name AS tag_name,
+        links.title AS link_title, links.url AS link_url,
         updates.updateList, updates.download AS updateDownload, updates.versionMajor, updates.versionMinor, updates.versionPatch, updates.title AS updateTitle
 
         FROM plugins
     
         LEFT JOIN plugin_authors ON plugins.id=plugin_authors.plugin_id
         LEFT JOIN users ON users.id=plugin_authors.user_id
+
+        LEFT JOIN links ON plugins.id=links.plugin_id
 
         LEFT JOIN plugin_tags ON plugins.id=plugin_tags.plugin_id
         LEFT JOIN tags ON tags.id=plugin_tags.tag_id

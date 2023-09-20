@@ -21,6 +21,7 @@ const LoginForm = () => {
   const [errors, setErrors] = useState([]);
   const [type, setType] = useState("Server");
   const [step, setStep] = useState(1);
+  const [image, setImage] = useState([]);
   const [descriptionMode, setDescriptionMode] = useState("Edit");
   const [description, setDescription] = useState("");
   const [versions, setVersions] = useState([]);
@@ -33,6 +34,14 @@ const LoginForm = () => {
       [event.target.name]: event.target.value,
     });
   };
+
+  const handleImageChange = (event) => {
+    setImage(event.target.files[0]);
+  };
+
+  useEffect(() => {
+    setFormData({ ...formData, image: image });
+  }, [image]);
 
   const handleLinkChange = (event, index, titleOrURL) => {
     setLinks({
@@ -50,7 +59,11 @@ const LoginForm = () => {
   const onSubmit = (event) => {
     event.preventDefault();
     axios
-      .post(`${config.api_url}/api/plugins/create`, formData)
+      .post(`${config.api_url}/api/plugins/create`, formData, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      })
       .then((res) => console.log(res))
       .catch((err) => console.error(err));
   };
@@ -115,6 +128,7 @@ const LoginForm = () => {
     const versionsElement = document.getElementById("createFormVersions");
     const tagsElement = document.getElementById("createFormTags");
     const linksElement = document.getElementById("createFormLinks");
+    const priceElement = document.getElementById("createFormPrice");
     const jarElement = document.getElementById("createFormJar");
     const backButton = document.getElementById("createFormBackButton");
     const continueButton = document.getElementById("createFormContinueButton");
@@ -130,6 +144,7 @@ const LoginForm = () => {
       versionsElement.style.display = "none";
       tagsElement.style.display = "none";
       linksElement.style.display = "none";
+      priceElement.style.display = "none";
       jarElement.style.display = "none";
       continueButton.style.width = "100%";
       continueButton.style.display = "flex";
@@ -144,6 +159,7 @@ const LoginForm = () => {
       versionsElement.style.display = "block";
       tagsElement.style.display = "block";
       linksElement.style.display = "none";
+      priceElement.style.display = "none";
       jarElement.style.display = "none";
       backButton.style.width = "100%";
       continueButton.style.display = "flex";
@@ -158,6 +174,7 @@ const LoginForm = () => {
       versionsElement.style.display = "none";
       tagsElement.style.display = "none";
       linksElement.style.display = "none";
+      priceElement.style.display = "none";
       jarElement.style.display = "none";
       backButton.style.width = "100%";
       continueButton.style.display = "flex";
@@ -172,6 +189,7 @@ const LoginForm = () => {
       versionsElement.style.display = "none";
       tagsElement.style.display = "none";
       linksElement.style.display = "block";
+      priceElement.style.display = "block";
       jarElement.style.display = "block";
       backButton.style.width = "33%";
       continueButton.style.display = "none";
@@ -180,7 +198,7 @@ const LoginForm = () => {
   }, [step]);
 
   return (
-    <form className={styles.form} onSubmit={onSubmit}>
+    <form encType="multipart/form-data" className={styles.form} onSubmit={onSubmit}>
       {errors.map((error, index) => (
         <p key={index} className="text-danger mb-3">
           {error}
@@ -236,7 +254,7 @@ const LoginForm = () => {
             {type} Image<span className={styles.required}>*</span>
           </label>
           <p>The logo image for your {type.toLowerCase()}.</p>
-          <input name="image" type="file" accept="image/*" onChange={handleChange} />
+          <input name="image" type="file" accept="image/*" onChange={handleImageChange} />
         </div>
 
         <div id="createFormDescription">
@@ -319,9 +337,11 @@ const LoginForm = () => {
           </div>
         </div>
 
-        <div id="createFormJar">
-          <label htmlFor="file">Upload Jar</label>
-          <input name="file" type="file" accept=".jar" onChange={handleChange} />
+        <div id="createFormPrice" className={styles.priceContainer}>
+          <label htmlFor="price">Price</label>
+          <p>
+            $<input name="price" type="number" onChange={handleChange} />
+          </p>
         </div>
 
         <div id="createFormLinks">
@@ -339,6 +359,11 @@ const LoginForm = () => {
           <Button onClick={addLinkInput} icon={<Link width={16} height={16} color="var(--primaryColor)" />} className={`${styles.addLinkButton} button-quaternary`}>
             Add Link
           </Button>
+        </div>
+
+        <div id="createFormJar">
+          <label htmlFor="file">Upload Jar</label>
+          <input name="file" type="file" accept=".jar" onChange={handleChange} />
         </div>
 
         <div className={styles.buttons}>

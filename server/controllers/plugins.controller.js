@@ -48,27 +48,27 @@ module.exports.createOne = async (req, res) => {
 
   try {
     const insertPlugin = await connection.query(
-      `INSERT INTO plugins (userID, name, description, longDescription, imgSrc, vanity_url)
-      VALUES (?, ?, ?, ?, ?, ?);`,
-      [userID, req.body.title, req.body.summary, req.body.description, req.body.image, req.body.url]
+      `INSERT INTO plugins (userID, name, description, longDescription, imgSrc, vanity_url, price)
+      VALUES (?, ?, ?, ?, ?, ?, ?);`,
+      [userID, req.body.title, req.body.summary, req.body.description, req.file.location, req.body.url, req.body.price]
     );
 
     const pluginID = insertPlugin[0].insertId;
 
     const tags = [];
     for (const tag of req.body.tags) tags.push([parseInt(tag), pluginID]);
-    const insertTags = await connection.query(`INSERT INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
+    await connection.query(`INSERT INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
 
     const versions = [];
     for (const version of req.body.versions) versions.push([pluginID, parseInt(version)]);
-    const insertVersions = await connection.query(`INSERT INTO plugin_versions (plugin_id, version_id) VALUES ?;`, [versions]);
+    await connection.query(`INSERT INTO plugin_versions (plugin_id, version_id) VALUES ?;`, [versions]);
 
     const links = [];
-    for (const link of Object.values(req.body.links)) links.push([link.title, link.url]);
-    const insertLinks = await connection.query(`INSERT INTO links (title, url) VALUES ?;`, [links]);
-    console.log(insertLinks);
+    for (const link of Object.values(req.body.links)) links.push([link.title, link.url, pluginID]);
+    await connection.query(`INSERT INTO links (title, url, plugin_id) VALUES ?;`, [links]);
 
     await connection.commit();
+
     res.send("Success");
   } catch (err) {
     await connection.rollback();

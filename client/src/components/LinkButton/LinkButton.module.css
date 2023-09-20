@@ -1,0 +1,11 @@
+.linkButton {
+  color: var(--primaryColor);
+  text-decoration: none;
+  padding: 5px;
+  border-radius: var(--borderRadius);
+  background-color: var(--septenaryColor);
+}
+
+.linkButton:hover {
+  text-decoration: underline;
+}

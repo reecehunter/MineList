@@ -45,6 +45,7 @@
 }
 
 .form input[type="text"],
+.form input[type="number"],
 .form textarea {
   padding: 5px 15px;
   color: var(--primaryColor);
@@ -59,6 +60,7 @@
 }
 
 .form input[type="text"]:focus,
+.form input[type="number"]:focus,
 .form textarea:focus {
   outline: 2px solid var(--secondaryColor);
 }
@@ -173,6 +175,17 @@
 
 .descriptionModes {
   margin-bottom: var(--contentGap);
+}
+
+/*   */
+
+.priceContainer > p {
+  display: flex;
+  align-items: center;
+  padding-left: var(--contentGap);
+  color: var(--secondaryColor);
+  border-radius: var(--borderRadius);
+  background-color: var(--septenaryColor);
 }
 
 /*   */

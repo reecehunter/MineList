@@ -13,6 +13,7 @@ import parseMarkdown from "../../helpers/markdownParser";
 import Statistic from "../../components/Statistic/Statistic";
 import ContentNav from "../../components/ContentNav/ContentNav";
 import InfoCard from "../../components/InfoCard/InfoCard";
+import LinkButton from "../../components/LinkButton/LinkButton";
 
 const SingleServerPage = () => {
   const { id } = useParams();
@@ -20,6 +21,7 @@ const SingleServerPage = () => {
   const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", stars: 0, downloads: 0, views: 0 }]);
   const [authors, setAuthors] = useState([]);
   const [tags, setTags] = useState([]);
+  const [links, setLinks] = useState([]);
   const [updates, setUpdates] = useState([]);
   const [downloads, setDownloads] = useState([]);
 
@@ -63,8 +65,11 @@ const SingleServerPage = () => {
       window.document.title = pluginDataResult.data[0].name + " - Description";
 
       const authorsOutput = [];
+      const linkOutput = [];
       const tagOutput = [];
       const updateOutput = [];
+
+      console.log(pluginDataResult.data);
 
       for (const dataSet of pluginDataResult.data) {
         const authorUsername = dataSet.username;
@@ -82,6 +87,19 @@ const SingleServerPage = () => {
         if (!isAuthorPresent) {
           authorsOutput.push(authorData);
           isAuthorPresent = false;
+        }
+
+        // Links
+        let isLinkPresent = false;
+        const linkData = { title: dataSet.link_title, url: dataSet.link_url };
+        for (const entry of linkOutput) {
+          if (entry.title === linkData.title) {
+            isLinkPresent = true;
+          }
+        }
+        if (!isLinkPresent) {
+          linkOutput.push(linkData);
+          isLinkPresent = false;
         }
 
         // Tags
@@ -103,6 +121,7 @@ const SingleServerPage = () => {
       }
 
       setAuthors(authorsOutput);
+      setLinks(linkOutput);
       setTags(tagOutput);
       setUpdates(updateOutput);
 
@@ -113,12 +132,13 @@ const SingleServerPage = () => {
   }, []);
 
   const renderContent = () => {
+    window.document.title = pluginData[0].name + " - " + selectedInfo;
+
     switch (selectedInfo) {
       case "Description":
         return pluginData[0] ? <div className={styles.description}>{parseMarkdown(pluginData[0].longDescription)}</div> : "";
 
       case "Updates":
-        window.document.title = pluginData[0].name + " - Updates";
         if (updates.length > 0) {
           return (
             <div className={styles.updatesContainer}>
@@ -184,13 +204,23 @@ const SingleServerPage = () => {
               </Link>
             ))}
           />
-          <InfoCard title="Links" content={<div></div>} />
+          <InfoCard title="Links">
+            <div className={styles.linksContainer}>
+              {links.map((link, index) => (
+                <LinkButton key={index} url={link.url}>
+                  {link.title}
+                </LinkButton>
+              ))}
+            </div>
+          </InfoCard>
           <InfoCard title="Tags" className={styles.tags}>
             {tags.map((tag, index) => (
               <Tag key={index} name={tag} />
             ))}
           </InfoCard>
-          <InfoCard title="Downloads" content={<div></div>} />
+          <InfoCard title="Downloads">
+            <div></div>
+          </InfoCard>
         </div>
         <div>
           <ContentNav options={["Description", "Updates", "Reviews"]} handleClick={setSelectedInfo} className={styles.contentNav} />

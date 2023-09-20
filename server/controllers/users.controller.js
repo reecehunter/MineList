@@ -15,6 +15,8 @@ module.exports.createOne = (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
+  console.log(email);
+
   bcrypt
     .hash(password, saltRounds)
     .then((hashedPassword) => {
@@ -91,6 +93,30 @@ module.exports.parseJWT = (token) => {
 };
 
 module.exports.verifyToken = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return res.status(401).json({
+      message: "Access Denied! Unauthorized User",
+    });
+  }
+  const token = authHeader.split("token=")[1];
+
+  if (token === undefined) {
+    return res.status(401).json({
+      message: "Access Denied! Unauthorized User",
+    });
+  } else {
+    jwt.verify(token, config.jwt.secret, (err, authData) => {
+      if (err) return res.status(403).end();
+      else {
+        const parsedToken = this.parseJWT(token);
+        return res.json(parsedToken);
+      }
+    });
+  }
+};
+
+module.exports.verifyTokenMiddleware = async (req, res, next) => {
   const authHeader = req.headers["authorization"];
   if (!authHeader) {
     return res.status(401).json({

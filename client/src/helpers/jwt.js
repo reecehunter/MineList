@@ -6,7 +6,7 @@ export const checkAuth = async (callback) => {
   const cookie = document.cookie;
   if (!cookie) return callback(false);
   try {
-    const res = await axios.post(`${config.api_url}/api/users/verify`, { withCredentials: true }); // res.data = userData
+    const res = await axios.post(`${config.api_url}/api/users/verify`, { withCredentials: true });
     if (res.status === 200) callback(res);
     else callback(false);
   } catch (err) {
