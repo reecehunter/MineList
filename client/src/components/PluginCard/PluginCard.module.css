@@ -67,7 +67,7 @@
 }
 
 .description {
-  margin: 10px 0;
+  margin: 5px 0;
   color: var(--quaternaryColor);
 }
 
@@ -78,4 +78,14 @@
   align-items: flex-start;
   gap: 10px;
   min-width: fit-content;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.tags > span {
+  color: var(--quaternaryColor);
+  background-color: transparent;
 }

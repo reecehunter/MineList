@@ -3,10 +3,10 @@ import config from "../../config/config";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./SinglePluginPage.module.css";
-import Star from "../../components/icons/Star";
+import User from "../../components/icons/User";
 import Button from "../../components/Button/Button";
 import Download from "../../components/icons/Download";
-import Eye from "../../components/icons/Eye";
+import Star from "../../components/icons/Star";
 import Tag from "../../components/Tag/Tag";
 import formatVersion from "../../helpers/versionFormatter";
 import parseMarkdown from "../../helpers/markdownParser";
@@ -18,24 +18,12 @@ import LinkButton from "../../components/LinkButton/LinkButton";
 const SingleServerPage = () => {
   const { id } = useParams();
   const [selectedInfo, setSelectedInfo] = useState("Description");
-  const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", stars: 0, downloads: 0, views: 0 }]);
+  const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", downloads: 0 }]);
   const [authors, setAuthors] = useState([]);
   const [tags, setTags] = useState([]);
   const [links, setLinks] = useState([]);
   const [updates, setUpdates] = useState([]);
   const [downloads, setDownloads] = useState([]);
-
-  const addView = async () => {
-    const key = `view_${id}`;
-    const views = localStorage.getItem(key);
-    if (views < 25) {
-      const res = await axios.post(`${config.api_url}/api/plugins/views/add/${id}`);
-      if (res.status === 200) {
-        if (views) localStorage.setItem(key, parseInt(views) + 1);
-        else localStorage.setItem(key, 1);
-      }
-    }
-  };
 
   const downloadJar = async (event) => {
     addDownload();
@@ -57,9 +45,7 @@ const SingleServerPage = () => {
     const fetchData = async () => {
       const startTime = Date.now();
 
-      addView();
-
-      const pluginDataResult = await axios.get(`${config.api_url}/api/sections/${id}`);
+      const pluginDataResult = await axios.get(`${config.api_url}/api/plugins/detailed/${id}`);
       setPluginData(pluginDataResult.data);
 
       window.document.title = pluginDataResult.data[0].name + " - Description";
@@ -68,8 +54,6 @@ const SingleServerPage = () => {
       const linkOutput = [];
       const tagOutput = [];
       const updateOutput = [];
-
-      console.log(pluginDataResult.data);
 
       for (const dataSet of pluginDataResult.data) {
         const authorUsername = dataSet.username;
@@ -176,8 +160,8 @@ const SingleServerPage = () => {
         <div>
           <div className={styles.stats}>
             <Statistic icon={<Download />} number={pluginData[0].downloads} text="downloads" />
-            <Statistic icon={<Eye />} number={pluginData[0].views} text="views" />
-            <Statistic icon={<Star />} number={pluginData[0].stars} text="stars" />
+            <Statistic icon={<Star />} number={0} text="stars" />
+            <Statistic icon={<User />} number={0} text="followers" />
           </div>
         </div>
         <div className={styles.headingButtons}>
@@ -189,9 +173,8 @@ const SingleServerPage = () => {
 
       <div className={styles.info}>
         <div>
-          <InfoCard
-            title="Authors"
-            content={authors.map((author, index) => (
+          <InfoCard title="Authors">
+            {authors.map((author, index) => (
               <Link key={index} to={`/user/${author.username}`} className={styles.link}>
                 <img
                   src={
@@ -203,7 +186,7 @@ const SingleServerPage = () => {
                 <p>{author.username}</p>
               </Link>
             ))}
-          />
+          </InfoCard>
           <InfoCard title="Links">
             <div className={styles.linksContainer}>
               {links.map((link, index) => (

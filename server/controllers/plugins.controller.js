@@ -25,14 +25,53 @@ module.exports.getAllByUserID = async (req, res) => {
   res.json(output);
 };
 
+module.exports.getOneWithRelatedData = async (req, res) => {
+  const id = req.params.id;
+  const result = await db.query(`
+        SELECT
+
+        plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.imgSrc, plugins.date_created,
+        users.username, users.pfpImgSrc,
+        tags.name AS tag_name,
+        links.title AS link_title, links.url AS link_url,
+        updates.updateList, updates.download AS updateDownload, updates.versionMajor, updates.versionMinor, updates.versionPatch, updates.title AS updateTitle
+
+        FROM plugins
+    
+        LEFT JOIN plugin_authors ON plugins.id=plugin_authors.plugin_id
+        LEFT JOIN users ON users.id=plugin_authors.user_id
+
+        LEFT JOIN links ON plugins.id=links.plugin_id
+
+        LEFT JOIN plugin_tags ON plugins.id=plugin_tags.plugin_id
+        LEFT JOIN tags ON tags.id=plugin_tags.tag_id
+
+        LEFT JOIN plugin_updates ON plugins.id=plugin_updates.plugin_id
+        LEFT JOIN updates ON updates.id=plugin_updates.update_id
+
+        WHERE plugins.id=${id};
+    `);
+  return res.json(result);
+};
+
 const fetchAll = async () => {
   const result = await db.query(`
     SELECT
-    COUNT(plugin_followers.plugin_id) AS followers, plugins.*, users.username
+
+    COUNT(plugin_followers.plugin_id) AS followers,
+    plugins.*,
+    users.username,
+    tags.name AS tag_name
     FROM plugins
+    
     LEFT JOIN users ON users.id = plugins.userID
+    
     LEFT JOIN plugin_followers ON plugin_followers.plugin_id = plugins.id
-    GROUP BY plugins.id;
+    
+    LEFT JOIN plugin_tags ON plugins.id=plugin_tags.plugin_id
+    LEFT JOIN tags ON tags.id=plugin_tags.tag_id
+    
+    GROUP BY plugins.id, tags.name;
   `);
   for (const plugin of result) {
     cache.set(plugin.id, plugin);
@@ -54,6 +93,8 @@ module.exports.createOne = async (req, res) => {
     );
 
     const pluginID = insertPlugin[0].insertId;
+
+    await connection.query(`INSERT INTO plugin_authors (plugin_id, user_id) VALUES (?, ?);`, [pluginID, userID]);
 
     const tags = [];
     for (const tag of req.body.tags) tags.push([parseInt(tag), pluginID]);
@@ -77,12 +118,6 @@ module.exports.createOne = async (req, res) => {
   }
 
   connection.destroy();
-};
-
-module.exports.addView = async (req, res) => {
-  const id = req.params.id;
-  const result = await db.query(`UPDATE plugins SET views=views+1 WHERE id=${id};`);
-  return res.json(result);
 };
 
 module.exports.addDownload = async (req, res) => {

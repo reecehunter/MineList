@@ -126,6 +126,7 @@
 
 .tags > div:last-of-type {
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
 }
 
