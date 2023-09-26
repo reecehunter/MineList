@@ -15,11 +15,6 @@ const NavBar = () => {
   const [hoveringProfile, setHoveringProfile] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
 
-  const handleAuthCheck = (link) => {
-    if (!isAuthenticated) navigate("/auth/sign-in");
-    else navigate(link);
-  };
-
   useEffect(() => {
     checkAuth((isAuthRes) => setIsAuthenticated(isAuthRes));
   }, []);
@@ -33,11 +28,11 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-light" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link href="/explore" className="link link-primaryy">
-              Explore
+            <Nav.Link href="/servers" className="link link-primaryy">
+              Servers
             </Nav.Link>
-            <Nav.Link className="link link-primaryy" onClick={() => handleAuthCheck("/create")}>
-              Create
+            <Nav.Link href="/plugins" className="link link-primaryy">
+              Plugins
             </Nav.Link>
             <Nav.Link href="/minelist+" className="link link-primaryy">
               MineList+

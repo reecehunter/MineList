@@ -25,8 +25,13 @@ const SingleServerPage = () => {
   const [updates, setUpdates] = useState([]);
   const [downloads, setDownloads] = useState([]);
 
-  const downloadJar = async (event) => {
+  const downloadJar = async () => {
     addDownload();
+    var link = document.createElement("a");
+    const url = pluginData[0].jarURL;
+    link.href = url;
+    link.download = url.substr(url.lastIndexOf("/") + 1);
+    link.click();
   };
 
   const addDownload = async () => {

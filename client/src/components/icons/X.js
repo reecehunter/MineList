@@ -1,7 +1,7 @@
 import React from "react";
 
 const X = (props) => {
-  const { width = 22, height = 22, stroke = 3, color = "currentColor", className } = props;
+  const { width = 22, height = 22, stroke = 3, color = "currentColor", className, onClick } = props;
 
   return (
     <svg
@@ -15,6 +15,7 @@ const X = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       className={`${className} feather feather-plus-square`}
+      onClick={onClick}
     >
       <line x1="18" y1="6" x2="6" y2="18"></line>
       <line x1="6" y1="6" x2="18" y2="18"></line>

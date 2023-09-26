@@ -1,7 +1,33 @@
+.bodyNoScroll {
+  overflow: hidden;
+}
+
+.show {
+  display: block !important;
+}
+
+.container {
+  position: absolute;
+  display: none;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  backdrop-filter: blur(3px);
+  z-index: 110;
+}
+
 .form {
+  position: absolute;
+  display: block;
+  top: 100vh;
+  left: 0;
+  transform: translateX(55%);
   width: 500px;
   border-radius: var(--borderRadius);
   background-color: var(--tertiaryColor);
+  transition: top 0.2s ease;
+  z-index: 111;
 }
 
 .header {
@@ -104,6 +130,12 @@
 .buttons {
   display: flex;
   gap: var(--contentGap);
+}
+
+/*   */
+
+.imageContainer {
+  justify-content: space-between;
 }
 
 /*   */

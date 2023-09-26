@@ -1,6 +1,7 @@
 const db = require("../db/db");
 const mysql = require("mysql2/promise");
 const config = require("../config/config");
+const { getCloudfrontSignedUrl } = require("../helper/cloudfront");
 
 const cache = new Map();
 
@@ -27,10 +28,10 @@ module.exports.getAllByUserID = async (req, res) => {
 
 module.exports.getOneWithRelatedData = async (req, res) => {
   const id = req.params.id;
-  const result = await db.query(`
+  const results = await db.query(`
         SELECT
 
-        plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.imgSrc, plugins.date_created,
+        plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.jarURL, plugins.imgSrc, plugins.date_created,
         users.username, users.pfpImgSrc,
         tags.name AS tag_name,
         links.title AS link_title, links.url AS link_url,
@@ -51,7 +52,10 @@ module.exports.getOneWithRelatedData = async (req, res) => {
 
         WHERE plugins.id=${id};
     `);
-  return res.json(result);
+  for (const result of results) {
+    result.imgSrc = getCloudfrontSignedUrl(result.imgSrc);
+  }
+  return res.json(results);
 };
 
 const fetchAll = async () => {
@@ -74,6 +78,7 @@ const fetchAll = async () => {
     GROUP BY plugins.id, tags.name;
   `);
   for (const plugin of result) {
+    plugin.imgSrc = getCloudfrontSignedUrl(plugin.imgSrc);
     cache.set(plugin.id, plugin);
   }
 };
@@ -87,26 +92,32 @@ module.exports.createOne = async (req, res) => {
 
   try {
     const insertPlugin = await connection.query(
-      `INSERT INTO plugins (userID, name, description, longDescription, imgSrc, vanity_url, price)
-      VALUES (?, ?, ?, ?, ?, ?, ?);`,
-      [userID, req.body.title, req.body.summary, req.body.description, req.file.location, req.body.url, req.body.price]
+      `INSERT INTO plugins (userID, name, description, longDescription, imgSrc, jarURL, vanity_url, price)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+      [userID, req.body.title, req.body.summary, req.body.description, req.files.image[0].key, req.files.jar[0].key, req.body.url, req.body.price]
     );
 
     const pluginID = insertPlugin[0].insertId;
 
     await connection.query(`INSERT INTO plugin_authors (plugin_id, user_id) VALUES (?, ?);`, [pluginID, userID]);
 
-    const tags = [];
-    for (const tag of req.body.tags) tags.push([parseInt(tag), pluginID]);
-    await connection.query(`INSERT INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
+    if (req.body.tags) {
+      const tags = [];
+      for (const tag of req.body.tags) tags.push([parseInt(tag), pluginID]);
+      await connection.query(`INSERT INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
+    }
 
-    const versions = [];
-    for (const version of req.body.versions) versions.push([pluginID, parseInt(version)]);
-    await connection.query(`INSERT INTO plugin_versions (plugin_id, version_id) VALUES ?;`, [versions]);
+    if (req.body.versions) {
+      const versions = [];
+      for (const version of req.body.versions) versions.push([pluginID, parseInt(version)]);
+      await connection.query(`INSERT INTO plugin_versions (plugin_id, version_id) VALUES ?;`, [versions]);
+    }
 
-    const links = [];
-    for (const link of Object.values(req.body.links)) links.push([link.title, link.url, pluginID]);
-    await connection.query(`INSERT INTO links (title, url, plugin_id) VALUES ?;`, [links]);
+    if (req.body.links) {
+      const links = [];
+      for (const link of Object.values(req.body.links)) links.push([link.title, link.url, pluginID]);
+      await connection.query(`INSERT INTO links (title, url, plugin_id) VALUES ?;`, [links]);
+    }
 
     await connection.commit();
 

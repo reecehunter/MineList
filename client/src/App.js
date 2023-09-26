@@ -7,7 +7,7 @@ import SinglePluginPage from "./pages/SinglePluginPage/SinglePluginPage";
 import RegistrationPage from "./pages/RegistrationPage/RegistrationPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
-import CreatePage from "./pages/CreatePage/CreatePage";
+import EditPage from "./pages/EditPage/EditPage";
 import DashboardPage from "./pages/DashboardPage/DashboardPage";
 
 function App() {
@@ -18,13 +18,14 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/explore" element={<HomePage />} />
-      <Route path="/plugin/:id" element={<SinglePluginPage />} />
       <Route path="/auth/sign-up" element={<RegistrationPage />} />
       <Route path="/auth/sign-in" element={<LoginPage />} />
+      <Route path="/plugins" element={<HomePage />} />
+      <Route path="/plugin/:id" element={<SinglePluginPage />} />
+      <Route path="/servers" element={<HomePage />} />
       <Route path="/dashboard/" element={<DashboardPage />} />
       <Route path="/user/:username" element={<ProfilePage />} />
-      <Route path="/create" element={<CreatePage />} />
+      <Route path="/create" element={<EditPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

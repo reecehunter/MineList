@@ -6,7 +6,7 @@
 .container:hover {
   border: 3px solid var(--secondaryColor);
 }
-.container img {
+.pfp {
   width: 40px;
   border-radius: var(--borderRadius);
 }

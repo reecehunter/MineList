@@ -93,6 +93,9 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
+        <InfoCard title="Favorite Server">
+          <div></div>
+        </InfoCard>
         <InfoCard title="Statistics">
           <div className={styles.stats}>
             <Statistic icon={<Download />} number={userStats.downloads} text="downloads" />

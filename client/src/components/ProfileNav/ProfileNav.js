@@ -8,11 +8,13 @@ import PlusSquare from "../icons/PlusSquare";
 import Dashboard from "../icons/Dashboard";
 import Bell from "../icons/Bell";
 import Gear from "../icons/Gear";
+import CreateForm from "../CreateForm/CreateForm";
 
 const ProfileNav = (props) => {
   const { isAuthenticated } = props;
   const container = useRef(null);
   const [show, setShow] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [userData, setUserData] = useState({ username: "", pfpImgSrc: "" });
 
   const handleAuthCheck = (link) => {
@@ -22,6 +24,11 @@ const ProfileNav = (props) => {
       console.log("link: " + link);
       window.location.href = link;
     }
+  };
+
+  const openCreateModal = () => {
+    setShowCreateForm(true);
+    setShow(false);
   };
 
   useEffect(() => {
@@ -50,18 +57,19 @@ const ProfileNav = (props) => {
   }, [show]);
 
   return (
-    <div className={styles.container} onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
-      <img src={userData.pfpImgSrc ? userData.pfpImgSrc : config.default_user_image} alt="Profile" />
+    <div id="profileNav" className={styles.container} onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
+      <CreateForm show={showCreateForm} setShow={setShowCreateForm} />
+      <img src={userData.pfpImgSrc ? userData.pfpImgSrc : config.default_user_image} alt="Profile" className={styles.pfp} />
       <div ref={container} className={styles.popup}>
         <Link to={`/user/${userData.username}`} className={styles.viewProfile}>
-          <img src={userData.pfpImgSrc ? userData.pfpImgSrc : config.default_user_image} alt="Profile" />
+          <img src={userData.pfpImgSrc ? userData.pfpImgSrc : config.default_user_image} alt="Profile" className={styles.pfp} />
           <div>
             <p className="text-primaryy">View Your Profile</p>
             <p>@{userData.username}</p>
           </div>
         </Link>
         <hr className={styles.line} />
-        <Link to="/create">
+        <Link onClick={openCreateModal}>
           <PlusSquare /> Create Project
         </Link>
         <hr className={styles.line} />
