@@ -18,7 +18,7 @@ const PluginCardFeed = (props) => {
         followers={plugin.followers}
         stars={0}
         author={plugin.username}
-        tags={["tag1", "tag2", "tag3"]}
+        tags={plugin.tags}
       />
     ));
   };

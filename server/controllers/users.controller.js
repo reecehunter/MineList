@@ -107,7 +107,7 @@ module.exports.verifyToken = async (req, res, next) => {
     });
   } else {
     jwt.verify(token, config.jwt.secret, (err, authData) => {
-      if (err) return res.status(403).end();
+      if (err) return res.status(403).json(err);
       else {
         const parsedToken = this.parseJWT(token);
         return res.json(parsedToken);

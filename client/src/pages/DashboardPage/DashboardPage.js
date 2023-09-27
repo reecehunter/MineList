@@ -27,7 +27,7 @@ const DashboardPage = () => {
         return (
           <div className={styles.overviewContainer}>
             <InfoCard title="Downloads">{userStats.downloads}</InfoCard>
-            <InfoCard title="Views">{userStats.views}</InfoCard>
+            <InfoCard title="Stars">{userStats.stars}</InfoCard>
             <InfoCard title="Followers">{userStats.followers}</InfoCard>
           </div>
         );

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./CreateForm.module.css";
 import axios from "axios";
 import config from "../../config/config";
@@ -18,12 +19,13 @@ import SquareImage from "../SquareImage/SquareImage";
 
 const CreateForm = (props) => {
   const { show, setShow } = props;
+  const navigate = useNavigate();
 
   const formContainerRef = useRef();
   const formRef = useRef();
   const imageUploadButtonRef = useRef();
 
-  const [formData, setFormData] = useState({ price: 0 });
+  const [formData, setFormData] = useState({ title: "", url: "", summary: "", versions: [], tags: [], image: null, description: "", jar: null, links: { 0: { title: "", url: "" } }, price: "0" });
   const [linkCount, setLinkCount] = useState(1);
   const [errors, setErrors] = useState([]);
   const [type, setType] = useState("Server");
@@ -43,11 +45,47 @@ const CreateForm = (props) => {
     });
   };
 
+  const validateStep = (cb) => {
+    const newErrors = [];
+    if (step === 1) {
+      if (formData.title.length < 3) newErrors.push("Title must be more than 3 characters.");
+      if (formData.title.length > 30) newErrors.push("Title must be less than 30 characters.");
+      if (formData.url.length < 3) newErrors.push("URL must be at least 3 characters.");
+      if (formData.url.length > 20) newErrors.push("URL must be less than 20 characters.");
+      if (formData.summary.length < 30) newErrors.push("The summary must be at least 30 characters.");
+    } else if (step === 2) {
+      if (formData.versions.length < 1) newErrors.push("You must select at least 1 working version.");
+      if (formData.tags.length < 1) newErrors.push("You must select at least 1 tag.");
+    } else if (step === 3) {
+      if (formData.image === null) newErrors.push("You must upload an image.");
+      if (formData.description.length < 200) newErrors.push("The description must be at least 200 characters.");
+    } else if (step === 4) {
+      if (formData.price === "" || !formData.price) newErrors.push("You must enter a price (put $0 to make it free).");
+      const linkRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
+      for (const link of Object.values(formData.links)) {
+        if (!link.title || link.title === "") newErrors.push("All links must have a title.");
+        if (link.title && link.title.length > 20) newErrors.push("Link titles must be less than 20 characters.");
+        if (link.url && !link.url.match(linkRegex)) newErrors.push("Links URL must be a valid URL.");
+        if (!link.url || link.url === "") newErrors.push("All links must have a url.");
+        if (link.url && link.url.length > 255) newErrors.push("Link URLs must be less than 255 characters.");
+      }
+      if (formData.jar === null) newErrors.push("You must upload a plugin jar.");
+    }
+    if (newErrors.length === 0) {
+      cb(true);
+    } else {
+      cb(false);
+    }
+    setErrors(newErrors);
+  };
+
   const changeStep = (amount) => {
     if (step + amount > 5) return;
     else if (step + amount < 1) return;
     setStep((prev) => prev + amount);
   };
+
+  useEffect(() => console.log(formData), [formData]);
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
@@ -75,18 +113,15 @@ const CreateForm = (props) => {
     setFormData({ ...formData, links: links });
   }, [links]);
 
-  useEffect(() => console.log(formData), [formData]);
-
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log(formData);
     axios
       .post(`${config.api_url}/api/plugins/create`, formData, {
         headers: {
           "content-type": "multipart/form-data",
         },
       })
-      .then((res) => console.log(res))
+      .then((res) => navigate(`/plugin/${res.data.vanity_url}`))
       .catch((err) => console.error(err));
   };
 
@@ -126,6 +161,15 @@ const CreateForm = (props) => {
 
   const addLinkInput = () => {
     if (linkCount < 5) setLinkCount((prev) => prev + 1);
+  };
+
+  const removeLinkInput = (index) => {
+    setLinks((prev) => {
+      const newLinks = { ...prev };
+      delete newLinks[index];
+      return newLinks;
+    });
+    setLinkCount((prev) => prev - 1);
   };
 
   useEffect(() => {
@@ -238,18 +282,17 @@ const CreateForm = (props) => {
   return (
     <div ref={formContainerRef} className={styles.container}>
       <form ref={formRef} encType="multipart/form-data" className={styles.form} onSubmit={onSubmit}>
-        {errors.map((error, index) => (
-          <p key={index} className="text-danger mb-3">
-            {error}
-          </p>
-        ))}
-
         <div className={styles.header}>
           <h2>Create a Project</h2>
           <X className={styles.xButton} onClick={() => setShow(false)} />
         </div>
 
         <div className={styles.formContent}>
+          {errors.map((error, index) => (
+            <p key={index} className="text-danger mb-3">
+              {error}
+            </p>
+          ))}
           <div id="createFormType">
             <label htmlFor="type">
               Type<span className={styles.required}>*</span>
@@ -395,7 +438,7 @@ const CreateForm = (props) => {
                   <input name={`linkTitle${index}`} type="text" placeholder="Link Title" onChange={(e) => handleLinkChange(e, index, "title")} />
                   <RightArrow width={22} height={22} />
                   <input name={`linkURL${index}`} type="text" placeholder="URL" onChange={(e) => handleLinkChange(e, index, "url")} />
-                  <Trashcan width={28} height={28} color="var(--primaryColor)" className={styles.deleteLinkButton} onClick={() => setLinkCount((prev) => prev - 1)} />
+                  <Trashcan width={28} height={28} color="var(--primaryColor)" className={styles.deleteLinkButton} onClick={() => removeLinkInput(index)} />
                 </div>
               </div>
             ))}
@@ -410,13 +453,37 @@ const CreateForm = (props) => {
           </div>
 
           <div className={styles.buttons}>
-            <Button id="createFormBackButton" className="button-quaternary" icon={<LeftArrow color="var(--primaryColor)" />} onClick={() => changeStep(-1)}>
+            <Button
+              id="createFormBackButton"
+              className="button-quaternary"
+              icon={<LeftArrow color="var(--primaryColor)" />}
+              onClick={() =>
+                validateStep((res) => {
+                  if (res) changeStep(-1);
+                })
+              }
+            >
               Back
             </Button>
-            <Button id="createFormContinueButton" className="button-secondary" icon={<RightArrow color="var(--primaryColor)" />} onClick={() => changeStep(1)}>
+            <Button
+              id="createFormContinueButton"
+              className="button-secondary"
+              icon={<RightArrow color="var(--primaryColor)" />}
+              onClick={() =>
+                validateStep((res) => {
+                  if (res) changeStep(1);
+                })
+              }
+            >
               Continue
             </Button>
-            <Button id="createFormSubmitButton" type="submit" icon={<PlusSquare color="var(--primaryColor)" />} className={`button button-secondary ${styles.submitButton}`}>
+            <Button
+              id="createFormSubmitButton"
+              icon={<PlusSquare color="var(--primaryColor)" />}
+              className={`button button-secondary ${styles.submitButton}`}
+              type={errors.length === 0 ? "submit" : "button"}
+              onClick={() => validateStep(() => {})}
+            >
               Create {type}
             </Button>
           </div>

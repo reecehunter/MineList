@@ -3,12 +3,38 @@ const mysql = require("mysql2/promise");
 const config = require("../config/config");
 const { getCloudfrontSignedUrl } = require("../helper/cloudfront");
 
-const cache = new Map();
+module.exports.getAll = async (req, res) => {
+  const output = {};
+  const results = await db.query(`
+    SELECT
 
-module.exports.getAll = (req, res) => {
-  const obj = Object.fromEntries(cache);
-  const values = Object.values(obj);
-  res.json(values);
+    COUNT(plugin_followers.plugin_id) AS followers,
+    plugins.*,
+    users.username,
+    tags.name AS tag_name
+    FROM plugins
+    
+    LEFT JOIN users ON users.id = plugins.userID
+    
+    LEFT JOIN plugin_followers ON plugin_followers.plugin_id = plugins.id
+    
+    LEFT JOIN plugin_tags ON plugins.id=plugin_tags.plugin_id
+    LEFT JOIN tags ON tags.id=plugin_tags.tag_id
+    
+    GROUP BY plugins.id, tags.name;
+  `);
+  for (const plugin of results) {
+    if (!output[plugin.id]) {
+      plugin.imgSrc = getCloudfrontSignedUrl(plugin.imgSrc);
+      plugin.tags = [plugin.tag_name];
+      output[plugin.id] = plugin;
+    } else {
+      if (!output[plugin.id].tags.includes(plugin.tag_name)) {
+        output[plugin.id].tags.push(plugin.tag_name);
+      }
+    }
+  }
+  res.json(Object.values(output));
 };
 
 module.exports.getOne = async (req, res) => {
@@ -18,12 +44,49 @@ module.exports.getOne = async (req, res) => {
 };
 
 module.exports.getAllByUserID = async (req, res) => {
-  const userID = parseInt(req.params.userID);
-  const output = [];
-  for (const plugin of cache.values()) {
-    if (plugin.userID === userID) output.push(plugin);
+  const output = {};
+  try {
+    const results = await db.query(`
+      SELECT
+  
+      COUNT(plugin_followers.plugin_id) AS followers,
+      plugins.*,
+      users.username,
+      tags.name AS tag_name
+      FROM plugins
+      
+      LEFT JOIN users ON users.id = plugins.userID
+      
+      LEFT JOIN plugin_followers ON plugin_followers.plugin_id = plugins.id
+      
+      LEFT JOIN plugin_tags ON plugins.id=plugin_tags.plugin_id
+      LEFT JOIN tags ON tags.id=plugin_tags.tag_id
+  
+      WHERE users.id = ${req.params.userID}
+      
+      GROUP BY plugins.id, tags.name;
+    `);
+    for (const plugin of results) {
+      if (!output[plugin.id]) {
+        plugin.imgSrc = getCloudfrontSignedUrl(plugin.imgSrc);
+        plugin.tags = [plugin.tag_name];
+        output[plugin.id] = plugin;
+      } else {
+        if (!output[plugin.id].tags.includes(plugin.tag_name)) {
+          output[plugin.id].tags.push(plugin.tag_name);
+        }
+      }
+    }
+    res.json(Object.values(output));
+  } catch (err) {
+    res.status(400).send({ err });
   }
-  res.json(output);
+  // const userID = parseInt(req.params.userID);
+  // const output = [];
+  // for (const plugin of cache.values()) {
+  //   if (plugin.userID === userID) output.push(plugin);
+  // }
+  // res.json(output);
 };
 
 module.exports.getOneWithRelatedData = async (req, res) => {
@@ -56,31 +119,6 @@ module.exports.getOneWithRelatedData = async (req, res) => {
     result.imgSrc = getCloudfrontSignedUrl(result.imgSrc);
   }
   return res.json(results);
-};
-
-const fetchAll = async () => {
-  const result = await db.query(`
-    SELECT
-
-    COUNT(plugin_followers.plugin_id) AS followers,
-    plugins.*,
-    users.username,
-    tags.name AS tag_name
-    FROM plugins
-    
-    LEFT JOIN users ON users.id = plugins.userID
-    
-    LEFT JOIN plugin_followers ON plugin_followers.plugin_id = plugins.id
-    
-    LEFT JOIN plugin_tags ON plugins.id=plugin_tags.plugin_id
-    LEFT JOIN tags ON tags.id=plugin_tags.tag_id
-    
-    GROUP BY plugins.id, tags.name;
-  `);
-  for (const plugin of result) {
-    plugin.imgSrc = getCloudfrontSignedUrl(plugin.imgSrc);
-    cache.set(plugin.id, plugin);
-  }
 };
 
 module.exports.createOne = async (req, res) => {
@@ -121,7 +159,7 @@ module.exports.createOne = async (req, res) => {
 
     await connection.commit();
 
-    res.send("Success");
+    res.send({ vanity_url: req.body.url });
   } catch (err) {
     await connection.rollback();
     console.error(`Error occurred while creating plugin: ${err.message}`, err);
@@ -136,11 +174,3 @@ module.exports.addDownload = async (req, res) => {
   const result = await db.query(`UPDATE plugins SET downloads=downloads+1 WHERE id=${id};`);
   return res.json(result);
 };
-
-// Update cache on start
-fetchAll();
-// Update the cache every so often
-setInterval(() => {
-  cache.clear();
-  fetchAll();
-}, 30 * 60 * 1000);

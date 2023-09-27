@@ -20,6 +20,8 @@
 .form {
   position: absolute;
   display: block;
+  max-height: 80vh;
+  overflow-y: scroll;
   top: 100vh;
   left: 0;
   transform: translateX(55%);

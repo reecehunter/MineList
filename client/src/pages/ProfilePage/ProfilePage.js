@@ -12,6 +12,7 @@ import Statistic from "../../components/Statistic/Statistic";
 import ContentNav from "../../components/ContentNav/ContentNav";
 import InfoCard from "../../components/InfoCard/InfoCard";
 import { getTimeDifference } from "../../helpers/dateTime";
+import Star from "../../components/icons/Star";
 
 const ProfilePage = () => {
   const params = useParams();
@@ -99,7 +100,7 @@ const ProfilePage = () => {
         <InfoCard title="Statistics">
           <div className={styles.stats}>
             <Statistic icon={<Download />} number={userStats.downloads} text="downloads" />
-            <Statistic icon={<Eye />} number={userStats.views} text="views" />
+            <Statistic icon={<Star />} number={0} text="stars" />
             <Statistic icon={<User />} number={userStats.followers} text="followers" />
           </div>
         </InfoCard>

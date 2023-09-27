@@ -25,7 +25,7 @@ const SingleServerPage = () => {
   const [updates, setUpdates] = useState([]);
   const [downloads, setDownloads] = useState([]);
 
-  const downloadJar = async () => {
+  const downloadJar = () => {
     addDownload();
     var link = document.createElement("a");
     const url = pluginData[0].jarURL;
@@ -82,12 +82,12 @@ const SingleServerPage = () => {
         let isLinkPresent = false;
         const linkData = { title: dataSet.link_title, url: dataSet.link_url };
         for (const entry of linkOutput) {
-          if (entry.title === linkData.title) {
+          if (entry.title && entry.url && entry.title === linkData.title) {
             isLinkPresent = true;
           }
         }
         if (!isLinkPresent) {
-          linkOutput.push(linkData);
+          if (linkData.title && linkData.url) linkOutput.push(linkData);
           isLinkPresent = false;
         }
 
@@ -111,6 +111,7 @@ const SingleServerPage = () => {
 
       setAuthors(authorsOutput);
       setLinks(linkOutput);
+      console.log(linkOutput);
       setTags(tagOutput);
       setUpdates(updateOutput);
 

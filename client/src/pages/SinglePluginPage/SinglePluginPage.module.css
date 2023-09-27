@@ -14,6 +14,7 @@
   flex-direction: row;
   align-items: center;
   gap: var(--contentGap);
+  width: 100%;
 }
 
 .headingButtons > button {
@@ -104,14 +105,18 @@
   padding: var(--contentGap);
   border-radius: var(--borderRadius);
   background-color: var(--tertiaryColor);
+  word-break: break-all;
+  white-space: normal;
 }
-
 .description h3 {
   color: var(--primaryColor);
   margin: 0;
 }
 .description hr {
   margin: 5px 0 var(--contentGap) 0;
+}
+.description p {
+  margin: 0;
 }
 
 /*  Links Container */
