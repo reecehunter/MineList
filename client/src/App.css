@@ -11,13 +11,15 @@
   --tertiaryColor: #12202f;
   --quaternaryColor: rgb(116, 116, 116);
   --septenaryColor: #1c3248;
+  --octonaryColor: #132639;
 
   --secondaryOverlay: rgba(22, 133, 223, 0.3);
   --dangerColor: #f35353;
 
   --backgroundColor: #03101d;
 
-  --borderRadius: 5px;
+  /* --borderRadius: 5px; */
+  --borderRadius: 3px;
   --contentGap: 15px;
 }
 

@@ -17,9 +17,16 @@
   width: 100%;
 }
 
+.headingButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--contentGap);
+}
 .headingButtons > button {
   font-size: 20px;
   padding: 10px var(--contentGap);
+  width: 100%;
 }
 
 .logo {
@@ -98,27 +105,6 @@
   margin: 0;
 }
 
-/* Description */
-
-.description {
-  color: var(--quaternaryColor);
-  padding: var(--contentGap);
-  border-radius: var(--borderRadius);
-  background-color: var(--tertiaryColor);
-  word-break: break-all;
-  white-space: normal;
-}
-.description h3 {
-  color: var(--primaryColor);
-  margin: 0;
-}
-.description hr {
-  margin: 5px 0 var(--contentGap) 0;
-}
-.description p {
-  margin: 0;
-}
-
 /*  Links Container */
 
 .linksContainer {
@@ -183,4 +169,25 @@
 
 .contentNav {
   margin-bottom: var(--contentGap);
+}
+
+/* Inputs */
+
+.editImageContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.editImageContainer > button {
+  font-size: 14px;
+}
+
+.titleInput {
+  font-size: 32px;
+  margin-bottom: 5px;
+}
+
+.summaryInput {
+  height: 100px;
 }

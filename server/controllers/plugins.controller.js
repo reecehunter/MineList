@@ -81,12 +81,6 @@ module.exports.getAllByUserID = async (req, res) => {
   } catch (err) {
     res.status(400).send({ err });
   }
-  // const userID = parseInt(req.params.userID);
-  // const output = [];
-  // for (const plugin of cache.values()) {
-  //   if (plugin.userID === userID) output.push(plugin);
-  // }
-  // res.json(output);
 };
 
 module.exports.getOneWithRelatedData = async (req, res) => {
@@ -95,7 +89,7 @@ module.exports.getOneWithRelatedData = async (req, res) => {
         SELECT
 
         plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.jarURL, plugins.imgSrc, plugins.date_created,
-        users.username, users.pfpImgSrc,
+        users.id AS author_id, users.username AS author_username, users.pfpImgSrc AS author_pfpImgSrc,
         tags.name AS tag_name,
         links.title AS link_title, links.url AS link_url,
         updates.updateList, updates.download AS updateDownload, updates.versionMajor, updates.versionMinor, updates.versionPatch, updates.title AS updateTitle
@@ -125,10 +119,11 @@ module.exports.createOne = async (req, res) => {
   const userID = res.locals.userID;
 
   const connection = await mysql.createConnection(config.db);
-  await connection.query("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
-  await connection.beginTransaction();
 
   try {
+    await connection.query("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+    await connection.beginTransaction();
+
     const insertPlugin = await connection.query(
       `INSERT INTO plugins (userID, name, description, longDescription, imgSrc, jarURL, vanity_url, price)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
@@ -163,10 +158,26 @@ module.exports.createOne = async (req, res) => {
   } catch (err) {
     await connection.rollback();
     console.error(`Error occurred while creating plugin: ${err.message}`, err);
-    res.status(400).send({ err });
+    res.status(400).send({ message: err.message });
   }
 
   connection.destroy();
+};
+
+module.exports.editOne = async (req, res) => {
+  try {
+    const result = await db.query(`
+    UPDATE plugins
+    SET name="${req.body.title}",
+      description="${req.body.summary}",
+      longDescription="${req.body.description}"
+      ${req.files.image ? `, imgSrc="${req.files.image[0].key}"` : ""}
+    WHERE id=${req.params.id};`);
+    return res.json(result);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json(err);
+  }
 };
 
 module.exports.addDownload = async (req, res) => {

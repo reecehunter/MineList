@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import config from "../../config/config";
-import { checkAuth } from "../../helpers/jwt";
 import { useNavigate, useParams } from "react-router-dom";
 import PluginCardFeed from "../../components/PluginCardFeed/PluginCardFeed";
 import styles from "./ProfilePage.module.css";
 import Download from "../../components/icons/Download";
-import Eye from "../../components/icons/Eye";
 import User from "../../components/icons/User";
 import Statistic from "../../components/Statistic/Statistic";
 import ContentNav from "../../components/ContentNav/ContentNav";
@@ -33,23 +31,11 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    // Fetch data for authenticated user
-    if (!params.username) {
-      checkAuth((res) => {
-        if (!res) {
-          navigate("/auth/sign-in");
-        } else {
-          setUserData(res.data);
-          setIsOwnProfile(true);
-        }
-      });
-    } else {
-      // Fetch data for queried user
-      axios
-        .get(`${config.api_url}/api/users/${params.username}`)
-        .then((res) => setUserData(res.data))
-        .catch((err) => console.error(err));
-    }
+    // Fetch data for queried user
+    axios
+      .get(`${config.api_url}/api/users/${params.username}`)
+      .then((res) => setUserData(res.data))
+      .catch((err) => console.error(err));
   }, []);
 
   useEffect(() => {
@@ -86,10 +72,7 @@ const ProfilePage = () => {
               alt={`${userData.username}'s Profile`}
             />
             <div>
-              <h1 className={styles.username}>
-                {userData.username}
-                {isOwnProfile ? "*" : ""}
-              </h1>
+              <h1 className={styles.username}>{userData.username}</h1>
               <p className="text-quaternary ">Joined: {getTimeDifference(userData.dateCreated)}</p>
             </div>
           </div>

@@ -141,3 +141,33 @@ module.exports.verifyTokenMiddleware = async (req, res, next) => {
     });
   }
 };
+
+module.exports.verifyUserID = async (req, res, next) => {
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return res.status(401).json({
+      message: "Access Denied! Unauthorized User",
+    });
+  }
+  const token = authHeader.split("token=")[1];
+
+  if (token === undefined) {
+    return res.status(401).json({
+      message: "Access Denied! Unauthorized User",
+    });
+  } else {
+    jwt.verify(token, config.jwt.secret, (err, authData) => {
+      if (err) {
+        return res.status(403).json(err);
+      } else {
+        const parsedToken = this.parseJWT(token);
+        if (parsedToken.id === parseInt(req.headers.user_id)) {
+          res.locals.userID = parsedToken.id;
+          return next();
+        } else {
+          return res.status(403).json({ message: "User ID doesn't match" });
+        }
+      }
+    });
+  }
+};

@@ -1,19 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import config from "../../config/config";
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./SinglePluginPage.module.css";
+import markdownStyles from "../../components/MarkdownEditor/MarkdownEditor.module.css";
 import User from "../../components/icons/User";
 import Button from "../../components/Button/Button";
 import Download from "../../components/icons/Download";
 import Star from "../../components/icons/Star";
+import Pencil from "../../components/icons/Pencil";
 import Tag from "../../components/Tag/Tag";
 import formatVersion from "../../helpers/versionFormatter";
-import parseMarkdown from "../../helpers/markdownParser";
 import Statistic from "../../components/Statistic/Statistic";
 import ContentNav from "../../components/ContentNav/ContentNav";
 import InfoCard from "../../components/InfoCard/InfoCard";
 import LinkButton from "../../components/LinkButton/LinkButton";
+import TextInput from "../../components/Input/TextInput/TextInput";
+import { checkAuth } from "../../helpers/jwt";
+import { validatePluginForm } from "../../helpers/formValidation";
+import MarkdownEditor from "../../components/MarkdownEditor/MarkdownEditor";
+import TextArea from "../../components/Input/Textarea/TextArea";
+import Camera from "../../components/icons/Camera";
+import X from "../../components/icons/X";
+import Loader from "../../components/Loader/Loader";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import SelectOption from "../../components/SelectOption/SelectOption";
+import Hash from "../../components/icons/Hash";
 
 const SingleServerPage = () => {
   const { id } = useParams();
@@ -24,6 +37,17 @@ const SingleServerPage = () => {
   const [links, setLinks] = useState([]);
   const [updates, setUpdates] = useState([]);
   const [downloads, setDownloads] = useState([]);
+  const [isOwnProfile, setIsOwnProfile] = useState();
+
+  const imageInputRef = useRef();
+  const [editMode, setEditMode] = useState(false);
+  const [formData, setFormData] = useState(null);
+  const [errors, setErrors] = useState([]);
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(image);
+  const [newTags, setNewTags] = useState([]);
+  const [showSaveButton, setShowSaveButton] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const downloadJar = () => {
     addDownload();
@@ -46,12 +70,68 @@ const SingleServerPage = () => {
     }
   };
 
+  const handleChange = (event) => {
+    setFormData({
+      ...formData,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  const toggleNewTag = (tagName) => {
+    const index = newTags.indexOf(tagName);
+    if (index > -1) {
+      const newNewTags = [...newTags];
+      newNewTags.splice(index, 1);
+      setNewTags(newNewTags);
+    } else {
+      setNewTags([...newTags, tagName]);
+    }
+  };
+
+  useEffect(() => {
+    setFormData({ ...formData, tags: newTags });
+  }, [newTags]);
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    setSubmitted(true);
+    axios
+      .post(
+        `${config.api_url}/api/plugins/edit/${id}`,
+        { ...formData, author_id: pluginData[0].author_id },
+        {
+          headers: { "content-type": "multipart/form-data", user_id: pluginData[0].author_id },
+        }
+      )
+      .then((res) => (window.location.href = `/plugin/${id}`))
+      .catch((err) => {
+        console.error(err);
+        setErrors([err.response.data.message]);
+      })
+      .finally(() => setSubmitted(false));
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const startTime = Date.now();
 
       const pluginDataResult = await axios.get(`${config.api_url}/api/plugins/detailed/${id}`);
       setPluginData(pluginDataResult.data);
+      setFormData({
+        image: pluginDataResult.data[0].imgSrc,
+        title: pluginDataResult.data[0].name,
+        summary: pluginDataResult.data[0].description,
+        description: pluginDataResult.data[0].longDescription,
+      });
+      setImage(pluginDataResult.data[0].imgSrc);
+
+      checkAuth((authRes) => {
+        if (authRes) {
+          if (pluginDataResult.data[0].author_id === authRes.data.id) {
+            setIsOwnProfile(true);
+          }
+        }
+      });
 
       window.document.title = pluginDataResult.data[0].name + " - Description";
 
@@ -61,7 +141,7 @@ const SingleServerPage = () => {
       const updateOutput = [];
 
       for (const dataSet of pluginDataResult.data) {
-        const authorUsername = dataSet.username;
+        const authorUsername = dataSet.author_username;
 
         const updateList = dataSet.updateList;
         const updateTitle = dataSet.updateTitle;
@@ -69,7 +149,7 @@ const SingleServerPage = () => {
 
         // Authors
         let isAuthorPresent = false;
-        const authorData = { username: dataSet.username, pfpImgSrc: dataSet.pfpImgSrc };
+        const authorData = { id: dataSet.author_id, username: dataSet.author_username, pfpImgSrc: dataSet.author_pfpImgSrc };
         for (const entry of authorsOutput) {
           if (entry.username === authorUsername) isAuthorPresent = true;
         }
@@ -111,7 +191,6 @@ const SingleServerPage = () => {
 
       setAuthors(authorsOutput);
       setLinks(linkOutput);
-      console.log(linkOutput);
       setTags(tagOutput);
       setUpdates(updateOutput);
 
@@ -121,18 +200,51 @@ const SingleServerPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    setFormData({ ...formData, image: image });
+    if (image != null && typeof image === "object") {
+      setImagePreview(URL.createObjectURL(image));
+    } else {
+      setImagePreview(image);
+    }
+  }, [image]);
+
+  useEffect(() => {
+    setErrors(validatePluginForm(formData));
+  }, [formData]);
+
+  useEffect(() => {
+    if (editMode) {
+      for (const tag of tags) {
+        newTags.push(tag);
+      }
+    }
+    setTimeout(() => {
+      setShowSaveButton(editMode);
+    }, 1);
+  }, [editMode]);
+
   const renderContent = () => {
     window.document.title = pluginData[0].name + " - " + selectedInfo;
 
     switch (selectedInfo) {
       case "Description":
-        return pluginData[0] ? <div className={styles.description}>{parseMarkdown(pluginData[0].longDescription)}</div> : "";
+        if (editMode) {
+          return <MarkdownEditor inputName="description" defaultValue={pluginData[0].longDescription} onChange={handleChange} />;
+        } else {
+          return pluginData[0] ? (
+            <Markdown remarkPlugins={[remarkGfm]} className={markdownStyles.previewContainer}>
+              {pluginData[0].longDescription}
+            </Markdown>
+          ) : (
+            ""
+          );
+        }
 
       case "Updates":
         if (updates.length > 0) {
           return (
             <div className={styles.updatesContainer}>
-              {" "}
               {updates.map((updateObj, index1) => (
                 <div key={index1} className={styles.update}>
                   <p className={styles.updateTitle}>
@@ -154,13 +266,40 @@ const SingleServerPage = () => {
   };
 
   return (
-    <div>
+    <form onSubmit={onSubmit} encType="multipart/form-data">
+      {editMode
+        ? errors.map((error, index) => (
+            <p key={index} className="text-danger mb-3">
+              {error}
+            </p>
+          ))
+        : ""}
+      {submitted ? <Loader /> : ""}
       <div className={styles.heading}>
         <div className={styles.headingInfo}>
-          <img src={pluginData[0].imgSrc ? pluginData[0].imgSrc : "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"} alt={`${pluginData[0].name} logo`} className={styles.logo} />
+          {editMode ? (
+            <div className={styles.editImageContainer}>
+              <img src={imagePreview} className={styles.logo} alt={`${pluginData[0].name} logo`} />
+              <Button icon={<Camera color="var(--primaryColor)" />} onClick={() => imageInputRef.current.click()} className="button-secondary">
+                Change Image
+              </Button>
+              <input ref={imageInputRef} name="image" type="file" accept="image/*" onChange={(e) => setImage(e.target.files[0])} hidden />
+            </div>
+          ) : (
+            <img src={pluginData[0].imgSrc ? pluginData[0].imgSrc : "https://upload.wikimedia.org/wikipedia/en/5/51/Minecraft_cover.png"} alt={`${pluginData[0].name} logo`} className={styles.logo} />
+          )}
           <div>
-            <h1 className="text-primaryy">{pluginData[0].name}</h1>
-            <p className="text-quaternary">{pluginData[0].description}</p>
+            {editMode ? (
+              <div>
+                <TextInput name="title" defaultValue={pluginData[0].name} onChange={handleChange} className={styles.titleInput} />
+                <TextArea name="summary" defaultValue={pluginData[0].description} onChange={handleChange} className={styles.summaryInput} />
+              </div>
+            ) : (
+              <>
+                <h1 className="text-primaryy">{pluginData[0].name}</h1>
+                <p className="text-quaternary">{pluginData[0].description}</p>
+              </>
+            )}
           </div>
         </div>
         <div>
@@ -171,9 +310,31 @@ const SingleServerPage = () => {
           </div>
         </div>
         <div className={styles.headingButtons}>
-          <Button className="button-secondary" onClick={downloadJar} icon={<Download color="var(--primaryColor)" />}>
-            Download
-          </Button>
+          {!editMode ? (
+            <Button className="button-secondary" onClick={downloadJar} icon={<Download color="var(--primaryColor)" />}>
+              Download
+            </Button>
+          ) : (
+            ""
+          )}
+          {isOwnProfile ? (
+            showSaveButton ? (
+              <>
+                <Button className="button-secondary" type="submit" icon={<Pencil color="var(--primaryColor)" width="18" />}>
+                  Save
+                </Button>
+                <Button className="button-quaternary" icon={<X color="var(--primaryColor)" width="18" />} onClick={() => setEditMode(false)}>
+                  Cancel
+                </Button>
+              </>
+            ) : (
+              <Button className="button-quaternary" onClick={() => setEditMode(true)} icon={<Pencil color="var(--primaryColor)" width="18" />}>
+                Edit
+              </Button>
+            )
+          ) : (
+            ""
+          )}
         </div>
       </div>
 
@@ -203,20 +364,26 @@ const SingleServerPage = () => {
             </div>
           </InfoCard>
           <InfoCard title="Tags" className={styles.tags}>
-            {tags.map((tag, index) => (
-              <Tag key={index} name={tag} />
-            ))}
+            {editMode ? (
+              <div>
+                {config.server_tags.map((tag, index) => (
+                  <SelectOption key={index} name={tag} icon={<Hash />} alwaysShowIcon={true} selected={newTags.includes(tag)} onClick={() => toggleNewTag(tag)} />
+                ))}
+              </div>
+            ) : (
+              tags.map((tag, index) => <Tag key={index} name={tag} />)
+            )}
           </InfoCard>
           <InfoCard title="Downloads">
             <div></div>
           </InfoCard>
         </div>
         <div>
-          <ContentNav options={["Description", "Updates", "Reviews"]} handleClick={setSelectedInfo} className={styles.contentNav} />
+          {editMode ? "" : <ContentNav options={["Description", "Updates", "Reviews"]} handleClick={setSelectedInfo} className={styles.contentNav} />}
           {renderContent()}
         </div>
       </div>
-    </div>
+    </form>
   );
 };
 

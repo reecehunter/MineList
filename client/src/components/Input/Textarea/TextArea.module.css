@@ -1,0 +1,14 @@
+.input {
+  padding: 5px 15px;
+  width: 100%;
+  color: var(--primaryColor);
+  background-color: var(--septenaryColor);
+  caret-color: var(--primaryColor);
+  border: none;
+  outline: none;
+  border-radius: var(--borderRadius);
+}
+
+.input:focus {
+  outline: 2px solid var(--secondaryColor);
+}

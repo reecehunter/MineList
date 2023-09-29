@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import styles from "./CreateForm.module.css";
 import axios from "axios";
 import config from "../../config/config";
@@ -16,15 +15,16 @@ import Link from "../icons/Link";
 import Hash from "../icons/Hash";
 import parseMarkdown from "../../helpers/markdownParser";
 import SquareImage from "../SquareImage/SquareImage";
+import Loader from "../Loader/Loader";
 
 const CreateForm = (props) => {
   const { show, setShow } = props;
-  const navigate = useNavigate();
 
   const formContainerRef = useRef();
   const formRef = useRef();
   const imageUploadButtonRef = useRef();
 
+  const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({ title: "", url: "", summary: "", versions: [], tags: [], image: null, description: "", jar: null, links: { 0: { title: "", url: "" } }, price: "0" });
   const [linkCount, setLinkCount] = useState(1);
   const [errors, setErrors] = useState([]);
@@ -58,7 +58,7 @@ const CreateForm = (props) => {
       if (formData.tags.length < 1) newErrors.push("You must select at least 1 tag.");
     } else if (step === 3) {
       if (formData.image === null) newErrors.push("You must upload an image.");
-      if (formData.description.length < 200) newErrors.push("The description must be at least 200 characters.");
+      if (formData.description.length < 100) newErrors.push("The description must be at least 100 characters.");
     } else if (step === 4) {
       if (formData.price === "" || !formData.price) newErrors.push("You must enter a price (put $0 to make it free).");
       const linkRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
@@ -69,7 +69,7 @@ const CreateForm = (props) => {
         if (!link.url || link.url === "") newErrors.push("All links must have a url.");
         if (link.url && link.url.length > 255) newErrors.push("Link URLs must be less than 255 characters.");
       }
-      if (formData.jar === null) newErrors.push("You must upload a plugin jar.");
+      if (!formData.jar) newErrors.push("You must upload a plugin jar.");
     }
     if (newErrors.length === 0) {
       cb(true);
@@ -84,8 +84,6 @@ const CreateForm = (props) => {
     else if (step + amount < 1) return;
     setStep((prev) => prev + amount);
   };
-
-  useEffect(() => console.log(formData), [formData]);
 
   const handleImageChange = (event) => {
     setImage(event.target.files[0]);
@@ -109,20 +107,22 @@ const CreateForm = (props) => {
     });
   };
 
-  useEffect(() => {
-    setFormData({ ...formData, links: links });
-  }, [links]);
-
   const onSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post(`${config.api_url}/api/plugins/create`, formData, {
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      })
-      .then((res) => navigate(`/plugin/${res.data.vanity_url}`))
-      .catch((err) => console.error(err));
+    if (submitted) return;
+    if (type === "Plugin") {
+      setSubmitted(true);
+      axios
+        .post(`${config.api_url}/api/plugins/create`, formData, {
+          headers: { "content-type": "multipart/form-data" },
+        })
+        .then((res) => (window.location.href = `/plugin/${res.data.vanity_url}`))
+        .catch((err) => {
+          console.error(err);
+          setErrors([err.response.data.message]);
+        })
+        .finally(() => setSubmitted(false));
+    }
   };
 
   const toggleUrlBorder = (event) => {
@@ -185,85 +185,6 @@ const CreateForm = (props) => {
   }, [versions]);
 
   useEffect(() => {
-    const typeElement = document.getElementById("createFormType");
-    const titleElement = document.getElementById("createFormTitle");
-    const urlElement = document.getElementById("createFormUrl");
-    const summaryElement = document.getElementById("createFormSummary");
-    const imageElement = document.getElementById("createFormImage");
-    const descriptionElement = document.getElementById("createFormDescription");
-    const versionsElement = document.getElementById("createFormVersions");
-    const tagsElement = document.getElementById("createFormTags");
-    const linksElement = document.getElementById("createFormLinks");
-    const priceElement = document.getElementById("createFormPrice");
-    const jarElement = document.getElementById("createFormJar");
-    const backButton = document.getElementById("createFormBackButton");
-    const continueButton = document.getElementById("createFormContinueButton");
-    const submitButton = document.getElementById("createFormSubmitButton");
-
-    if (step === 1) {
-      typeElement.style.display = "block";
-      titleElement.style.display = "block";
-      urlElement.style.display = "block";
-      summaryElement.style.display = "block";
-      imageElement.style.display = "none";
-      descriptionElement.style.display = "none";
-      versionsElement.style.display = "none";
-      tagsElement.style.display = "none";
-      linksElement.style.display = "none";
-      priceElement.style.display = "none";
-      jarElement.style.display = "none";
-      continueButton.style.width = "100%";
-      continueButton.style.display = "flex";
-      submitButton.style.display = "none";
-    } else if (step === 2) {
-      typeElement.style.display = "none";
-      titleElement.style.display = "none";
-      urlElement.style.display = "none";
-      summaryElement.style.display = "none";
-      imageElement.style.display = "none";
-      descriptionElement.style.display = "none";
-      versionsElement.style.display = "block";
-      tagsElement.style.display = "block";
-      linksElement.style.display = "none";
-      priceElement.style.display = "none";
-      jarElement.style.display = "none";
-      backButton.style.width = "100%";
-      continueButton.style.display = "flex";
-      submitButton.style.display = "none";
-    } else if (step === 3) {
-      typeElement.style.display = "none";
-      titleElement.style.display = "none";
-      urlElement.style.display = "none";
-      summaryElement.style.display = "none";
-      imageElement.style.display = "flex";
-      descriptionElement.style.display = "block";
-      versionsElement.style.display = "none";
-      tagsElement.style.display = "none";
-      linksElement.style.display = "none";
-      priceElement.style.display = "none";
-      jarElement.style.display = "none";
-      backButton.style.width = "100%";
-      continueButton.style.display = "flex";
-      submitButton.style.display = "none";
-    } else if (step === 4) {
-      typeElement.style.display = "none";
-      titleElement.style.display = "none";
-      urlElement.style.display = "none";
-      summaryElement.style.display = "none";
-      imageElement.style.display = "none";
-      descriptionElement.style.display = "none";
-      versionsElement.style.display = "none";
-      tagsElement.style.display = "none";
-      linksElement.style.display = "block";
-      priceElement.style.display = "block";
-      jarElement.style.display = "block";
-      backButton.style.width = "33%";
-      continueButton.style.display = "none";
-      submitButton.style.display = "flex";
-    }
-  }, [step]);
-
-  useEffect(() => {
     if (show) {
       formContainerRef.current.classList.add(styles.show);
       setTimeout(() => {
@@ -279,11 +200,15 @@ const CreateForm = (props) => {
     }
   }, [show]);
 
+  useEffect(() => {
+    setFormData({ ...formData, links: links });
+  }, [links]);
+
   return (
     <div ref={formContainerRef} className={styles.container}>
       <form ref={formRef} encType="multipart/form-data" className={styles.form} onSubmit={onSubmit}>
         <div className={styles.header}>
-          <h2>Create a Project</h2>
+          <h2>Create a Project {submitted ? <Loader /> : ""}</h2>
           <X className={styles.xButton} onClick={() => setShow(false)} />
         </div>
 
@@ -293,7 +218,7 @@ const CreateForm = (props) => {
               {error}
             </p>
           ))}
-          <div id="createFormType">
+          <div id="createFormType" className={step === 1 ? "" : styles.hide}>
             <label htmlFor="type">
               Type<span className={styles.required}>*</span>
             </label>
@@ -304,14 +229,14 @@ const CreateForm = (props) => {
             </div>
           </div>
 
-          <div id="createFormTitle">
+          <div id="createFormTitle" className={step === 1 ? "" : styles.hide}>
             <label htmlFor="title">
               Name<span className={styles.required}>*</span>
             </label>
             <input name="title" type="text" placeholder="Title" onChange={handleChange} className={styles.nameInput} />
           </div>
 
-          <div id="createFormUrl">
+          <div id="createFormUrl" className={step === 1 ? "" : styles.hide}>
             <label htmlFor="url">
               URL<span className={styles.required}>*</span>
             </label>
@@ -323,7 +248,7 @@ const CreateForm = (props) => {
             </div>
           </div>
 
-          <div id="createFormSummary">
+          <div id="createFormSummary" className={step === 1 ? "" : styles.hide}>
             <label htmlFor="summary">
               Summary<span className={styles.required}>*</span>
             </label>
@@ -331,7 +256,7 @@ const CreateForm = (props) => {
             <textarea name="summary" type="summary" placeholder="Summary" onChange={handleChange} />
           </div>
 
-          <div id="createFormImage" className={styles.imageContainer}>
+          <div id="createFormImage" className={`${step === 3 ? "" : styles.hide} ${styles.imageContainer}`}>
             <div>
               <label htmlFor="image">
                 {type} Image<span className={styles.required}>*</span>
@@ -343,7 +268,7 @@ const CreateForm = (props) => {
             {imagePreview ? <SquareImage src={imagePreview} alt={`${type} display`} /> : ""}
           </div>
 
-          <div id="createFormDescription">
+          <div id="createFormDescription" className={step === 3 ? "" : styles.hide}>
             <label htmlFor="description">
               Description<span className={styles.required}>*</span>
             </label>
@@ -380,57 +305,36 @@ const CreateForm = (props) => {
             )}
           </div>
 
-          <div id="createFormVersions">
+          <div id="createFormVersions" className={step === 2 ? "" : styles.hide}>
             <label htmlFor="versions">
               Working Versions<span className={styles.required}>*</span>
             </label>
             <div className={styles.tags}>
-              <SelectOption name="1.7" icon="" selected={versions.includes(1)} onClick={() => toggleVersion(1)} />
-              <SelectOption name="1.8" icon="" selected={versions.includes(2)} onClick={() => toggleVersion(2)} />
-              <SelectOption name="1.9" icon="" selected={versions.includes(3)} onClick={() => toggleVersion(3)} />
-              <SelectOption name="1.10" icon="" selected={versions.includes(4)} onClick={() => toggleVersion(4)} />
-              <SelectOption name="1.11" icon="" selected={versions.includes(5)} onClick={() => toggleVersion(5)} />
-              <SelectOption name="1.12" icon="" selected={versions.includes(6)} onClick={() => toggleVersion(6)} />
-              <SelectOption name="1.13" icon="" selected={versions.includes(7)} onClick={() => toggleVersion(7)} />
-              <SelectOption name="1.14" icon="" selected={versions.includes(8)} onClick={() => toggleVersion(8)} />
-              <SelectOption name="1.15" icon="" selected={versions.includes(9)} onClick={() => toggleVersion(9)} />
-              <SelectOption name="1.16" icon="" selected={versions.includes(10)} onClick={() => toggleVersion(10)} />
-              <SelectOption name="1.17" icon="" selected={versions.includes(11)} onClick={() => toggleVersion(11)} />
-              <SelectOption name="1.18" icon="" selected={versions.includes(12)} onClick={() => toggleVersion(12)} />
-              <SelectOption name="1.19" icon="" selected={versions.includes(13)} onClick={() => toggleVersion(13)} />
-              <SelectOption name="1.20" icon="" selected={versions.includes(14)} onClick={() => toggleVersion(14)} />
+              {config.server_versions.map((version, index) => (
+                <SelectOption key={index} name={version} icon="" selected={versions.includes(index + 1)} onClick={() => toggleVersion(index + 1)} />
+              ))}
             </div>
           </div>
 
-          <div id="createFormTags">
+          <div id="createFormTags" className={step === 2 ? "" : styles.hide}>
             <label htmlFor="tags">
               Tags<span className={styles.required}>*</span>
             </label>
             <div className={styles.tags}>
-              <SelectOption name="Chat" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("1")} onClick={() => toggleTag("1")} />
-              <SelectOption name="Utility" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("2")} onClick={() => toggleTag("2")} />
-              <SelectOption name="Economy" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("3")} onClick={() => toggleTag("3")} />
-              <SelectOption name="Fun" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("4")} onClick={() => toggleTag("4")} />
-              <SelectOption name="Management" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("5")} onClick={() => toggleTag("5")} />
-              <SelectOption name="Adventure" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("6")} onClick={() => toggleTag("6")} />
-              <SelectOption name="Cursed" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("7")} onClick={() => toggleTag("7")} />
-              <SelectOption name="Equipment" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("8")} onClick={() => toggleTag("8")} />
-              <SelectOption name="Magic" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("9")} onClick={() => toggleTag("9")} />
-              <SelectOption name="Minigame" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("10")} onClick={() => toggleTag("10")} />
-              <SelectOption name="Mobs" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("11")} onClick={() => toggleTag("11")} />
-              <SelectOption name="Optimization" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("12")} onClick={() => toggleTag("12")} />
-              <SelectOption name="World Generation" icon={<Hash />} alwaysShowIcon={true} selected={tags.includes("13")} onClick={() => toggleTag("13")} />
+              {config.server_tags.map((tag, index) => (
+                <SelectOption key={index} name={tag} icon={<Hash />} alwaysShowIcon={true} selected={tags.includes(index + 1)} onClick={() => toggleTag(index + 1)} />
+              ))}
             </div>
           </div>
 
-          <div id="createFormPrice" className={styles.priceContainer}>
+          <div id="createFormPrice" className={`${step === 4 ? "" : styles.hide} ${styles.priceContainer}`}>
             <label htmlFor="price">Price</label>
             <p>
               $<input name="price" type="number" defaultValue={0} onChange={handleChange} />
             </p>
           </div>
 
-          <div id="createFormLinks">
+          <div id="createFormLinks" className={step === 4 ? "" : styles.hide}>
             <label htmlFor="link">Links</label>
             {[...Array(linkCount)].map((input, index) => (
               <div key={index} className={styles.link}>
@@ -447,7 +351,7 @@ const CreateForm = (props) => {
             </Button>
           </div>
 
-          <div id="createFormJar">
+          <div id="createFormJar" className={step === 4 ? "" : styles.hide}>
             <label htmlFor="jar">Upload Jar</label>
             <input name="jar" type="file" accept=".jar" onChange={handleJarChange} />
           </div>
@@ -457,35 +361,42 @@ const CreateForm = (props) => {
               id="createFormBackButton"
               className="button-quaternary"
               icon={<LeftArrow color="var(--primaryColor)" />}
-              onClick={() =>
-                validateStep((res) => {
-                  if (res) changeStep(-1);
-                })
-              }
+              onClick={() => {
+                changeStep(-1);
+                setErrors([]);
+              }}
             >
               Back
             </Button>
-            <Button
-              id="createFormContinueButton"
-              className="button-secondary"
-              icon={<RightArrow color="var(--primaryColor)" />}
-              onClick={() =>
-                validateStep((res) => {
-                  if (res) changeStep(1);
-                })
-              }
-            >
-              Continue
-            </Button>
-            <Button
-              id="createFormSubmitButton"
-              icon={<PlusSquare color="var(--primaryColor)" />}
-              className={`button button-secondary ${styles.submitButton}`}
-              type={errors.length === 0 ? "submit" : "button"}
-              onClick={() => validateStep(() => {})}
-            >
-              Create {type}
-            </Button>
+            {step !== 4 ? (
+              <Button
+                id="createFormContinueButton"
+                className={`${styles.continueButton} button-secondary`}
+                icon={<RightArrow color="var(--primaryColor)" />}
+                onClick={() =>
+                  validateStep((res) => {
+                    if (res) changeStep(1);
+                  })
+                }
+              >
+                Continue
+              </Button>
+            ) : (
+              ""
+            )}
+            {step === 4 ? (
+              <Button
+                id="createFormSubmitButton"
+                icon={<PlusSquare color="var(--primaryColor)" />}
+                className={`button button-secondary ${styles.submitButton}`}
+                type={errors.length === 0 ? "submit" : "button"}
+                onClick={() => validateStep(() => {})}
+              >
+                Create {type}
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </form>

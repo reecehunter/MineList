@@ -6,6 +6,10 @@
   display: block !important;
 }
 
+.hide {
+  display: none;
+}
+
 .container {
   position: absolute;
   display: none;
@@ -40,6 +44,11 @@
   background-color: var(--septenaryColor);
   border-top-left-radius: var(--borderRadius);
   border-top-right-radius: var(--borderRadius);
+}
+.header > h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--contentGap);
 }
 
 .xButton {
@@ -137,6 +146,7 @@
 /*   */
 
 .imageContainer {
+  display: flex;
   justify-content: space-between;
 }
 
@@ -224,7 +234,8 @@
 
 /*   */
 
-.submitButton {
+.submitButton,
+.continueButton {
   width: 100%;
 }
 

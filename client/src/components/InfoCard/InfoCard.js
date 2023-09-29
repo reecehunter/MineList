@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./InfoCard.module.css";
 
 const InfoCard = (props) => {
-  const { title, children, className } = props;
+  const { title, children, className = "" } = props;
 
   return (
     <div className={`${styles.infoCard} ${className}`}>
