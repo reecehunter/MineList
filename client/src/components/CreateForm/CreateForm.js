@@ -3,7 +3,7 @@ import styles from "./CreateForm.module.css";
 import axios from "axios";
 import config from "../../config/config";
 import Button from "../../components/Button/Button";
-import SelectOption from "../SelectOption/SelectOption";
+import SelectOption from "../Input/SelectOption/SelectOption";
 import RightArrow from "../icons/RightArrow";
 import LeftArrow from "../icons/LeftArrow";
 import X from "../icons/X";

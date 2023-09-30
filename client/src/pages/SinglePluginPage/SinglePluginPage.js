@@ -9,6 +9,7 @@ import Button from "../../components/Button/Button";
 import Download from "../../components/icons/Download";
 import Star from "../../components/icons/Star";
 import Pencil from "../../components/icons/Pencil";
+import Save from "../../components/icons/Save";
 import Tag from "../../components/Tag/Tag";
 import formatVersion from "../../helpers/versionFormatter";
 import Statistic from "../../components/Statistic/Statistic";
@@ -25,7 +26,7 @@ import X from "../../components/icons/X";
 import Loader from "../../components/Loader/Loader";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import SelectOption from "../../components/SelectOption/SelectOption";
+import SelectOption from "../../components/Input/SelectOption/SelectOption";
 import Hash from "../../components/icons/Hash";
 
 const SingleServerPage = () => {
@@ -77,14 +78,13 @@ const SingleServerPage = () => {
     });
   };
 
-  const toggleNewTag = (tagName) => {
-    const index = newTags.indexOf(tagName);
-    if (index > -1) {
+  const toggleNewTag = (configIndex) => {
+    if (newTags.includes(configIndex)) {
       const newNewTags = [...newTags];
-      newNewTags.splice(index, 1);
+      newNewTags.splice(newNewTags.indexOf(configIndex), 1);
       setNewTags(newNewTags);
     } else {
-      setNewTags([...newTags, tagName]);
+      setNewTags([...newTags, configIndex]);
     }
   };
 
@@ -216,7 +216,7 @@ const SingleServerPage = () => {
   useEffect(() => {
     if (editMode) {
       for (const tag of tags) {
-        newTags.push(tag);
+        newTags.push(config.server_tags.indexOf(tag));
       }
     }
     setTimeout(() => {
@@ -320,7 +320,7 @@ const SingleServerPage = () => {
           {isOwnProfile ? (
             showSaveButton ? (
               <>
-                <Button className="button-secondary" type="submit" icon={<Pencil color="var(--primaryColor)" width="18" />}>
+                <Button className="button-secondary" type="submit" icon={<Save color="var(--primaryColor)" width="18" />}>
                   Save
                 </Button>
                 <Button className="button-quaternary" icon={<X color="var(--primaryColor)" width="18" />} onClick={() => setEditMode(false)}>
@@ -363,15 +363,26 @@ const SingleServerPage = () => {
               ))}
             </div>
           </InfoCard>
-          <InfoCard title="Tags" className={styles.tags}>
+          <InfoCard title="Tags">
             {editMode ? (
-              <div>
+              <div className={styles.tags}>
                 {config.server_tags.map((tag, index) => (
-                  <SelectOption key={index} name={tag} icon={<Hash />} alwaysShowIcon={true} selected={newTags.includes(tag)} onClick={() => toggleNewTag(tag)} />
+                  <SelectOption
+                    key={index}
+                    name={tag}
+                    icon={<Hash />}
+                    alwaysShowIcon={true}
+                    selected={newTags.includes(config.server_tags.indexOf(tag))}
+                    onClick={() => toggleNewTag(config.server_tags.indexOf(tag))}
+                  />
                 ))}
               </div>
             ) : (
-              tags.map((tag, index) => <Tag key={index} name={tag} />)
+              <div className={styles.tags}>
+                {tags.map((tag, index) => (
+                  <Tag key={index} name={tag} />
+                ))}
+              </div>
             )}
           </InfoCard>
           <InfoCard title="Downloads">

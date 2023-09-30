@@ -165,18 +165,40 @@ module.exports.createOne = async (req, res) => {
 };
 
 module.exports.editOne = async (req, res) => {
+  const connection = await mysql.createConnection(config.db);
+
   try {
-    const result = await db.query(`
-    UPDATE plugins
-    SET name="${req.body.title}",
-      description="${req.body.summary}",
-      longDescription="${req.body.description}"
-      ${req.files.image ? `, imgSrc="${req.files.image[0].key}"` : ""}
-    WHERE id=${req.params.id};`);
-    return res.json(result);
+    await connection.query("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+    await connection.beginTransaction();
+
+    // Update the plugin
+    if (req.files.image) {
+      await connection.query("UPDATE plugins SET name=?, description=?, longDescription=?, imgSrc=? WHERE id=?;", [
+        req.body.title,
+        req.body.summary,
+        req.body.description,
+        req.files.image[0].key,
+        req.params.id,
+      ]);
+    } else {
+      await connection.query("UPDATE plugins SET name=?, description=?, longDescription=? WHERE id=?;", [req.body.title, req.body.summary, req.body.description, req.params.id]);
+    }
+
+    // Update the plugin tags
+    if (req.body.tags) {
+      const tags = [];
+      for (const tag of req.body.tags) tags.push([parseInt(tag), req.params.id]);
+      await connection.query(`DELETE FROM plugin_tags WHERE plugin_id=?;`, [req.params.id]);
+      await connection.query(`INSERT IGNORE INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
+    }
+
+    await connection.commit();
+
+    return res.json("ok");
   } catch (err) {
-    console.error(err);
-    return res.status(500).json(err);
+    await connection.rollback();
+    console.error(`Error occurred while updating plugin: ${err.message}`, err);
+    res.status(500).send({ message: err.message });
   }
 };
 

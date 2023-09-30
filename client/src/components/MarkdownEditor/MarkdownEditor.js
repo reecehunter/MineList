@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarkdownEditor.module.css";
-import parseMarkdown from "../../helpers/markdownParser";
 import Eye from "../icons/Eye";
 import Pencil from "../icons/Pencil";
-import SelectOption from "../SelectOption/SelectOption";
+import SelectOption from "../Input/SelectOption/SelectOption";
 import TextArea from "../Input/Textarea/TextArea";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";

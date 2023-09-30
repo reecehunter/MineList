@@ -4,21 +4,25 @@
   background-color: var(--tertiaryColor);
 }
 .infoCard > div:not(:first-child) {
-  padding: 10px;
+  padding: var(--contentGap);
+  padding-top: 0;
 }
 .infoCard > p {
   color: var(--quaternaryColor);
 }
 
+.infoCardHeader {
+  padding: var(--contentGap);
+}
 .infoCardHeader > h5 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--contentGap);
+  /* padding: var(--contentGap); */
   margin: 0;
   border-top-left-radius: var(--borderRadius);
   border-top-right-radius: var(--borderRadius);
-  background-color: var(--septenaryColor);
+  /* background-color: var(--septenaryColor); */
   color: var(--primaryColor);
 }
 .infoCardHeader > h5 > a {

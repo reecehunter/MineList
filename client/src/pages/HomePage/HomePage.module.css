@@ -1,26 +1,72 @@
 .heading {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .selectContainer {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .select {
-    border: none;
-    border-radius: var(--borderRadius);
-    padding: 10px 15px;
-    font-size: 16px;
-    color: var(--primaryColor);
-    background-color: var(--secondaryColor);
-    align-self: flex-end;
+  border: none;
+  border-radius: var(--borderRadius);
+  padding: 10px 15px;
+  font-size: 16px;
+  color: var(--primaryColor);
+  background-color: var(--secondaryColor);
+  align-self: flex-end;
 }
 
 .select ~ p {
-    color: var(--quaternaryColor);
-    margin-top: 5px;
+  color: var(--quaternaryColor);
+  margin-top: 5px;
+}
+
+/*   */
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: calc(var(--contentGap) * 4) auto;
+  max-width: 75%;
+}
+.header > h1 {
+  color: var(--primaryColor);
+  margin: 0;
+}
+
+.searchInput {
+  padding: var(--contentGap) !important;
+  margin: var(--contentGap) 0;
+}
+
+.filterOptionsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--contentGap);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 2fr 5fr;
+  gap: var(--contentGap);
+}
+
+.categoriesContainer {
+  padding: var(--contentGap);
+  color: var(--primaryColor);
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
+}
+.categoriesContainer > div {
+  margin-bottom: var(--contentGap);
+}
+
+.tagsContainer {
+  display: flexbox;
+  gap: 10px;
 }

@@ -19,7 +19,7 @@ const NavBar = () => {
   }, []);
 
   return (
-    <Navbar expand="lg" className="bg-body-primary py-4">
+    <Navbar expand="lg" className="bg-body-primary">
       <Container>
         <Navbar.Brand href="/" className="text-light">
           <img src="https://freepngimg.com/thumb/minecraft/11-2-minecraft-diamond-png.png" width="35" height="30" className="d-inline-block align-center" alt="Logo" /> MineList
