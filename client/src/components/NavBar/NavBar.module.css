@@ -1,0 +1,13 @@
+.container {
+  margin: var(--contentGap) 0;
+}
+
+.darkModeButton {
+  cursor: pointer;
+}
+
+.rightSide {
+  display: flex;
+  align-items: center;
+  gap: var(--contentGap);
+}

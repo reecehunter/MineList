@@ -13,11 +13,37 @@ import SelectCheckbox from "../../components/Input/SelectCheckbox/SelectCheckbox
 
 const HomePage = () => {
   const [pluginData, setPluginData] = useState([]);
+  const [filteredPluginData, setFilteredPluginData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [filter, setfilter] = useState("Trending");
+  const [filter, setfilter] = useState("Most Downloaded");
   const [platform, setPlatform] = useState(null);
   const [categories, setCategories] = useState([]);
   const [versions, setVersions] = useState([]);
+
+  function filterSearch() {
+    if (searchQuery.length === 0) {
+      setFilteredPluginData(pluginData);
+    } else {
+      setFilteredPluginData([...pluginData].filter((plugin) => plugin.name.toLowerCase().startsWith(searchQuery.toLowerCase())));
+    }
+  }
+
+  function filterFilterOptions() {
+    switch (filter) {
+      case "Trending":
+        setFilteredPluginData(pluginData);
+        break;
+      case "Most Downloaded":
+        setFilteredPluginData([...pluginData].sort((pluginA, pluginB) => pluginB.downloads - pluginA.downloads));
+        break;
+      case "Recently Updated":
+        setFilteredPluginData([...pluginData].sort((pluginA, pluginB) => new Date(pluginB.date_modified) - new Date(pluginA.date_modified)));
+        break;
+      case "Newest":
+        setFilteredPluginData([...pluginData].sort((pluginA, pluginB) => new Date(pluginB.date_created) - new Date(pluginA.date_created)));
+        break;
+    }
+  }
 
   function togglePlatform(platformName) {
     if (platform === platformName) {
@@ -53,9 +79,14 @@ const HomePage = () => {
     const fetchData = async () => {
       const res = await axios.get("http://localhost:5050/api/plugins");
       setPluginData(res.data);
+      setFilteredPluginData(res.data);
     };
     fetchData();
   }, []);
+
+  useEffect(() => filterSearch(), [searchQuery]);
+
+  useEffect(() => filterFilterOptions(), [filter]);
 
   return (
     <div>
@@ -90,7 +121,7 @@ const HomePage = () => {
             ))}
           </div>
         </div>
-        <div>{pluginData ? <PluginCardFeed pluginData={pluginData} /> : "Loading..."}</div>
+        <div>{pluginData ? <PluginCardFeed pluginData={filteredPluginData} /> : "Loading..."}</div>
       </div>
     </div>
   );

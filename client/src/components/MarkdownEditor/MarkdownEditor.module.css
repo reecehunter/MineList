@@ -89,9 +89,9 @@
 }
 .previewContainer th {
   border-radius: var(--borderRadius);
-  background-color: var(--backgroundColor);
+  background-color: var(--septenaryColor);
 }
 .previewContainer tr:nth-child(even) {
   border-radius: var(--borderRadius);
-  background-color: var(--backgroundColor);
+  background-color: var(--septenaryColor);
 }

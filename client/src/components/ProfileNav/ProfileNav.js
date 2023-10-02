@@ -17,19 +17,24 @@ const ProfileNav = (props) => {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [userData, setUserData] = useState({ username: "", pfpImgSrc: "" });
 
-  const handleAuthCheck = (link) => {
+  function handleAuthCheck(link) {
     if (!isAuthenticated) {
       window.location.href = "/auth/sign-in";
     } else {
       console.log("link: " + link);
       window.location.href = link;
     }
-  };
+  }
 
-  const openCreateModal = () => {
+  function openCreateModal() {
     setShowCreateForm(true);
     setShow(false);
-  };
+  }
+
+  function signOut() {
+    document.cookie = null;
+    window.location.href = "/servers";
+  }
 
   useEffect(() => {
     if (document.cookie) {
@@ -83,7 +88,7 @@ const ProfileNav = (props) => {
           <Gear /> Settings
         </Link>
         <hr className={styles.line} />
-        <Link to="/auth/sign-out" className={styles.signOut}>
+        <Link className={styles.signOut} onClick={signOut}>
           <SignIn /> Sign Out
         </Link>
       </div>

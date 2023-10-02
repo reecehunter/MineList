@@ -1,23 +1,37 @@
 .form {
-    width: 500px;
-    padding: 30px;
-    border-radius: var(--borderRadius);
-    background-color: var(--tertiaryColor);
+  width: 500px;
+  margin: 0 auto;
+  padding: var(--contentGap);
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
+}
+
+.form > h1 {
+  color: var(--primaryColor);
+  margin: 0 0 var(--contentGap) 0;
 }
 
 .form > div {
-    margin: 10px 0;
+  margin: var(--contentGap) 0;
 }
 
 .form > div > * {
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .form > div > label {
-    color: var(--primaryColor);
+  color: var(--primaryColor);
 }
 
-.form > input[type="submit"] {
-    width: 100%;
+.form > button {
+  width: 100%;
+}
+
+.loginPrompt {
+  margin: var(--contentGap) 0 0 0;
+  color: var(--quaternaryColor);
+}
+.loginPrompt > a {
+  color: var(--quaternaryColor);
 }

@@ -1,5 +1,44 @@
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  margin: 0 auto;
+  margin: calc(var(--contentGap) * 5) auto calc(var(--contentGap) * 2) auto;
   padding: var(--contentGap);
+  color: var(--quaternaryColor);
+}
+
+.container > div {
+  margin: 0 auto;
+}
+
+.container h4,
+.container p,
+.container a {
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.container h4 {
+  font-size: 18px;
+  color: var(--primaryColor);
+  font-weight: bold;
+}
+
+.container a {
+  display: block;
+  color: var(--quaternaryColor);
+  text-decoration: none;
+}
+.container a:hover {
+  text-decoration: underline;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mojangLegal {
+  font-size: 12px;
 }

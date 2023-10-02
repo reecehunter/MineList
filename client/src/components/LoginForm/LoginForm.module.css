@@ -1,23 +1,38 @@
-.form {
-    width: 500px;
-    padding: 30px;
-    border-radius: var(--borderRadius);
-    background-color: var(--tertiaryColor);
+.header {
+  color: var(--primaryColor);
+  text-align: center;
+  margin: 0;
 }
 
-.form > div {
-    margin: 10px 0;
+.form {
+  margin: 0 auto;
+  width: 500px;
+  padding: var(--contentGap);
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
 }
 
 .form > div > * {
-    display: block;
-    width: 100%;
+  display: block;
+  width: 100%;
 }
 
 .form > div > label {
-    color: var(--primaryColor);
+  color: var(--primaryColor);
 }
 
-.form > input[type="submit"] {
-    width: 100%;
+.form input {
+  margin-bottom: var(--contentGap);
+}
+
+.form > button {
+  width: 100%;
+}
+
+.registerPrompt {
+  color: var(--quaternaryColor);
+  margin: var(--contentGap) 0 0 0;
+}
+.registerPrompt > a {
+  color: var(--quaternaryColor);
 }

@@ -6,21 +6,30 @@
 }
 
 :root {
+  --successColor: #10985d;
+  --dangerColor: #f35353;
+  --borderRadius: 3px;
+  --contentGap: 15px;
+
+  /* Dark Mode */
   --primaryColor: #eaeaea;
   --secondaryColor: #1684df;
   --tertiaryColor: #12202f;
   --quaternaryColor: rgb(116, 116, 116);
   --septenaryColor: #1c3248;
   --octonaryColor: #132639;
-
   --secondaryOverlay: rgba(22, 133, 223, 0.3);
-  --dangerColor: #f35353;
-
   --backgroundColor: #03101d;
 
-  /* --borderRadius: 5px; */
-  --borderRadius: 3px;
-  --contentGap: 15px;
+  /* Light Mode */
+  --primaryColor-Light: #171717;
+  --secondaryColor-Light: #1684df;
+  --tertiaryColor-Light: #959fa9;
+  --quaternaryColor-Light: #254966;
+  --septenaryColor-Light: #647a90;
+  --octonaryColor-Light: #132639;
+  --secondaryOverlay-Light: rgba(22, 133, 223, 0.3);
+  --backgroundColor-Light: #cbdbea;
 }
 
 /* LAYOUT */

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import config from "../../config/config";
 import styles from "./RegistrationForm.module.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import TextInput from "../Input/TextInput/TextInput";
+import Button from "../Button/Button";
+import PlusSquare from "../icons/PlusSquare";
 
 const RegistrationForm = () => {
   const [formData, setFormData] = useState({ username: "username", email: "email@email.email", password: "password", confirmPassword: "password" });
@@ -39,7 +42,6 @@ const RegistrationForm = () => {
       })
       .then((res) => {
         localStorage.setItem("username", res.data.user.username);
-        // localStorage.setItem("jwt", res.data.jwt);
         navigate("/dashboard");
       })
       .catch((err) => {
@@ -59,27 +61,35 @@ const RegistrationForm = () => {
         </p>
       ))}
 
+      <h1>Create an Account</h1>
+
       <div>
         <label htmlFor="username">Username</label>
-        <input name="username" type="text" placeholder="Username" onChange={handleChange} />
+        <TextInput name="username" type="text" placeholder="Username" onChange={handleChange} />
       </div>
 
       <div>
         <label htmlFor="email">Email</label>
-        <input name="email" type="text" placeholder="Email" onChange={handleChange} />
+        <TextInput name="email" type="text" placeholder="Email" onChange={handleChange} />
       </div>
 
       <div>
         <label htmlFor="password">Password</label>
-        <input name="password" type="password" placeholder="Password" onChange={handleChange} />
+        <TextInput name="password" type="password" placeholder="Password" onChange={handleChange} />
       </div>
 
       <div>
         <label htmlFor="confirmPassword">Confirm Password</label>
-        <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} />
+        <TextInput name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} />
       </div>
 
-      <input type="submit" value="Create Account" className="button button-secondary" />
+      <Button type="submit" icon={<PlusSquare color="var(--primaryColor)" />} className="button-secondary">
+        Create Account
+      </Button>
+
+      <p className={styles.loginPrompt}>
+        Already have an account? <Link to="/auth/sign-in">log in</Link>.
+      </p>
     </form>
   );
 };

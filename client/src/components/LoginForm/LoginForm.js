@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import config from "../../config/config";
 import styles from "./LoginForm.module.css";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import TextInput from "../Input/TextInput/TextInput";
+import User from "../icons/User";
+import Button from "../Button/Button";
 
 const LoginForm = () => {
   const [formData, setFormData] = useState({ username: "username", password: "password" });
@@ -40,6 +43,7 @@ const LoginForm = () => {
 
   return (
     <form className={styles.form} onSubmit={onSubmit}>
+      <h1 className={styles.header}>Log In</h1>
       {errors.map((error, index) => (
         <p key={index} className="text-danger mb-3">
           {error}
@@ -48,14 +52,20 @@ const LoginForm = () => {
 
       <div>
         <label htmlFor="username">Username</label>
-        <input name="username" type="text" placeholder="Username" onChange={handleChange} />
+        <TextInput name="username" placeholder="Username" onChange={handleChange} />
       </div>
       <div>
         <label htmlFor="password">Password</label>
-        <input name="password" type="password" placeholder="Password" onChange={handleChange} />
+        <TextInput name="password" type="password" placeholder="Password" onChange={handleChange} />
       </div>
 
-      <input type="submit" value="Log In" className="button button-secondary" />
+      <Button type="submit" icon={<User color="var(--primaryColor)" />} className="button-secondary">
+        Log In
+      </Button>
+
+      <p className={styles.registerPrompt}>
+        Don't have an account? <Link to="/auth/sign-up">Create one</Link>.
+      </p>
     </form>
   );
 };
