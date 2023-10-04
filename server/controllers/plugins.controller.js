@@ -237,6 +237,14 @@ module.exports.editOne = async (req, res) => {
       await connection.query(`INSERT IGNORE INTO plugin_versions (plugin_id, version_id) VALUES ?;`, [versions]);
     }
 
+    // Update the plugin links
+    if (req.body.links) {
+      const links = [];
+      for (const link of req.body.links) links.push([link.title, link.url, req.params.id]);
+      await connection.query(`DELETE FROM links WHERE plugin_id=?;`, [req.params.id]);
+      await connection.query(`INSERT INTO links (title, url, plugin_id) VALUES ?;`, [links]);
+    }
+
     await connection.commit();
 
     return res.json("ok");

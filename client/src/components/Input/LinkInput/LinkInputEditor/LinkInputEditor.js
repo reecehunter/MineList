@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./LinkInputEditor.module.css";
 import LinkInput from "../LinkInput/LinkInput";
 import Button from "../../../Button/Button";
 import { Link } from "react-router-dom";
 
 const LinkInputEditor = (props) => {
-  const { links, setLinks } = props;
+  const { defaultLinks = [], links = {}, setLinks } = props;
   const [linkCount, setLinkCount] = useState(1);
 
   function handleLinkChange(event, index, titleOrURL) {
@@ -16,7 +16,13 @@ const LinkInputEditor = (props) => {
   }
 
   function addLinkInput() {
-    if (linkCount < 5) setLinkCount((prev) => prev + 1);
+    if (linkCount < 5) {
+      setLinks((prev) => {
+        const newLinks = { ...prev };
+        newLinks[links.length] = { title: null, url: null };
+        return newLinks;
+      });
+    }
   }
 
   function removeLinkInput(index) {
@@ -25,14 +31,25 @@ const LinkInputEditor = (props) => {
       delete newLinks[index];
       return newLinks;
     });
-    setLinkCount((prev) => prev - 1);
   }
+
+  useEffect(() => setLinks({ ...links, defaultLinks }), []);
+  // useEffect(() => setLinks((prev) => defaultLinks.concat(prev)), []);
+
+  useEffect(() => console.log(links), [links]);
 
   return (
     <div className={styles.container}>
       <label htmlFor="link">Links</label>
-      {[...Array(linkCount)].map((input, index) => (
-        <LinkInput onTitleChange={(e) => handleLinkChange(e, index, "title")} onURLChange={(e) => handleLinkChange(e, index, "url")} onDelete={() => removeLinkInput(index)} />
+      {Object.values(links).map((link, index) => (
+        <LinkInput
+          key={index}
+          defaultTitle={link.title}
+          defaultURL={link.url}
+          onTitleChange={(e) => handleLinkChange(e, index, "title")}
+          onURLChange={(e) => handleLinkChange(e, index, "url")}
+          onDelete={() => removeLinkInput(index)}
+        />
       ))}
       <Button onClick={addLinkInput} icon={<Link width={16} height={16} color="var(--primaryColor)" />} className={`${styles.addLinkButton} button-quaternary`}>
         Add Link

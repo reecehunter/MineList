@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./LinkInput.module.css";
 import RightArrow from "../../../icons/RightArrow";
 import Trashcan from "../../../icons/Trashcan";
+import TextInput from "../../TextInput/TextInput";
 
 const LinkInput = (props) => {
-  const { onTitleChange, onURLChange, onDelete } = props;
+  const { defaultTitle = "", defaultURL = "", onTitleChange, onURLChange, onDelete } = props;
+
+  useEffect(() => console.log(defaultTitle), [defaultTitle]);
 
   return (
     <div className={styles.link}>
-      <input type="text" placeholder="Link Title" onChange={onTitleChange} />
+      <TextInput type="text" defaultValue={defaultTitle} placeholder="Link Title" onChange={onTitleChange} />
       <RightArrow width={22} height={22} />
-      <input type="text" placeholder="URL" onChange={onURLChange} />
+      <TextInput type="text" defaultValue={defaultURL} placeholder="URL" onChange={onURLChange} />
       <Trashcan width={28} height={28} color="var(--primaryColor)" className={styles.deleteLinkButton} onClick={onDelete} />
     </div>
   );

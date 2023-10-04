@@ -28,6 +28,7 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import SelectOption from "../../components/Input/SelectOption/SelectOption";
 import Hash from "../../components/icons/Hash";
+import LinkInputEditor from "../../components/Input/LinkInput/LinkInputEditor/LinkInputEditor";
 
 const SingleServerPage = () => {
   const { vanityURL } = useParams();
@@ -51,6 +52,7 @@ const SingleServerPage = () => {
   const [newTags, setNewTags] = useState([]);
   const [newPlatforms, setNewPlatforms] = useState([]);
   const [newVersions, setNewVersions] = useState([]);
+  const [newLinks, setNewLinks] = useState({});
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -123,6 +125,11 @@ const SingleServerPage = () => {
   useEffect(() => {
     setFormData({ ...formData, versions: newVersions });
   }, [newVersions]);
+
+  useEffect(() => {
+    console.log(newLinks);
+    setFormData({ ...formData, links: newLinks });
+  }, [newLinks]);
 
   function onSubmit(event) {
     event.preventDefault();
@@ -265,12 +272,10 @@ const SingleServerPage = () => {
       for (const platform of platforms) {
         newPlatforms.push(config.server_platforms.indexOf(platform));
       }
-      console.log(config.server_versions);
       for (const version of versions) {
-        console.log(version);
-        console.log(config.server_versions.indexOf(version));
         newVersions.push(config.server_versions.indexOf(version));
       }
+      setNewLinks(links);
     }
     setTimeout(() => {
       setShowSaveButton(editMode);
@@ -408,7 +413,9 @@ const SingleServerPage = () => {
             ))}
           </InfoCard>
           {editMode ? (
-            ""
+            <InfoCard title="Links">
+              <LinkInputEditor defaultLinks={[...links]} links={newLinks} setLinks={setNewLinks} />
+            </InfoCard>
           ) : (
             <InfoCard title="Links">
               <div className={styles.linksContainer}>
