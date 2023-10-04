@@ -16,7 +16,7 @@ const HomePage = () => {
   const [filteredPluginData, setFilteredPluginData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setfilter] = useState("Most Downloaded");
-  const [platform, setPlatform] = useState(null);
+  const [platforms, setPlatforms] = useState([]);
   const [categories, setCategories] = useState([]);
   const [versions, setVersions] = useState([]);
 
@@ -28,59 +28,54 @@ const HomePage = () => {
     }
   }
 
-  function filterFilterOptions() {
+  function filterMainOptions() {
     switch (filter) {
       case "Trending":
         setFilteredPluginData(pluginData);
         break;
       case "Most Downloaded":
-        setFilteredPluginData([...pluginData].sort((pluginA, pluginB) => pluginB.downloads - pluginA.downloads));
+        setFilteredPluginData([...filteredPluginData].sort((pluginA, pluginB) => pluginB.downloads - pluginA.downloads));
         break;
       case "Recently Updated":
-        setFilteredPluginData([...pluginData].sort((pluginA, pluginB) => new Date(pluginB.date_modified) - new Date(pluginA.date_modified)));
+        setFilteredPluginData([...filteredPluginData].sort((pluginA, pluginB) => new Date(pluginB.date_modified) - new Date(pluginA.date_modified)));
         break;
       case "Newest":
-        setFilteredPluginData([...pluginData].sort((pluginA, pluginB) => new Date(pluginB.date_created) - new Date(pluginA.date_created)));
+        setFilteredPluginData([...filteredPluginData].sort((pluginA, pluginB) => new Date(pluginB.date_created) - new Date(pluginA.date_created)));
         break;
     }
   }
 
-  function filterrrrrr() {
-    if (categories.length === 0 && versions.length === 0) {
-      setFilteredPluginData(pluginData);
-    } else if (categories.length === 0 && versions.length > 0) {
-      setFilteredPluginData([...pluginData].filter((plugin) => plugin.versions.includes(versions[versions.length - 1])));
-    } else if (categories.length > 0 && versions.length === 0) {
-      setFilteredPluginData([...pluginData].filter((plugin) => plugin.tags.includes(categories[categories.length - 1])));
-    } else if (categories.length > 0 && versions.length > 0) {
-      console.log("both filters");
-      setFilteredPluginData([...pluginData].filter((plugin) => plugin.tags.includes(categories[categories.length - 1]) && plugin.versions.includes(versions[versions.length - 1])));
-    } else {
-      console.log("no filters");
+  function filterSecondaryOptions() {
+    if (platforms.length === 0 && categories.length === 0 && versions.length === 0) {
+      return setFilteredPluginData(pluginData);
     }
-  }
 
-  function filterCategories() {
-    if (categories.length === 0) {
-      setFilteredPluginData(pluginData);
-    } else {
-      setFilteredPluginData([...filteredPluginData].filter((plugin) => plugin.tags.includes(categories[categories.length - 1])));
+    let toFilter = filteredPluginData;
+
+    if (platforms.length > 0) {
+      toFilter = [...filteredPluginData].filter((plugin) => plugin.platforms.includes(platforms[platforms.length - 1]));
+      setFilteredPluginData(toFilter);
     }
-  }
 
-  function filterVersions() {
-    if (versions.length === 0) {
-      setFilteredPluginData(pluginData);
-    } else {
-      setFilteredPluginData([...filteredPluginData].filter((plugin) => plugin.versions.includes(versions[versions.length - 1])));
+    if (categories.length > 0) {
+      toFilter = [...toFilter].filter((plugin) => plugin.tags.includes(categories[categories.length - 1]));
+      setFilteredPluginData(toFilter);
+    }
+
+    if (versions.length > 0) {
+      toFilter = [...toFilter].filter((plugin) => plugin.versions.includes(versions[versions.length - 1]));
+      setFilteredPluginData(toFilter);
     }
   }
 
   function togglePlatform(platformName) {
-    if (platform === platformName) {
-      setPlatform(null);
+    const index = platforms.indexOf(platformName);
+    if (index > -1) {
+      const newPlatforms = [...platforms];
+      newPlatforms.splice(index, 1);
+      setPlatforms(newPlatforms);
     } else {
-      setPlatform(platformName);
+      setPlatforms([...platforms, platformName]);
     }
   }
 
@@ -110,7 +105,6 @@ const HomePage = () => {
     const fetchData = async () => {
       const res = await axios.get("http://localhost:5050/api/plugins");
       setPluginData(res.data);
-      console.log(res.data);
       setFilteredPluginData(res.data);
     };
     fetchData();
@@ -118,11 +112,9 @@ const HomePage = () => {
 
   useEffect(() => filterSearch(), [searchQuery]);
 
-  useEffect(() => filterFilterOptions(), [filter]);
+  useEffect(() => filterMainOptions(), [filter]);
 
-  useEffect(() => filterrrrrr(), [categories]);
-
-  useEffect(() => filterrrrrr(), [versions]);
+  useEffect(() => filterSecondaryOptions(), [platforms, categories, versions]);
 
   return (
     <div>
@@ -140,8 +132,8 @@ const HomePage = () => {
         <div className={styles.categoriesContainer}>
           <h3>Platforms</h3>
           <div>
-            {config.server_platforms.map((platformName, index) => (
-              <SelectCheckbox key={index} name={platformName} selected={platform === platformName} onClick={() => togglePlatform(platformName)} />
+            {config.server_platforms.map((platform, index) => (
+              <SelectCheckbox key={index} name={platform} selected={platforms.includes(platform)} onClick={() => togglePlatform(platform)} />
             ))}
           </div>
           <h3>Categories</h3>

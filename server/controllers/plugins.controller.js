@@ -12,7 +12,8 @@ module.exports.getAll = async (req, res) => {
     plugins.*,
     users.username,
     tags.name AS tag_name,
-    versions.name AS version_name
+    versions.name AS version_name,
+    platforms.name AS platform_name
     FROM plugins
     
     LEFT JOIN users ON users.id = plugins.userID
@@ -25,13 +26,17 @@ module.exports.getAll = async (req, res) => {
     LEFT JOIN plugin_versions ON plugins.id=plugin_versions.plugin_id
     LEFT JOIN versions ON versions.id=plugin_versions.version_id
     
-    GROUP BY plugins.id, tags.name, versions.name;
+    LEFT JOIN plugin_platforms ON plugins.id=plugin_platforms.plugin_id
+    LEFT JOIN platforms ON platforms.id=plugin_platforms.platform_id
+    
+    GROUP BY plugins.id, tags.name, versions.name, platforms.name;
   `);
   for (const plugin of results) {
     if (!output[plugin.id]) {
       plugin.imgSrc = getCloudfrontSignedUrl(plugin.imgSrc);
       plugin.tags = [plugin.tag_name];
       plugin.versions = [plugin.version_name];
+      plugin.platforms = [plugin.platform_name];
       output[plugin.id] = plugin;
     } else {
       if (!output[plugin.id].tags.includes(plugin.tag_name)) {
@@ -39,6 +44,9 @@ module.exports.getAll = async (req, res) => {
       }
       if (!output[plugin.id].versions.includes(plugin.version_name)) {
         output[plugin.id].versions.push(plugin.version_name);
+      }
+      if (!output[plugin.id].platforms.includes(plugin.platform_name)) {
+        output[plugin.id].platforms.push(plugin.platform_name);
       }
     }
   }
