@@ -14,6 +14,7 @@ import Hash from "../icons/Hash";
 import MarkdownEditor from "../Input/MarkdownEditor/MarkdownEditor";
 import SquareImage from "../SquareImage/SquareImage";
 import Loader from "../Loader/Loader";
+import LinkInput from "../Input/LinkInput/LinkInput";
 
 const CreateForm = (props) => {
   const { show, setShow } = props;
@@ -339,14 +340,7 @@ const CreateForm = (props) => {
           <div id="createFormLinks" className={step === 4 ? "" : styles.hide}>
             <label htmlFor="link">Links</label>
             {[...Array(linkCount)].map((input, index) => (
-              <div key={index} className={styles.link}>
-                <div>
-                  <input name={`linkTitle${index}`} type="text" placeholder="Link Title" onChange={(e) => handleLinkChange(e, index, "title")} />
-                  <RightArrow width={22} height={22} />
-                  <input name={`linkURL${index}`} type="text" placeholder="URL" onChange={(e) => handleLinkChange(e, index, "url")} />
-                  <Trashcan width={28} height={28} color="var(--primaryColor)" className={styles.deleteLinkButton} onClick={() => removeLinkInput(index)} />
-                </div>
-              </div>
+              <LinkInput onTitleChange={(e) => handleLinkChange(e, index, "title")} onURLChange={(e) => handleLinkChange(e, index, "url")} onDelete={() => removeLinkInput(index)} />
             ))}
             <Button onClick={addLinkInput} icon={<Link width={16} height={16} color="var(--primaryColor)" />} className={`${styles.addLinkButton} button-quaternary`}>
               Add Link

@@ -183,40 +183,6 @@
 
 /*   */
 
-.link > div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--contentGap);
-}
-.link input[type="text"]:first-of-type {
-  width: 30%;
-}
-.link input[type="text"]:last-of-type {
-  /* width: 100%; */
-}
-.link > label {
-  margin-bottom: 0;
-}
-.link:not(:first-of-type) {
-  margin-top: var(--contentGap);
-}
-.link:last-of-type {
-  margin-bottom: var(--contentGap);
-}
-
-.addLinkButton {
-  width: 33% !important;
-}
-.deleteLinkButton {
-  padding: 5px;
-  cursor: pointer;
-  border-radius: var(--borderRadius);
-  background-color: var(--dangerColor);
-}
-
-/*   */
-
 .descriptionModes {
   margin-bottom: var(--contentGap);
 }
