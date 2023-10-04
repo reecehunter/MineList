@@ -1,0 +1,97 @@
+.descriptionModes {
+  display: flex;
+  gap: 5px;
+  margin-bottom: var(--contentGap);
+}
+
+/* .textArea {
+  background-color: var(--tertiaryColor);
+} */
+
+/* Preview Container */
+
+.previewContainer {
+  color: var(--primaryColor);
+  padding: var(--contentGap);
+  border-radius: var(--borderRadius);
+  background-color: var(--tertiaryColor);
+  word-break: break-all;
+}
+
+.previewContainer img {
+  max-width: 100%;
+}
+
+.previewContainer h1,
+.previewContainer h2,
+.previewContainer h3,
+.previewContainer h4,
+.previewContainer h5 {
+  color: var(--primaryColor);
+  margin-bottom: var(--contentGap);
+  padding-bottom: var(--contentGap);
+  border-bottom: 1px solid var(--quaternaryColor);
+}
+
+.previewContainer blockquote {
+  margin: var(--contentGap);
+  padding: var(--contentGap);
+  padding-left: var(--contentGap);
+  border-left: 3px solid var(--primaryColor);
+  background-color: var(--octonaryColor);
+  border-top-right-radius: var(--borderRadius);
+  border-bottom-right-radius: var(--borderRadius);
+}
+.previewContainer blockquote > p {
+  margin: 0;
+}
+
+.previewContainer code {
+  color: var(--tertiaryColor);
+  background-color: var(--quaternaryColor);
+  padding: 3px;
+  border-radius: var(--borderRadius);
+}
+
+.previewContainer hr {
+  margin: 5px 0 var(--contentGap) 0;
+}
+
+.previewContainer img {
+  max-width: 100%;
+  border-radius: var(--borderRadius);
+}
+
+.previewContainer p,
+.previewContainer li {
+  color: var(--quaternaryColor);
+}
+
+.previewContainer table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--quaternaryColor);
+  border-radius: var(--borderRadius);
+}
+
+.previewContainer th,
+.previewContainer td {
+  padding: var(--contentGap);
+  border-top: 1px solid var(--quaternaryColor);
+  border-left: 1px solid var(--quaternaryColor);
+}
+.previewContainer th {
+  border-top: none;
+}
+.previewContainer td:first-child,
+.previewContainer th:first-child {
+  border-left: none;
+}
+.previewContainer th {
+  border-radius: var(--borderRadius);
+  background-color: var(--septenaryColor);
+}
+.previewContainer tr:nth-child(even) {
+  border-radius: var(--borderRadius);
+  background-color: var(--septenaryColor);
+}
