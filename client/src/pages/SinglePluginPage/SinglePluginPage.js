@@ -20,7 +20,7 @@ import TextInput from "../../components/Input/TextInput/TextInput";
 import { checkAuth } from "../../helpers/jwt";
 import { validatePluginForm } from "../../helpers/formValidation";
 import MarkdownEditor from "../../components/MarkdownEditor/MarkdownEditor";
-import TextArea from "../../components/Input/Textarea/TextArea";
+import TextArea from "../../components/Input/TextArea/TextArea";
 import Camera from "../../components/icons/Camera";
 import X from "../../components/icons/X";
 import Loader from "../../components/Loader/Loader";
@@ -30,12 +30,14 @@ import SelectOption from "../../components/Input/SelectOption/SelectOption";
 import Hash from "../../components/icons/Hash";
 
 const SingleServerPage = () => {
-  const { id } = useParams();
+  const { vanityURL } = useParams();
   const [selectedInfo, setSelectedInfo] = useState("Description");
   const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", downloads: 0 }]);
   const [authors, setAuthors] = useState([]);
   const [tags, setTags] = useState([]);
+  const [platforms, setPlatforms] = useState([]);
   const [links, setLinks] = useState([]);
+  const [versions, setVersions] = useState([]);
   const [updates, setUpdates] = useState([]);
   const [downloads, setDownloads] = useState([]);
   const [isOwnProfile, setIsOwnProfile] = useState();
@@ -47,38 +49,40 @@ const SingleServerPage = () => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(image);
   const [newTags, setNewTags] = useState([]);
+  const [newPlatforms, setNewPlatforms] = useState([]);
+  const [newVersions, setNewVersions] = useState([]);
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const downloadJar = () => {
+  function downloadJar() {
     addDownload();
     var link = document.createElement("a");
     const url = pluginData[0].jarURL;
     link.href = url;
     link.download = url.substr(url.lastIndexOf("/") + 1);
     link.click();
-  };
+  }
 
-  const addDownload = async () => {
-    const key = `download_${id}`;
+  async function addDownload() {
+    const key = `download_${vanityURL}`;
     const downloads = localStorage.getItem(key);
     if (downloads < 25) {
-      const res = await axios.post(`${config.api_url}/api/plugins/downloads/add/${id}`);
+      const res = await axios.post(`${config.api_url}/api/plugins/downloads/add/${vanityURL}`);
       if (res.status === 200) {
         if (downloads) localStorage.setItem(key, parseInt(downloads) + 1);
         else localStorage.setItem(key, 1);
       }
     }
-  };
+  }
 
-  const handleChange = (event) => {
+  function handleChange(event) {
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
     });
-  };
+  }
 
-  const toggleNewTag = (configIndex) => {
+  function toggleNewTag(configIndex) {
     if (newTags.includes(configIndex)) {
       const newNewTags = [...newTags];
       newNewTags.splice(newNewTags.indexOf(configIndex), 1);
@@ -86,36 +90,64 @@ const SingleServerPage = () => {
     } else {
       setNewTags([...newTags, configIndex]);
     }
-  };
+  }
+
+  function toggleNewPlatform(configIndex) {
+    if (newPlatforms.includes(configIndex)) {
+      const newNewPlatforms = [...newPlatforms];
+      newNewPlatforms.splice(newNewPlatforms.indexOf(configIndex), 1);
+      setNewPlatforms(newNewPlatforms);
+    } else {
+      setNewPlatforms([...newPlatforms, configIndex]);
+    }
+  }
+
+  function toggleNewVersion(configIndex) {
+    if (newVersions.includes(configIndex)) {
+      const newNewVersions = [...newVersions];
+      newNewVersions.splice(newNewVersions.indexOf(configIndex), 1);
+      setNewVersions(newNewVersions);
+    } else {
+      setNewVersions([...newVersions, configIndex]);
+    }
+  }
 
   useEffect(() => {
     setFormData({ ...formData, tags: newTags });
   }, [newTags]);
 
-  const onSubmit = (event) => {
+  useEffect(() => {
+    setFormData({ ...formData, platforms: newPlatforms });
+  }, [newPlatforms]);
+
+  useEffect(() => {
+    setFormData({ ...formData, versions: newVersions });
+  }, [newVersions]);
+
+  function onSubmit(event) {
     event.preventDefault();
     setSubmitted(true);
     axios
       .post(
-        `${config.api_url}/api/plugins/edit/${id}`,
+        `${config.api_url}/api/plugins/edit/${pluginData[0].id}`,
         { ...formData, author_id: pluginData[0].author_id },
         {
           headers: { "content-type": "multipart/form-data", user_id: pluginData[0].author_id },
         }
       )
-      .then((res) => (window.location.href = `/plugin/${id}`))
+      .then((res) => (window.location.href = `/plugin/${vanityURL}`))
       .catch((err) => {
         console.error(err);
         setErrors([err.response.data.message]);
       })
       .finally(() => setSubmitted(false));
-  };
+  }
 
   useEffect(() => {
     const fetchData = async () => {
       const startTime = Date.now();
 
-      const pluginDataResult = await axios.get(`${config.api_url}/api/plugins/detailed/${id}`);
+      const pluginDataResult = await axios.get(`${config.api_url}/api/plugins/detailed/${vanityURL}`);
       setPluginData(pluginDataResult.data);
       setFormData({
         image: pluginDataResult.data[0].imgSrc,
@@ -139,6 +171,8 @@ const SingleServerPage = () => {
       const linkOutput = [];
       const tagOutput = [];
       const updateOutput = [];
+      const platformOutput = [];
+      const versionOutput = [];
 
       for (const dataSet of pluginDataResult.data) {
         const authorUsername = dataSet.author_username;
@@ -175,6 +209,14 @@ const SingleServerPage = () => {
         const tagName = dataSet.tag_name;
         if (tagName != null && !tagOutput.includes(tagName)) tagOutput.push(tagName);
 
+        // Platforms
+        const platformName = dataSet.platform_name;
+        if (platformName != null && !platformOutput.includes(platformName)) platformOutput.push(platformName);
+
+        // versions
+        const versionName = dataSet.version_name;
+        if (versionName != null && !versionOutput.includes(versionName)) versionOutput.push(versionName);
+
         // Updates
         if (updateList != null) {
           let isUpdatePresent = false;
@@ -192,6 +234,8 @@ const SingleServerPage = () => {
       setAuthors(authorsOutput);
       setLinks(linkOutput);
       setTags(tagOutput);
+      setPlatforms(platformOutput);
+      setVersions(versionOutput);
       setUpdates(updateOutput);
 
       const timeTaken = Date.now() - startTime;
@@ -218,13 +262,22 @@ const SingleServerPage = () => {
       for (const tag of tags) {
         newTags.push(config.server_tags.indexOf(tag));
       }
+      for (const platform of platforms) {
+        newPlatforms.push(config.server_platforms.indexOf(platform));
+      }
+      console.log(config.server_versions);
+      for (const version of versions) {
+        console.log(version);
+        console.log(config.server_versions.indexOf(version));
+        newVersions.push(config.server_versions.indexOf(version));
+      }
     }
     setTimeout(() => {
       setShowSaveButton(editMode);
     }, 1);
   }, [editMode]);
 
-  const renderContent = () => {
+  function renderContent() {
     window.document.title = pluginData[0].name + " - " + selectedInfo;
 
     switch (selectedInfo) {
@@ -263,7 +316,7 @@ const SingleServerPage = () => {
           return <></>;
         }
     }
-  };
+  }
 
   return (
     <form onSubmit={onSubmit} encType="multipart/form-data">
@@ -362,6 +415,50 @@ const SingleServerPage = () => {
                 </LinkButton>
               ))}
             </div>
+          </InfoCard>
+          <InfoCard title="Platforms">
+            {editMode ? (
+              <div className={styles.tags}>
+                {config.server_platforms.map((platform, index) => (
+                  <SelectOption
+                    key={index}
+                    name={platform}
+                    icon={<Hash />}
+                    alwaysShowIcon={true}
+                    selected={newPlatforms.includes(config.server_platforms.indexOf(platform))}
+                    onClick={() => toggleNewPlatform(config.server_platforms.indexOf(platform))}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={styles.tags}>
+                {platforms.map((platform, index) => (
+                  <Tag key={index} name={platform} />
+                ))}
+              </div>
+            )}
+          </InfoCard>
+          <InfoCard title="Versions">
+            {editMode ? (
+              <div className={styles.tags}>
+                {config.server_versions.map((version, index) => (
+                  <SelectOption
+                    key={index}
+                    name={version}
+                    icon={<Hash />}
+                    alwaysShowIcon={true}
+                    selected={newVersions.includes(config.server_versions.indexOf(version))}
+                    onClick={() => toggleNewVersion(config.server_versions.indexOf(version))}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className={styles.tags}>
+                {versions.map((version, index) => (
+                  <Tag key={index} name={version} />
+                ))}
+              </div>
+            )}
           </InfoCard>
           <InfoCard title="Tags">
             {editMode ? (

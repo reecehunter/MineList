@@ -9,8 +9,8 @@ import Statistic from "../Statistic/Statistic";
 import config from "../../config/config";
 
 const ServerCard = (props) => {
-  const { className, id, imgSrc, name, description, downloads, followers, stars, author, tags } = props;
-  const link = `/plugin/${id}`;
+  const { className, id, vanityURL, imgSrc, name, description, downloads, followers, stars, author, tags } = props;
+  const link = `/plugin/${vanityURL}`;
 
   return (
     <article className={`${className} ${styles.serverCard} text-primaryy`}>

@@ -21,7 +21,7 @@ function App() {
       <Route path="/auth/sign-up" element={<RegistrationPage />} />
       <Route path="/auth/sign-in" element={<LoginPage />} />
       <Route path="/plugins" element={<HomePage />} />
-      <Route path="/plugin/:id" element={<SinglePluginPage />} />
+      <Route path="/plugin/:vanityURL" element={<SinglePluginPage />} />
       <Route path="/servers" element={<HomePage />} />
       <Route path="/dashboard/" element={<DashboardPage />} />
       <Route path="/user/:username" element={<ProfilePage />} />

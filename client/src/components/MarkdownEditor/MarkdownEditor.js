@@ -3,12 +3,12 @@ import styles from "./MarkdownEditor.module.css";
 import Eye from "../icons/Eye";
 import Pencil from "../icons/Pencil";
 import SelectOption from "../Input/SelectOption/SelectOption";
-import TextArea from "../Input/Textarea/TextArea";
+import TextArea from "../Input/TextArea/TextArea";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const MarkdownEditor = (props) => {
-  const { inputName, defaultValue = "", onChange } = props;
+  const { inputName, defaultValue = "", defaultHeight = "100px", onChange } = props;
   const [value, setValue] = useState(defaultValue);
   const [previewMode, setPreviewMode] = useState(false);
 
@@ -20,8 +20,8 @@ const MarkdownEditor = (props) => {
 
   function setTextAreaHeight() {
     const element = document.getElementById("editPluginDescription");
-    if (element) {
-      element.style.height = "0px";
+    if (element && element.scrollHeight > defaultHeight) {
+      element.style.height = defaultHeight;
       element.style.height = element.scrollHeight + "px";
     }
   }
@@ -43,7 +43,7 @@ const MarkdownEditor = (props) => {
           {value}
         </Markdown>
       ) : (
-        <TextArea id="editPluginDescription" name={inputName} defaultValue={value} className={styles.textArea} onChange={handleChange} />
+        <TextArea id="editPluginDescription" name={inputName} defaultValue={value} className={styles.textArea} onChange={handleChange} style={{ height: defaultHeight }} />
       )}
     </div>
   );

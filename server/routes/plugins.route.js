@@ -6,7 +6,7 @@ const errorHandler = require("../helper/errorHandler");
 module.exports = (app) => {
   app.get("/api/plugins", pluginsController.getAll);
   app.get("/api/plugins/:id", pluginsController.getOne);
-  app.get("/api/plugins/detailed/:id", pluginsController.getOneWithRelatedData);
+  app.get("/api/plugins/detailed/:vanityURL", pluginsController.getOneWithRelatedData);
   app.post("/api/plugins/edit/:id", [usersController.verifyUserID, uploadFile.fields([{ name: "image", maxCount: 1 }]), errorHandler], pluginsController.editOne);
   app.get("/api/plugins/user/:userID", pluginsController.getAllByUserID);
   app.post(

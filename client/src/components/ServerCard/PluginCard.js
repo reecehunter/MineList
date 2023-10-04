@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import styles from "./PluginCard.module.css"
-import Download from '../icons/Download'
-import DownloadSlideUp from '../DownloadSlideUp/DownloadSlideUp'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import styles from "./PluginCard.module.css";
+import Download from "../icons/Download";
+import DownloadSlideUp from "../DownloadSlideUp/DownloadSlideUp";
+import { Link } from "react-router-dom";
 
 const ServerCard = (props) => {
-  const { className, id, imgSrc, name, description, downloads, stars, views } = props;
+  const { className, id, vanityURL, imgSrc, name, description, downloads, stars, views } = props;
   const [hovering, setHovering] = useState(false);
-  const link = `/plugin/${id}`;
+  const link = `/plugin/${vanityURL}`;
 
   return (
     <article className={`${className} ${styles.serverCard} text-primaryy`} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
@@ -18,18 +18,20 @@ const ServerCard = (props) => {
       </div>
       <div className={styles.text}>
         <div className={styles.nameAndVotes}>
-          <Link to={link} style={{ textDecoration: 'none' }}>
+          <Link to={link} style={{ textDecoration: "none" }}>
             <h5 className={styles.name}>{name}</h5>
           </Link>
           <div className={styles.stats}>
-            <p className={styles.downloadIcon}><Download width={22} height={22} /> {downloads}</p>
+            <p className={styles.downloadIcon}>
+              <Download width={22} height={22} /> {downloads}
+            </p>
           </div>
         </div>
         <p className={styles.description}>{description}</p>
         <DownloadSlideUp id={id} hovering={hovering} stars={stars} views={views} />
       </div>
     </article>
-  )
-}
+  );
+};
 
-export default ServerCard
+export default ServerCard;

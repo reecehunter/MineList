@@ -92,14 +92,15 @@ module.exports.getAllByUserID = async (req, res) => {
 };
 
 module.exports.getOneWithRelatedData = async (req, res) => {
-  const id = req.params.id;
   const results = await db.query(`
         SELECT
 
-        plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.jarURL, plugins.imgSrc, plugins.date_created,
+        plugins.id, plugins.name, plugins.description, plugins.longDescription, plugins.downloads, plugins.jarURL, plugins.imgSrc, plugins.date_created,
         users.id AS author_id, users.username AS author_username, users.pfpImgSrc AS author_pfpImgSrc,
         tags.name AS tag_name,
         links.title AS link_title, links.url AS link_url,
+        versions.name AS version_name,
+        platforms.name AS platform_name,
         updates.updateList, updates.download AS updateDownload, updates.versionMajor, updates.versionMinor, updates.versionPatch, updates.title AS updateTitle
 
         FROM plugins
@@ -114,8 +115,14 @@ module.exports.getOneWithRelatedData = async (req, res) => {
 
         LEFT JOIN plugin_updates ON plugins.id=plugin_updates.plugin_id
         LEFT JOIN updates ON updates.id=plugin_updates.update_id
+    
+        LEFT JOIN plugin_versions ON plugins.id=plugin_versions.plugin_id
+        LEFT JOIN versions ON versions.id=plugin_versions.version_id
+    
+        LEFT JOIN plugin_platforms ON plugins.id=plugin_platforms.plugin_id
+        LEFT JOIN platforms ON platforms.id=plugin_platforms.platform_id
 
-        WHERE plugins.id=${id};
+        WHERE plugins.vanity_url="${req.params.vanityURL}";
     `);
   for (const result of results) {
     result.imgSrc = getCloudfrontSignedUrl(result.imgSrc);
@@ -146,6 +153,12 @@ module.exports.createOne = async (req, res) => {
       const tags = [];
       for (const tag of req.body.tags) tags.push([parseInt(tag), pluginID]);
       await connection.query(`INSERT INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
+    }
+
+    if (req.body.platforms) {
+      const platforms = [];
+      for (const platform of req.body.platforms) platforms.push([pluginID, parseInt(platform)]);
+      await connection.query(`INSERT INTO plugin_platforms (plugin_id, platform_id) VALUES ?;`, [platforms]);
     }
 
     if (req.body.versions) {
@@ -189,15 +202,31 @@ module.exports.editOne = async (req, res) => {
         req.params.id,
       ]);
     } else {
-      await connection.query("UPDATE plugins SET name=?, description=?, longDescription=? WHERE id=?;", [req.body.title, req.body.summary, req.body.description, req.params.id]);
+      await connection.query("UPDATE plugins SET name=?, description=?, longDescription=? WHERE vanity_url=?;", [req.body.title, req.body.summary, req.body.description, req.params.id]);
     }
 
     // Update the plugin tags
     if (req.body.tags) {
       const tags = [];
-      for (const tag of req.body.tags) tags.push([parseInt(tag), req.params.id]);
+      for (const tag of req.body.tags) tags.push([parseInt(tag) + 1, req.params.id]);
       await connection.query(`DELETE FROM plugin_tags WHERE plugin_id=?;`, [req.params.id]);
       await connection.query(`INSERT IGNORE INTO plugin_tags (tag_id, plugin_id) VALUES ?;`, [tags]);
+    }
+
+    // Update the plugin platforms
+    if (req.body.platforms) {
+      const platforms = [];
+      for (const platform of req.body.platforms) platforms.push([req.params.id, parseInt(platform) + 1]);
+      await connection.query(`DELETE FROM plugin_platforms WHERE plugin_id=?;`, [req.params.id]);
+      await connection.query(`INSERT IGNORE INTO plugin_platforms (plugin_id, platform_id) VALUES ?;`, [platforms]);
+    }
+
+    // Update the plugin versions
+    if (req.body.versions) {
+      const versions = [];
+      for (const version of req.body.versions) versions.push([req.params.id, parseInt(version) + 1]);
+      await connection.query(`DELETE FROM plugin_versions WHERE plugin_id=?;`, [req.params.id]);
+      await connection.query(`INSERT IGNORE INTO plugin_versions (plugin_id, version_id) VALUES ?;`, [versions]);
     }
 
     await connection.commit();

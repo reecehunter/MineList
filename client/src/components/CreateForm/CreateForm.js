@@ -13,7 +13,7 @@ import Trashcan from "../icons/Trashcan";
 import PlusSquare from "../icons/PlusSquare";
 import Link from "../icons/Link";
 import Hash from "../icons/Hash";
-import parseMarkdown from "../../helpers/markdownParser";
+import MarkdownEditor from "../MarkdownEditor/MarkdownEditor";
 import SquareImage from "../SquareImage/SquareImage";
 import Loader from "../Loader/Loader";
 
@@ -190,6 +190,10 @@ const CreateForm = (props) => {
   }, [type]);
 
   useEffect(() => {
+    handleChange({ target: { name: "platforms", value: platforms } });
+  }, [platforms]);
+
+  useEffect(() => {
     handleChange({ target: { name: "tags", value: tags } });
   }, [tags]);
 
@@ -286,36 +290,13 @@ const CreateForm = (props) => {
               Description<span className={styles.required}>*</span>
             </label>
             <p>The long description to go on the main {type.toLowerCase()} page.</p>
-            <div className={styles.descriptionModes}>
-              <SelectOption
-                name="Edit"
-                selected={descriptionMode === "Edit"}
-                icon={<Pencil width={16} height={16} />}
-                onClick={() => {
-                  setDescriptionMode("Edit");
-                }}
-              />
-              <SelectOption
-                name="Preview"
-                selected={descriptionMode === "Preview"}
-                icon={<Eye width={16} height={16} />}
-                onClick={() => {
-                  setDescriptionMode("Preview");
-                }}
-              />
-            </div>
-            {descriptionMode === "Edit" ? (
-              <textarea
-                name="description"
-                placeholder="Long description"
-                onChange={(e) => {
-                  setDescription(e.currentTarget.value);
-                  handleChange(e);
-                }}
-              />
-            ) : (
-              parseMarkdown(description)
-            )}
+            <MarkdownEditor
+              defaultHeight="100px"
+              onChange={(e) => {
+                setDescription(e.currentTarget.value);
+                handleChange(e);
+              }}
+            />
           </div>
 
           <div id="createFormPlatforms" className={step === 2 ? "" : styles.hide}>

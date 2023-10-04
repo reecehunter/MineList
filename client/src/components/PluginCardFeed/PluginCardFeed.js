@@ -5,25 +5,26 @@ import PluginCard from "../PluginCard/PluginCard";
 const PluginCardFeed = (props) => {
   const { pluginData } = props;
 
-  const renderPluginData = () => {
-    return pluginData.map((plugin, index) => (
-      <PluginCard
-        className={styles.gridItem}
-        key={index}
-        id={plugin.id}
-        imgSrc={plugin.imgSrc}
-        name={plugin.name}
-        description={plugin.description}
-        downloads={plugin.downloads}
-        followers={plugin.followers}
-        stars={0}
-        author={plugin.username}
-        tags={plugin.tags}
-      />
-    ));
-  };
-
-  return <section className={styles.container}>{renderPluginData()}</section>;
+  return (
+    <section className={styles.container}>
+      {pluginData.map((plugin, index) => (
+        <PluginCard
+          className={styles.gridItem}
+          key={index}
+          id={plugin.id}
+          vanityURL={plugin.vanity_url}
+          imgSrc={plugin.imgSrc}
+          name={plugin.name}
+          description={plugin.description}
+          downloads={plugin.downloads}
+          followers={plugin.followers}
+          stars={0}
+          author={plugin.username}
+          tags={plugin.tags}
+        />
+      ))}
+    </section>
+  );
 };
 
 export default PluginCardFeed;
