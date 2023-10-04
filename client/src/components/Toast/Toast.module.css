@@ -3,12 +3,12 @@
 }
 
 .container {
-  position: fixed;
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--contentGap);
   bottom: 0;
-  right: -100%;
+  right: -125%;
   margin: 0 var(--contentGap) var(--contentGap) 0;
   padding: 5px;
   color: var(--primaryColor);
@@ -17,7 +17,7 @@
   box-shadow: -1px 1px 5px var(--quaternaryColor);
   background-color: var(--successColor);
   transition: right 0.2s ease;
-  z-index: 10000;
+  z-index: 10001;
 }
 .container p {
   margin: 0;

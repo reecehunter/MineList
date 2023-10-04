@@ -28,24 +28,25 @@ const CreateForm = (props) => {
   const [formData, setFormData] = useState({ title: "", url: "", summary: "", versions: [], tags: [], image: null, description: "", jar: null, links: { 0: { title: "", url: "" } }, price: "0" });
   const [linkCount, setLinkCount] = useState(1);
   const [errors, setErrors] = useState([]);
-  const [type, setType] = useState("Server");
+  const [type, setType] = useState("Plugin");
   const [step, setStep] = useState(1);
   const [image, setImage] = useState();
   const [imagePreview, setImagePreview] = useState();
   const [descriptionMode, setDescriptionMode] = useState("Edit");
   const [description, setDescription] = useState("");
+  const [platforms, setPlatforms] = useState([]);
   const [versions, setVersions] = useState([]);
   const [tags, setTags] = useState([]);
   const [links, setLinks] = useState([]);
 
-  const handleChange = (event) => {
+  function handleChange(event) {
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
     });
-  };
+  }
 
-  const validateStep = (cb) => {
+  function validateStep(cb) {
     const newErrors = [];
     if (step === 1) {
       if (formData.title.length < 3) newErrors.push("Title must be more than 3 characters.");
@@ -54,6 +55,7 @@ const CreateForm = (props) => {
       if (formData.url.length > 20) newErrors.push("URL must be less than 20 characters.");
       if (formData.summary.length < 30) newErrors.push("The summary must be at least 30 characters.");
     } else if (step === 2) {
+      if (formData.platforms.length < 1) newErrors.push("You must select at least 1 server platform.");
       if (formData.versions.length < 1) newErrors.push("You must select at least 1 working version.");
       if (formData.tags.length < 1) newErrors.push("You must select at least 1 tag.");
     } else if (step === 3) {
@@ -77,21 +79,21 @@ const CreateForm = (props) => {
       cb(false);
     }
     setErrors(newErrors);
-  };
+  }
 
-  const changeStep = (amount) => {
+  function changeStep(amount) {
     if (step + amount > 5) return;
     else if (step + amount < 1) return;
     setStep((prev) => prev + amount);
-  };
+  }
 
-  const handleImageChange = (event) => {
+  function handleImageChange(event) {
     setImage(event.target.files[0]);
-  };
+  }
 
-  const handleJarChange = (event) => {
+  function handleJarChange(event) {
     setFormData({ ...formData, jar: event.target.files[0] });
-  };
+  }
 
   useEffect(() => {
     setFormData({ ...formData, image: image });
@@ -100,14 +102,14 @@ const CreateForm = (props) => {
     }
   }, [image]);
 
-  const handleLinkChange = (event, index, titleOrURL) => {
+  function handleLinkChange(event, index, titleOrURL) {
     setLinks({
       ...links,
       [index]: { ...links[index], [titleOrURL]: event.target.value },
     });
-  };
+  }
 
-  const onSubmit = (event) => {
+  function onSubmit(event) {
     event.preventDefault();
     if (submitted) return;
     if (type === "Plugin") {
@@ -123,21 +125,32 @@ const CreateForm = (props) => {
         })
         .finally(() => setSubmitted(false));
     }
-  };
+  }
 
-  const toggleUrlBorder = (event) => {
+  function toggleUrlBorder(event) {
     const element = event.currentTarget.parentElement;
     const border = "2px solid var(--secondaryColor)";
     if (element.style.border === border) element.style.border = "";
     else element.style.border = border;
-  };
+  }
 
-  const setFocus = (event) => {
+  function setFocus(event) {
     const element = event.currentTarget;
     element.children[0].focus();
-  };
+  }
 
-  const toggleTag = (tagName) => {
+  function togglePlatform(platformName) {
+    const index = platforms.indexOf(platformName);
+    if (index > -1) {
+      const newPlatform = [...platforms];
+      newPlatform.splice(index, 1);
+      setPlatforms(newPlatform);
+    } else {
+      setPlatforms([...platforms, platformName]);
+    }
+  }
+
+  function toggleTag(tagName) {
     const index = tags.indexOf(tagName);
     if (index > -1) {
       const newTags = [...tags];
@@ -146,9 +159,9 @@ const CreateForm = (props) => {
     } else {
       setTags([...tags, tagName]);
     }
-  };
+  }
 
-  const toggleVersion = (version) => {
+  function toggleVersion(version) {
     const index = versions.indexOf(version);
     if (index > -1) {
       const newVersions = [...versions];
@@ -157,20 +170,20 @@ const CreateForm = (props) => {
     } else {
       setVersions([...versions, version]);
     }
-  };
+  }
 
-  const addLinkInput = () => {
+  function addLinkInput() {
     if (linkCount < 5) setLinkCount((prev) => prev + 1);
-  };
+  }
 
-  const removeLinkInput = (index) => {
+  function removeLinkInput(index) {
     setLinks((prev) => {
       const newLinks = { ...prev };
       delete newLinks[index];
       return newLinks;
     });
     setLinkCount((prev) => prev - 1);
-  };
+  }
 
   useEffect(() => {
     handleChange({ target: { name: "type", value: type } });
@@ -256,7 +269,7 @@ const CreateForm = (props) => {
             <textarea name="summary" type="summary" placeholder="Summary" onChange={handleChange} />
           </div>
 
-          <div id="createFormImage" className={`${step === 3 ? "" : styles.hide} ${styles.imageContainer}`}>
+          <div id="createFormImage" className={`${step === 3 ? styles.imageContainer : styles.hide}`}>
             <div>
               <label htmlFor="image">
                 {type} Image<span className={styles.required}>*</span>
@@ -303,6 +316,17 @@ const CreateForm = (props) => {
             ) : (
               parseMarkdown(description)
             )}
+          </div>
+
+          <div id="createFormPlatforms" className={step === 2 ? "" : styles.hide}>
+            <label htmlFor="platforms">
+              Server Platforms<span className={styles.required}>*</span>
+            </label>
+            <div className={styles.tags}>
+              {config.server_platforms.map((version, index) => (
+                <SelectOption key={index} name={version} icon="" selected={platforms.includes(index + 1)} onClick={() => togglePlatform(index + 1)} />
+              ))}
+            </div>
           </div>
 
           <div id="createFormVersions" className={step === 2 ? "" : styles.hide}>

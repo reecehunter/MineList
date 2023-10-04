@@ -6,7 +6,7 @@ import useInterval from "../../hooks/useInterval";
 
 const Toast = (props) => {
   const { type, title, message, onClick } = props;
-  const timerStart = 10000;
+  const timerStart = 7000;
   const [timer, setTimer] = useState(timerStart);
   const [mouseOver, setMouseOver] = useState(false);
   const toastRef = useRef();

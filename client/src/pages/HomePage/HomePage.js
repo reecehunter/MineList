@@ -45,6 +45,37 @@ const HomePage = () => {
     }
   }
 
+  function filterrrrrr() {
+    if (categories.length === 0 && versions.length === 0) {
+      setFilteredPluginData(pluginData);
+    } else if (categories.length === 0 && versions.length > 0) {
+      setFilteredPluginData([...pluginData].filter((plugin) => plugin.versions.includes(versions[versions.length - 1])));
+    } else if (categories.length > 0 && versions.length === 0) {
+      setFilteredPluginData([...pluginData].filter((plugin) => plugin.tags.includes(categories[categories.length - 1])));
+    } else if (categories.length > 0 && versions.length > 0) {
+      console.log("both filters");
+      setFilteredPluginData([...pluginData].filter((plugin) => plugin.tags.includes(categories[categories.length - 1]) && plugin.versions.includes(versions[versions.length - 1])));
+    } else {
+      console.log("no filters");
+    }
+  }
+
+  function filterCategories() {
+    if (categories.length === 0) {
+      setFilteredPluginData(pluginData);
+    } else {
+      setFilteredPluginData([...filteredPluginData].filter((plugin) => plugin.tags.includes(categories[categories.length - 1])));
+    }
+  }
+
+  function filterVersions() {
+    if (versions.length === 0) {
+      setFilteredPluginData(pluginData);
+    } else {
+      setFilteredPluginData([...filteredPluginData].filter((plugin) => plugin.versions.includes(versions[versions.length - 1])));
+    }
+  }
+
   function togglePlatform(platformName) {
     if (platform === platformName) {
       setPlatform(null);
@@ -79,6 +110,7 @@ const HomePage = () => {
     const fetchData = async () => {
       const res = await axios.get("http://localhost:5050/api/plugins");
       setPluginData(res.data);
+      console.log(res.data);
       setFilteredPluginData(res.data);
     };
     fetchData();
@@ -87,6 +119,10 @@ const HomePage = () => {
   useEffect(() => filterSearch(), [searchQuery]);
 
   useEffect(() => filterFilterOptions(), [filter]);
+
+  useEffect(() => filterrrrrr(), [categories]);
+
+  useEffect(() => filterrrrrr(), [versions]);
 
   return (
     <div>

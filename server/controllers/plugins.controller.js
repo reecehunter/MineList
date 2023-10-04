@@ -11,7 +11,8 @@ module.exports.getAll = async (req, res) => {
     COUNT(plugin_followers.plugin_id) AS followers,
     plugins.*,
     users.username,
-    tags.name AS tag_name
+    tags.name AS tag_name,
+    versions.name AS version_name
     FROM plugins
     
     LEFT JOIN users ON users.id = plugins.userID
@@ -21,16 +22,23 @@ module.exports.getAll = async (req, res) => {
     LEFT JOIN plugin_tags ON plugins.id=plugin_tags.plugin_id
     LEFT JOIN tags ON tags.id=plugin_tags.tag_id
     
-    GROUP BY plugins.id, tags.name;
+    LEFT JOIN plugin_versions ON plugins.id=plugin_versions.plugin_id
+    LEFT JOIN versions ON versions.id=plugin_versions.version_id
+    
+    GROUP BY plugins.id, tags.name, versions.name;
   `);
   for (const plugin of results) {
     if (!output[plugin.id]) {
       plugin.imgSrc = getCloudfrontSignedUrl(plugin.imgSrc);
       plugin.tags = [plugin.tag_name];
+      plugin.versions = [plugin.version_name];
       output[plugin.id] = plugin;
     } else {
       if (!output[plugin.id].tags.includes(plugin.tag_name)) {
         output[plugin.id].tags.push(plugin.tag_name);
+      }
+      if (!output[plugin.id].versions.includes(plugin.version_name)) {
+        output[plugin.id].versions.push(plugin.version_name);
       }
     }
   }

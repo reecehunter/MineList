@@ -11,3 +11,12 @@
   align-items: center;
   gap: var(--contentGap);
 }
+
+.toastContainer {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 0 var(--contentGap) var(--contentGap) 0;
+  width: 250px;
+  z-index: 10000;
+}

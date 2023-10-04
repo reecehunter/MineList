@@ -32,7 +32,7 @@ const ProfileNav = (props) => {
   }
 
   function signOut() {
-    document.cookie = null;
+    document.cookie = "token=null";
     window.location.href = "/servers";
   }
 

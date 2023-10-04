@@ -15,13 +15,13 @@ const NavBar = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hoveringProfile, setHoveringProfile] = useState(false);
-  const [toasts, setToasts] = useState([{ type: "success", title: "Success!", message: "You published a plugin." }]);
+  const [toasts, setToasts] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [cssColors, setCssColors] = useState({});
 
-  function removeToast(message) {
-    setToasts([...toasts].filter((toast) => toast.message !== message));
+  function removeToast(e, message) {
+    setTimeout(() => setToasts([...toasts].filter((toast) => toast.message !== message)), 0);
   }
 
   function toggleDarkMode() {
@@ -65,13 +65,13 @@ const NavBar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-light" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link href="/servers" className="link link-primaryy">
+              <Nav.Link onClick={() => navigate("/servers")} className="link link-primaryy">
                 Servers
               </Nav.Link>
-              <Nav.Link href="/plugins" className="link link-primaryy">
+              <Nav.Link onClick={() => navigate("/plugins")} className="link link-primaryy">
                 Plugins
               </Nav.Link>
-              <Nav.Link href="/minelist+" className="link link-primaryy">
+              <Nav.Link onClick={() => navigate("/minelist+")} className="link link-primaryy">
                 MineList+
               </Nav.Link>
             </Nav>
@@ -94,9 +94,11 @@ const NavBar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {toasts.map((toast, index) => (
-        <Toast key={index} type={toast.type} title={toast.title} message={toast.message} onClick={() => removeToast(toast.message)} />
-      ))}
+      <div className={styles.toastContainer}>
+        {toasts.map((toast, index) => (
+          <Toast key={index} type={toast.type} title={toast.title} message={toast.message} onClick={(e) => removeToast(e, toast.message)} />
+        ))}
+      </div>
     </>
   );
 };
