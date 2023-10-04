@@ -30,7 +30,6 @@ const CreateForm = (props) => {
   const [step, setStep] = useState(1);
   const [image, setImage] = useState();
   const [imagePreview, setImagePreview] = useState();
-  const [descriptionMode, setDescriptionMode] = useState("Edit");
   const [description, setDescription] = useState("");
   const [platforms, setPlatforms] = useState([]);
   const [versions, setVersions] = useState([]);
