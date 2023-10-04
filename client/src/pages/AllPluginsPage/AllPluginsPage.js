@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import styles from "./HomePage.module.css";
+import styles from "./AllPluginsPage.module.css";
 import PluginCardFeed from "../../components/PluginCardFeed/PluginCardFeed";
 import TextInput from "../../components/Input/TextInput/TextInput";
 import SelectOption from "../../components/Input/SelectOption/SelectOption";

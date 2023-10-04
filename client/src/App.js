@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage/HomePage";
+import AllPluginsPage from "./pages/AllPluginsPage/AllPluginsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import "./App.css";
 import SinglePluginPage from "./pages/SinglePluginPage/SinglePluginPage";
@@ -17,12 +17,12 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<AllPluginsPage />} />
       <Route path="/auth/sign-up" element={<RegistrationPage />} />
       <Route path="/auth/sign-in" element={<LoginPage />} />
-      <Route path="/plugins" element={<HomePage />} />
+      <Route path="/plugins" element={<AllPluginsPage />} />
       <Route path="/plugin/:vanityURL" element={<SinglePluginPage />} />
-      <Route path="/servers" element={<HomePage />} />
+      <Route path="/servers" element={<AllPluginsPage />} />
       <Route path="/dashboard/" element={<DashboardPage />} />
       <Route path="/user/:username" element={<ProfilePage />} />
       <Route path="/create" element={<EditPage />} />
