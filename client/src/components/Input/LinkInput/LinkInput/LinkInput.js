@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./LinkInput.module.css";
-import RightArrow from "../../icons/RightArrow";
-import Trashcan from "../../icons/Trashcan";
+import RightArrow from "../../../icons/RightArrow";
+import Trashcan from "../../../icons/Trashcan";
 
 const LinkInput = (props) => {
   const { onTitleChange, onURLChange, onDelete } = props;

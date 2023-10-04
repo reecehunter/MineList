@@ -14,7 +14,8 @@ import Hash from "../icons/Hash";
 import MarkdownEditor from "../Input/MarkdownEditor/MarkdownEditor";
 import SquareImage from "../SquareImage/SquareImage";
 import Loader from "../Loader/Loader";
-import LinkInput from "../Input/LinkInput/LinkInput";
+import LinkInput from "../Input/LinkInput/LinkInput/LinkInput";
+import LinkInputEditor from "../Input/LinkInput/LinkInputEditor/LinkInputEditor";
 
 const CreateForm = (props) => {
   const { show, setShow } = props;
@@ -101,12 +102,12 @@ const CreateForm = (props) => {
     }
   }, [image]);
 
-  function handleLinkChange(event, index, titleOrURL) {
-    setLinks({
-      ...links,
-      [index]: { ...links[index], [titleOrURL]: event.target.value },
-    });
-  }
+  // function handleLinkChange(event, index, titleOrURL) {
+  //   setLinks({
+  //     ...links,
+  //     [index]: { ...links[index], [titleOrURL]: event.target.value },
+  //   });
+  // }
 
   function onSubmit(event) {
     event.preventDefault();
@@ -171,18 +172,18 @@ const CreateForm = (props) => {
     }
   }
 
-  function addLinkInput() {
-    if (linkCount < 5) setLinkCount((prev) => prev + 1);
-  }
+  // function addLinkInput() {
+  //   if (linkCount < 5) setLinkCount((prev) => prev + 1);
+  // }
 
-  function removeLinkInput(index) {
-    setLinks((prev) => {
-      const newLinks = { ...prev };
-      delete newLinks[index];
-      return newLinks;
-    });
-    setLinkCount((prev) => prev - 1);
-  }
+  // function removeLinkInput(index) {
+  //   setLinks((prev) => {
+  //     const newLinks = { ...prev };
+  //     delete newLinks[index];
+  //     return newLinks;
+  //   });
+  //   setLinkCount((prev) => prev - 1);
+  // }
 
   useEffect(() => {
     handleChange({ target: { name: "type", value: type } });
@@ -338,13 +339,7 @@ const CreateForm = (props) => {
           </div>
 
           <div id="createFormLinks" className={step === 4 ? "" : styles.hide}>
-            <label htmlFor="link">Links</label>
-            {[...Array(linkCount)].map((input, index) => (
-              <LinkInput onTitleChange={(e) => handleLinkChange(e, index, "title")} onURLChange={(e) => handleLinkChange(e, index, "url")} onDelete={() => removeLinkInput(index)} />
-            ))}
-            <Button onClick={addLinkInput} icon={<Link width={16} height={16} color="var(--primaryColor)" />} className={`${styles.addLinkButton} button-quaternary`}>
-              Add Link
-            </Button>
+            <LinkInputEditor links={links} setLinks={setLinks} />
           </div>
 
           <div id="createFormJar" className={step === 4 ? "" : styles.hide}>

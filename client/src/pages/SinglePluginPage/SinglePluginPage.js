@@ -407,15 +407,19 @@ const SingleServerPage = () => {
               </Link>
             ))}
           </InfoCard>
-          <InfoCard title="Links">
-            <div className={styles.linksContainer}>
-              {links.map((link, index) => (
-                <LinkButton key={index} url={link.url}>
-                  {link.title}
-                </LinkButton>
-              ))}
-            </div>
-          </InfoCard>
+          {editMode ? (
+            ""
+          ) : (
+            <InfoCard title="Links">
+              <div className={styles.linksContainer}>
+                {links.map((link, index) => (
+                  <LinkButton key={index} url={link.url}>
+                    {link.title}
+                  </LinkButton>
+                ))}
+              </div>
+            </InfoCard>
+          )}
           <InfoCard title="Platforms">
             {editMode ? (
               <div className={styles.tags}>
