@@ -34,9 +34,6 @@ const LinkInputEditor = (props) => {
   }
 
   useEffect(() => setLinks({ ...links, defaultLinks }), []);
-  // useEffect(() => setLinks((prev) => defaultLinks.concat(prev)), []);
-
-  useEffect(() => console.log(links), [links]);
 
   return (
     <div className={styles.container}>

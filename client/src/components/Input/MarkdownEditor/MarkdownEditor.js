@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./MarkdownEditor.module.css";
 import Eye from "../../icons/Eye";
 import Pencil from "../../icons/Pencil";
@@ -8,7 +8,8 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const MarkdownEditor = (props) => {
-  const { inputName, defaultValue = "", defaultHeight = "100px", onChange } = props;
+  const { inputName, defaultValue = "", defaultHeight = 100, onChange } = props;
+  const textAreaRef = useRef(null);
   const [value, setValue] = useState(defaultValue);
   const [previewMode, setPreviewMode] = useState(false);
 
@@ -19,10 +20,15 @@ const MarkdownEditor = (props) => {
   }
 
   function setTextAreaHeight() {
-    const element = document.getElementById("editPluginDescription");
-    if (element && element.scrollHeight > defaultHeight) {
-      element.style.height = defaultHeight;
-      element.style.height = element.scrollHeight + "px";
+    if (textAreaRef) {
+      resetTextAreaHeight();
+      textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
+    }
+  }
+
+  function resetTextAreaHeight() {
+    if (textAreaRef) {
+      textAreaRef.current.style.height = defaultHeight + "px";
     }
   }
 
@@ -31,6 +37,8 @@ const MarkdownEditor = (props) => {
       setTextAreaHeight();
     }
   }, [previewMode]);
+
+  useEffect(() => resetTextAreaHeight(), []);
 
   return (
     <div>
@@ -43,7 +51,7 @@ const MarkdownEditor = (props) => {
           {value}
         </Markdown>
       ) : (
-        <TextArea id="editPluginDescription" name={inputName} defaultValue={value} className={styles.textArea} onChange={handleChange} style={{ height: defaultHeight }} />
+        <TextArea ref={textAreaRef} name={inputName} defaultValue={value} className={styles.textArea} onChange={handleChange} />
       )}
     </div>
   );

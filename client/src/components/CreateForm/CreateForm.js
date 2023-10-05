@@ -7,14 +7,11 @@ import SelectOption from "../Input/SelectOption/SelectOption";
 import RightArrow from "../icons/RightArrow";
 import LeftArrow from "../icons/LeftArrow";
 import X from "../icons/X";
-import Trashcan from "../icons/Trashcan";
 import PlusSquare from "../icons/PlusSquare";
-import Link from "../icons/Link";
 import Hash from "../icons/Hash";
 import MarkdownEditor from "../Input/MarkdownEditor/MarkdownEditor";
 import SquareImage from "../SquareImage/SquareImage";
 import Loader from "../Loader/Loader";
-import LinkInput from "../Input/LinkInput/LinkInput/LinkInput";
 import LinkInputEditor from "../Input/LinkInput/LinkInputEditor/LinkInputEditor";
 
 const CreateForm = (props) => {
@@ -290,7 +287,7 @@ const CreateForm = (props) => {
             <p>The long description to go on the main {type.toLowerCase()} page.</p>
             <MarkdownEditor
               inputName="description"
-              defaultHeight="100px"
+              defaultHeight={100}
               onChange={(e) => {
                 setDescription(e.currentTarget.value);
                 handleChange(e);
