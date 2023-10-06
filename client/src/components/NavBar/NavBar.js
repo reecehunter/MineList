@@ -85,7 +85,7 @@ const NavBar = () => {
                 <ProfileNav show={showPopup} isAuthenticated={isAuthenticated} />
               ) : (
                 <Link to="/auth/sign-in">
-                  <Button className="button-quaternary" icon={<User color="var(--primaryColor)" width={20} height={20} />}>
+                  <Button className="button-septenary" icon={<User color="var(--primaryColor)" width={20} height={20} />}>
                     Log In
                   </Button>
                 </Link>

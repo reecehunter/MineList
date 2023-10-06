@@ -3,7 +3,7 @@ import styles from "./ContentNav.module.css";
 
 const ContentNav = (props) => {
   const { className, options, handleClick } = props;
-  const [selectedInfo, setSelectedInfo] = useState("Description");
+  const [selectedInfo, setSelectedInfo] = useState("");
 
   const handleChange = (event) => {
     const element = event.currentTarget;
@@ -16,7 +16,7 @@ const ContentNav = (props) => {
     }
     element.classList.add(styles.selected);
 
-    handleClick(text);
+    handleClick(text.toLowerCase());
   };
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const ContentNav = (props) => {
     <div id="infoSelector" className={`${styles.infoSelector} ${className}`}>
       {options.map((option, index) => (
         <p key={index} onClick={handleChange}>
-          {option}
+          {option.charAt(0).toUpperCase() + option.slice(1)}
         </p>
       ))}
     </div>

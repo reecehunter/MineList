@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import config from "../../config/config";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import styles from "./SinglePluginPage.module.css";
 import markdownStyles from "../../components/Input/MarkdownEditor/MarkdownEditor.module.css";
@@ -11,7 +11,6 @@ import Star from "../../components/icons/Star";
 import Pencil from "../../components/icons/Pencil";
 import Save from "../../components/icons/Save";
 import Tag from "../../components/Tag/Tag";
-import formatVersion from "../../helpers/versionFormatter";
 import { getTimeDifference, formatTimestamp } from "../../helpers/dateTime";
 import Statistic from "../../components/Statistic/Statistic";
 import ContentNav from "../../components/ContentNav/ContentNav";
@@ -34,8 +33,8 @@ import LinkInputEditor from "../../components/Input/LinkInput/LinkInputEditor/Li
 import Calendar from "../../components/icons/Calendar";
 
 const SingleServerPage = () => {
-  const { vanityURL } = useParams();
-  const [selectedInfo, setSelectedInfo] = useState("Description");
+  const navigate = useNavigate();
+  const { vanityURL, selectedInfo = "Description" } = useParams();
   const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", downloads: 0 }]);
   const [authors, setAuthors] = useState([]);
   const [tags, setTags] = useState([]);
@@ -318,7 +317,7 @@ const SingleServerPage = () => {
           );
         }
 
-      case "Updates":
+      case "updates":
         return (
           <div className={styles.updatesContainer}>
             {isOwnProfile ? (
@@ -536,7 +535,14 @@ const SingleServerPage = () => {
           </InfoCard>
         </div>
         <div>
-          <ContentNav options={["Description", "Updates", "Reviews"]} handleClick={setSelectedInfo} className={styles.contentNav} />
+          <ContentNav
+            options={["description", "updates", "reviews"]}
+            handleClick={(option) => {
+              if (option === "description") navigate(`/plugin/${vanityURL}`);
+              else navigate(`/plugin/${vanityURL}/${option}`);
+            }}
+            className={styles.contentNav}
+          />
           {renderContent()}
         </div>
       </div>
