@@ -3,7 +3,7 @@ import styles from "./SelectOption.module.css";
 import Check from "../../icons/Check";
 
 const SelectOption = (props) => {
-  const { name, selected, icon = <Check color="var(--secondaryColor)" />, alwaysShowIcon = false, onClick } = props;
+  const { name, selected, icon = <Check color="var(--secondaryColor)" />, alwaysShowIcon = false, bg = "", onClick } = props;
   const ref = useRef();
 
   useEffect(() => {
@@ -15,7 +15,7 @@ const SelectOption = (props) => {
   }, [selected]);
 
   return (
-    <span ref={ref} className={`${styles.contents}`} onClick={onClick}>
+    <span ref={ref} className={`${styles.contents}`} onClick={onClick} style={{ backgroundColor: bg }}>
       {selected ? icon : alwaysShowIcon ? icon : ""} {name}
     </span>
   );

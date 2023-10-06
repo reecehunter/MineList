@@ -23,7 +23,6 @@ const CreateForm = (props) => {
 
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({ title: "", url: "", summary: "", versions: [], tags: [], image: null, description: "", jar: null, links: { 0: { title: "", url: "" } }, price: "0" });
-  const [linkCount, setLinkCount] = useState(1);
   const [errors, setErrors] = useState([]);
   const [type, setType] = useState("Plugin");
   const [step, setStep] = useState(1);
@@ -36,7 +35,6 @@ const CreateForm = (props) => {
   const [links, setLinks] = useState([]);
 
   function handleChange(event) {
-    console.log(event.target.name);
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
@@ -98,13 +96,6 @@ const CreateForm = (props) => {
       setImagePreview(URL.createObjectURL(image));
     }
   }, [image]);
-
-  // function handleLinkChange(event, index, titleOrURL) {
-  //   setLinks({
-  //     ...links,
-  //     [index]: { ...links[index], [titleOrURL]: event.target.value },
-  //   });
-  // }
 
   function onSubmit(event) {
     event.preventDefault();
@@ -168,19 +159,6 @@ const CreateForm = (props) => {
       setVersions([...versions, version]);
     }
   }
-
-  // function addLinkInput() {
-  //   if (linkCount < 5) setLinkCount((prev) => prev + 1);
-  // }
-
-  // function removeLinkInput(index) {
-  //   setLinks((prev) => {
-  //     const newLinks = { ...prev };
-  //     delete newLinks[index];
-  //     return newLinks;
-  //   });
-  //   setLinkCount((prev) => prev - 1);
-  // }
 
   useEffect(() => {
     handleChange({ target: { name: "type", value: type } });

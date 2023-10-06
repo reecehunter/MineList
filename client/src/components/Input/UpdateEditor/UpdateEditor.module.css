@@ -1,3 +1,9 @@
+.container {
+  padding: var(--contentGap);
+  background-color: var(--tertiaryColor);
+  border-radius: var(--borderRadius);
+}
+
 .outline {
   outline: 2px solid var(--secondaryColor);
 }
@@ -21,6 +27,25 @@
 .descriptionModes > div {
   display: flex;
   gap: 5px;
+}
+
+/* Bottom Row */
+
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--contentGap);
+}
+
+.bottomRow > div {
+  display: flex;
+  align-items: center;
+  gap: var(--contentGap);
+}
+
+.versionInput {
+  max-width: 100px;
 }
 
 /* Preview Container */

@@ -85,6 +85,13 @@
 .button-quaternary:hover {
   filter: grayscale(40%);
 }
+.button-septenary {
+  color: var(--primaryColor);
+  background-color: var(--septenaryColor);
+}
+.button-quaternary:hover {
+  filter: grayscale(40%);
+}
 
 /* TEXT COLORS */
 .text-primaryy {

@@ -21,5 +21,6 @@ module.exports = (app) => {
     ],
     pluginsController.createOne
   );
+  app.post("/api/plugins/update", [usersController.verifyUserID, uploadFile.fields([{ name: "jar", maxCount: 1 }]), errorHandler], pluginsController.createUpdate);
   app.post("/api/plugins/downloads/add/:id", pluginsController.addDownload);
 };

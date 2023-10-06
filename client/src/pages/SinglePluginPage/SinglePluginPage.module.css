@@ -139,8 +139,7 @@
 
 .update {
   background-color: var(--tertiaryColor);
-  border-bottom-left-radius: var(--borderRadius);
-  border-bottom-right-radius: var(--borderRadius);
+  border-radius: var(--borderRadius);
 }
 .update > div {
   padding: var(--contentGap);
@@ -149,10 +148,29 @@
   margin-top: var(--contentGap);
 }
 
+.updateBottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0 !important;
+}
+
+.downloadContainer {
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  gap: var(--contentGap);
+}
+
+.updateDate {
+  display: flex;
+  align-items: center;
+  gap: var(--contentGap);
+  color: var(--quaternaryColor);
+}
+
 .updateVersion {
   color: var(--quaternaryColor);
-  font-size: 18px;
-  margin-left: 5px;
 }
 
 /* Reviews */

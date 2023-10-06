@@ -8,26 +8,26 @@ import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const MarkdownEditor = (props) => {
-  const { inputName, defaultValue = "", defaultHeight = 100, onChange } = props;
+  const { inputName, defaultTextValue = "", defaultHeight = 50, placeholder = "", onChange } = props;
   const textAreaRef = useRef(null);
-  const [value, setValue] = useState(defaultValue);
+  const [textValue, setTextValue] = useState(defaultTextValue);
   const [previewMode, setPreviewMode] = useState(false);
 
   function handleChange(e) {
     setTextAreaHeight(e.target);
     onChange(e);
-    setValue(e.target.value);
+    setTextValue(e.target.value);
   }
 
   function setTextAreaHeight() {
-    if (textAreaRef) {
+    if (textAreaRef.current) {
       resetTextAreaHeight();
       textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
     }
   }
 
   function resetTextAreaHeight() {
-    if (textAreaRef) {
+    if (textAreaRef.current) {
       textAreaRef.current.style.height = defaultHeight + "px";
     }
   }
@@ -42,17 +42,19 @@ const MarkdownEditor = (props) => {
 
   return (
     <div>
-      <div className={styles.descriptionModes}>
-        <SelectOption name="Edit" selected={previewMode === false} icon={<Pencil width={16} height={16} />} onClick={() => setPreviewMode(false)} />
-        <SelectOption name="Preview" selected={previewMode === true} icon={<Eye width={16} height={16} />} onClick={() => setPreviewMode(true)} />
+      <div className={styles.textAreaContainer}>
+        <div className={styles.descriptionModes}>
+          <SelectOption name="Edit" selected={previewMode === false} icon={<Pencil width={16} height={16} />} onClick={() => setPreviewMode(false)} />
+          <SelectOption name="Preview" selected={previewMode === true} icon={<Eye width={16} height={16} />} onClick={() => setPreviewMode(true)} />
+        </div>
+        {previewMode ? (
+          <Markdown remarkPlugins={[remarkGfm]} className={styles.previewContainer}>
+            {textValue}
+          </Markdown>
+        ) : (
+          <TextArea ref={textAreaRef} placeholder={placeholder} name={inputName} defaultTextValue={textValue} onChange={handleChange} />
+        )}
       </div>
-      {previewMode ? (
-        <Markdown remarkPlugins={[remarkGfm]} className={styles.previewContainer}>
-          {value}
-        </Markdown>
-      ) : (
-        <TextArea ref={textAreaRef} name={inputName} defaultValue={value} className={styles.textArea} onChange={handleChange} />
-      )}
     </div>
   );
 };

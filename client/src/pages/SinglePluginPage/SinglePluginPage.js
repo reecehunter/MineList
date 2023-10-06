@@ -12,6 +12,7 @@ import Pencil from "../../components/icons/Pencil";
 import Save from "../../components/icons/Save";
 import Tag from "../../components/Tag/Tag";
 import formatVersion from "../../helpers/versionFormatter";
+import { getTimeDifference, formatTimestamp } from "../../helpers/dateTime";
 import Statistic from "../../components/Statistic/Statistic";
 import ContentNav from "../../components/ContentNav/ContentNav";
 import InfoCard from "../../components/InfoCard/InfoCard";
@@ -20,6 +21,7 @@ import TextInput from "../../components/Input/TextInput/TextInput";
 import { checkAuth } from "../../helpers/jwt";
 import { validatePluginForm } from "../../helpers/formValidation";
 import MarkdownEditor from "../../components/Input/MarkdownEditor/MarkdownEditor";
+import UpdateEditor from "../../components/Input/UpdateEditor/UpdateEditor";
 import TextArea from "../../components/Input/TextArea/TextArea";
 import Camera from "../../components/icons/Camera";
 import X from "../../components/icons/X";
@@ -29,6 +31,7 @@ import remarkGfm from "remark-gfm";
 import SelectOption from "../../components/Input/SelectOption/SelectOption";
 import Hash from "../../components/icons/Hash";
 import LinkInputEditor from "../../components/Input/LinkInput/LinkInputEditor/LinkInputEditor";
+import Calendar from "../../components/icons/Calendar";
 
 const SingleServerPage = () => {
   const { vanityURL } = useParams();
@@ -41,7 +44,9 @@ const SingleServerPage = () => {
   const [versions, setVersions] = useState([]);
   const [updates, setUpdates] = useState([]);
   const [downloads, setDownloads] = useState([]);
-  const [isOwnProfile, setIsOwnProfile] = useState();
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+
+  const [updateData, setUpdateData] = useState({ text: null, jar: null });
 
   const imageInputRef = useRef();
   const [editMode, setEditMode] = useState(false);
@@ -114,23 +119,6 @@ const SingleServerPage = () => {
     }
   }
 
-  useEffect(() => {
-    setFormData({ ...formData, tags: newTags });
-  }, [newTags]);
-
-  useEffect(() => {
-    setFormData({ ...formData, platforms: newPlatforms });
-  }, [newPlatforms]);
-
-  useEffect(() => {
-    setFormData({ ...formData, versions: newVersions });
-  }, [newVersions]);
-
-  useEffect(() => {
-    console.log(newLinks);
-    setFormData({ ...formData, links: newLinks });
-  }, [newLinks]);
-
   function onSubmit(event) {
     event.preventDefault();
     setSubmitted(true);
@@ -138,6 +126,25 @@ const SingleServerPage = () => {
       .post(
         `${config.api_url}/api/plugins/edit/${pluginData[0].id}`,
         { ...formData, author_id: pluginData[0].author_id },
+        {
+          headers: { "content-type": "multipart/form-data", user_id: pluginData[0].author_id },
+        }
+      )
+      .then((res) => (window.location.href = `/plugin/${vanityURL}`))
+      .catch((err) => {
+        console.error(err);
+        setErrors([err.response.data.message]);
+      })
+      .finally(() => setSubmitted(false));
+  }
+
+  function submitUpdate() {
+    setSubmitted(true);
+    console.log(updateData);
+    axios
+      .post(
+        `${config.api_url}/api/plugins/update`,
+        { ...updateData, plugin_id: pluginData[0].id },
         {
           headers: { "content-type": "multipart/form-data", user_id: pluginData[0].author_id },
         }
@@ -182,17 +189,11 @@ const SingleServerPage = () => {
       const versionOutput = [];
 
       for (const dataSet of pluginDataResult.data) {
-        const authorUsername = dataSet.author_username;
-
-        const updateList = dataSet.updateList;
-        const updateTitle = dataSet.updateTitle;
-        const updateVersion = { major: dataSet.versionMajor, minor: dataSet.versionMinor, patch: dataSet.versionPatch };
-
         // Authors
         let isAuthorPresent = false;
         const authorData = { id: dataSet.author_id, username: dataSet.author_username, pfpImgSrc: dataSet.author_pfpImgSrc };
         for (const entry of authorsOutput) {
-          if (entry.username === authorUsername) isAuthorPresent = true;
+          if (entry.username === dataSet.author_username) isAuthorPresent = true;
         }
         if (!isAuthorPresent) {
           authorsOutput.push(authorData);
@@ -225,16 +226,18 @@ const SingleServerPage = () => {
         if (versionName != null && !versionOutput.includes(versionName)) versionOutput.push(versionName);
 
         // Updates
-        if (updateList != null) {
+        if (dataSet.update_jar_url) {
+          const updateData = {
+            description: dataSet.update_description,
+            version: dataSet.update_version,
+            jar_url: dataSet.update_jar_url,
+            date_created: dataSet.update_date_created,
+          };
           let isUpdatePresent = false;
-          const updateData = { updateList, updateVersion, updateTitle };
-          for (const update of updateOutput) {
-            if (update.updateList === updateData.updateList) isUpdatePresent = true;
+          for (const entry of updateOutput) {
+            if (entry.jar_url === updateData.jar_url) isUpdatePresent = true;
           }
-          if (!isUpdatePresent) {
-            updateOutput.push(updateData);
-            isUpdatePresent = false;
-          }
+          if (!isUpdatePresent) updateOutput.push(updateData);
         }
       }
 
@@ -243,13 +246,29 @@ const SingleServerPage = () => {
       setTags(tagOutput);
       setPlatforms(platformOutput);
       setVersions(versionOutput);
-      setUpdates(updateOutput);
+      setUpdates(updateOutput.sort((a, b) => new Date(b.date_created) - new Date(a.date_created)));
 
       const timeTaken = Date.now() - startTime;
       console.log(`Fetched data in ${timeTaken} ms.`);
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setFormData({ ...formData, tags: newTags });
+  }, [newTags]);
+
+  useEffect(() => {
+    setFormData({ ...formData, platforms: newPlatforms });
+  }, [newPlatforms]);
+
+  useEffect(() => {
+    setFormData({ ...formData, versions: newVersions });
+  }, [newVersions]);
+
+  useEffect(() => {
+    setFormData({ ...formData, links: newLinks });
+  }, [newLinks]);
 
   useEffect(() => {
     setFormData({ ...formData, image: image });
@@ -283,12 +302,12 @@ const SingleServerPage = () => {
   }, [editMode]);
 
   function renderContent() {
-    window.document.title = pluginData[0].name + " - " + selectedInfo;
+    if (pluginData[0].name) window.document.title = pluginData[0].name + " - " + selectedInfo;
 
     switch (selectedInfo) {
       case "Description":
         if (editMode) {
-          return <MarkdownEditor inputName="description" defaultValue={pluginData[0].longDescription} onChange={handleChange} />;
+          return <MarkdownEditor inputName="description" defaultTextValue={pluginData[0].longDescription} onChange={handleChange} />;
         } else {
           return pluginData[0] ? (
             <Markdown remarkPlugins={[remarkGfm]} className={markdownStyles.previewContainer}>
@@ -300,26 +319,45 @@ const SingleServerPage = () => {
         }
 
       case "Updates":
-        if (updates.length > 0) {
-          return (
-            <div className={styles.updatesContainer}>
-              {updates.map((updateObj, index1) => (
-                <div key={index1} className={styles.update}>
-                  <p className={styles.updateTitle}>
-                    {updateObj.updateTitle} <span className={styles.updateVersion}>{formatVersion(updateObj.updateVersion)}</span>
-                  </p>
-                  <div>
-                    {updateObj.updateList.split("|").map((updateBullet, index2) => {
-                      return <p key={index2}>{updateBullet}</p>;
-                    })}
+        return (
+          <div className={styles.updatesContainer}>
+            {isOwnProfile ? (
+              <UpdateEditor
+                inputName="update"
+                placeholder="Update description"
+                showSubmit={true}
+                setJar={(jar) => setUpdateData({ ...updateData, jar: jar })}
+                setVersion={(version) => setUpdateData({ ...updateData, version: version })}
+                onChange={(e) => setUpdateData({ ...updateData, text: e.target.value })}
+                onSubmit={submitUpdate}
+              />
+            ) : (
+              ""
+            )}
+
+            {updates.map((update, index1) => (
+              <div key={index1} className={styles.update}>
+                <Markdown remarkPlugins={[remarkGfm]} className={markdownStyles.previewContainer}>
+                  {update.description}
+                </Markdown>
+                <div className={styles.updateBottomRow}>
+                  <span className={styles.updateDate}>
+                    <Calendar />{" "}
+                    <span>
+                      {getTimeDifference(update.date_created)} • {formatTimestamp(update.date_created)}
+                    </span>
+                  </span>
+                  <div className={styles.downloadContainer}>
+                    <span className={styles.updateVersion}>{update.version}</span>
+                    <Button className="button-septenary" icon={<Download color="var(--secondaryColor)" />}>
+                      Download
+                    </Button>
                   </div>
                 </div>
-              ))}
-            </div>
-          );
-        } else {
-          return <></>;
-        }
+              </div>
+            ))}
+          </div>
+        );
     }
   }
 
@@ -369,7 +407,7 @@ const SingleServerPage = () => {
         </div>
         <div className={styles.headingButtons}>
           {!editMode ? (
-            <Button className="button-secondary" onClick={downloadJar} icon={<Download color="var(--primaryColor)" />}>
+            <Button className="button-septenary" onClick={downloadJar} icon={<Download />}>
               Download
             </Button>
           ) : (
@@ -498,7 +536,7 @@ const SingleServerPage = () => {
           </InfoCard>
         </div>
         <div>
-          {editMode ? "" : <ContentNav options={["Description", "Updates", "Reviews"]} handleClick={setSelectedInfo} className={styles.contentNav} />}
+          <ContentNav options={["Description", "Updates", "Reviews"]} handleClick={setSelectedInfo} className={styles.contentNav} />
           {renderContent()}
         </div>
       </div>

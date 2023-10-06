@@ -109,7 +109,7 @@ module.exports.getOneWithRelatedData = async (req, res) => {
         links.title AS link_title, links.url AS link_url,
         versions.name AS version_name,
         platforms.name AS platform_name,
-        updates.updateList, updates.download AS updateDownload, updates.versionMajor, updates.versionMinor, updates.versionPatch, updates.title AS updateTitle
+        updates.description AS update_description, updates.jar_url AS update_jar_url, updates.version AS update_version, updates.date_created AS update_date_created
 
         FROM plugins
     
@@ -253,6 +253,46 @@ module.exports.editOne = async (req, res) => {
     console.error(`Error occurred while updating plugin: ${err.message}`, err);
     res.status(500).send({ message: err.message });
   }
+
+  connection.destroy();
+};
+
+module.exports.createUpdate = async (req, res) => {
+  const connection = await mysql.createConnection(config.db);
+  const versionRegex = new RegExp(/^([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)\.([0-9]|[1-9][0-9]*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/gm);
+
+  if (!versionRegex.test(req.body.version)) {
+    return res.status(400).json({ message: "Invalid version." });
+  }
+
+  if (!req.files.jar[0]) {
+    return res.status(400).json({ message: "You must upload a jar file." });
+  }
+
+  try {
+    await connection.query("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+    await connection.beginTransaction();
+
+    const insertUpdate = await connection.query(
+      `INSERT INTO updates (description, version, jar_url)
+      VALUES (?, ?, ?);`,
+      [req.body.text, req.body.version, req.files.jar[0].key]
+    );
+
+    const updateID = insertUpdate[0].insertId;
+
+    await connection.query(`INSERT INTO plugin_updates (update_id, plugin_id) VALUES (?, ?);`, [updateID, req.body.plugin_id]);
+
+    await connection.commit();
+
+    res.send("ok");
+  } catch (err) {
+    await connection.rollback();
+    console.error(`Error occurred while creating a plugin update: ${err.message}`, err);
+    res.status(400).send({ message: err.message });
+  }
+
+  connection.destroy();
 };
 
 module.exports.addDownload = async (req, res) => {

@@ -1,7 +1,7 @@
 export const formatTimestamp = (timestamp) => {
   if (!timestamp) return "N/A";
   const date = new Date(timestamp);
-  return date;
+  return date.toLocaleDateString([], { year: "numeric", month: "long", day: "numeric" });
 };
 
 export const getTimeDifference = (timestamp) => {
