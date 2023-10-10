@@ -33,7 +33,7 @@ import LinkInputEditor from "../../components/Input/LinkInput/LinkInputEditor/Li
 import Calendar from "../../components/icons/Calendar";
 
 const SingleServerPage = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //
   const { vanityURL, selectedInfo = "Description" } = useParams();
   const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", downloads: 0 }]);
   const [authors, setAuthors] = useState([]);
