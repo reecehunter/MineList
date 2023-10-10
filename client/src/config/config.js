@@ -1,3 +1,4 @@
+console.log(process.env.NODE_ENV)
 const config = {
   api_url: process.env.NODE_ENV === "development" ? "http://localhost:5050" : "http://100.24.29.2:5050",
   default_user_image:

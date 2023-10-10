@@ -103,7 +103,7 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get("http://localhost:5050/api/plugins");
+      const res = await axios.get(`${config.api_url}/api/plugins"`);
       setPluginData(res.data);
       setFilteredPluginData(res.data);
     };
