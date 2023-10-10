@@ -21,7 +21,7 @@ import { checkAuth } from "../../helpers/jwt";
 import { validatePluginForm } from "../../helpers/formValidation";
 import MarkdownEditor from "../../components/Input/MarkdownEditor/MarkdownEditor";
 import UpdateEditor from "../../components/Input/UpdateEditor/UpdateEditor";
-import TextArea from "../../components/Input/TextArea/TextArea";
+import TextArea from "../../components/Input/TextArea/TextArea"; //
 import Camera from "../../components/icons/Camera";
 import X from "../../components/icons/X";
 import Loader from "../../components/Loader/Loader";
@@ -33,7 +33,7 @@ import LinkInputEditor from "../../components/Input/LinkInput/LinkInputEditor/Li
 import Calendar from "../../components/icons/Calendar";
 
 const SingleServerPage = () => {
-  const navigate = useNavigate(); //
+  const navigate = useNavigate();
   const { vanityURL, selectedInfo = "Description" } = useParams();
   const [pluginData, setPluginData] = useState([{ imgSrc: "", name: "", downloads: 0 }]);
   const [authors, setAuthors] = useState([]);
