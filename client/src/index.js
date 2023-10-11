@@ -5,7 +5,6 @@ import { BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavBar from "./components/NavBar/NavBar";
 import Footer from "./components/Footer/Footer";
-import Toast from "./components/Toast/Toast";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
