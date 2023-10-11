@@ -103,7 +103,7 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    API.get("pluginsAPI", "/plugins", {})
+    API.get("pluginAPI", "/plugins", {})
       .then(res => console.log(res))
       .catch(err => console.error(err))
     // const fetchData = async () => {
