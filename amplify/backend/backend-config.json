@@ -1,6 +1,6 @@
 {
   "api": {
-    "minelistBackend": {
+    "pluginAPI": {
       "dependsOn": [
         {
           "attributes": [
@@ -8,7 +8,7 @@
             "Arn"
           ],
           "category": "function",
-          "resourceName": "apiLambda"
+          "resourceName": "pluginsFunction"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -17,6 +17,11 @@
   },
   "function": {
     "apiLambda": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "pluginsFunction": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
@@ -36,6 +41,22 @@
         {
           "category": "function",
           "resourceName": "apiLambda"
+        }
+      ]
+    },
+    "AMPLIFY_function_pluginsFunction_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "pluginsFunction"
+        }
+      ]
+    },
+    "AMPLIFY_function_pluginsFunction_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "pluginsFunction"
         }
       ]
     }

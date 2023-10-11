@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
   "api": {
-    "minelistBackend": {
+    "pluginAPI": {
       "ApiId": "string",
       "ApiName": "string",
       "RootUrl": "string"
@@ -8,6 +8,13 @@ export type AmplifyDependentResourcesAttributes = {
   },
   "function": {
     "apiLambda": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
+    "pluginsFunction": {
       "Arn": "string",
       "LambdaExecutionRole": "string",
       "LambdaExecutionRoleArn": "string",

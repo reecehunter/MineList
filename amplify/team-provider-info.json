@@ -15,11 +15,15 @@
       "function": {
         "apiLambda": {
           "deploymentBucketName": "amplify-minelist-staging-45348-deployment",
-          "s3Key": "amplify-builds/apiLambda-54644b44413258377568-build.zip"
+          "s3Key": "amplify-builds/apiLambda-6e687a44656455656479-build.zip"
+        },
+        "pluginsFunction": {
+          "deploymentBucketName": "amplify-minelist-staging-45348-deployment",
+          "s3Key": "amplify-builds/pluginsFunction-6f4a695736514d6c2b67-build.zip"
         }
       },
       "api": {
-        "minelistBackend": {}
+        "pluginAPI": {}
       }
     }
   }

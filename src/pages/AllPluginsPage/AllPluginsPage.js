@@ -103,7 +103,7 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    API.get("minelistBackend", "/api/plugins", {})
+    API.get("pluginsAPI", "/plugins", {})
       .then(res => console.log(res))
       .catch(err => console.error(err))
     // const fetchData = async () => {

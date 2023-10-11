@@ -1,9 +1,9 @@
 {
   "version": 1,
   "paths": {
-    "/api": {
-      "name": "/api",
-      "lambdaFunction": "apiLambda",
+    "/plugins": {
+      "name": "/plugins",
+      "lambdaFunction": "pluginsFunction",
       "permissions": {
         "setting": "open"
       }
