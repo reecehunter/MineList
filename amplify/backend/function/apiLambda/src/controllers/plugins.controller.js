@@ -4,6 +4,7 @@ const config = require("../config/config");
 const { getCloudfrontSignedUrl } = require("../helper/cloudfront");
 
 module.exports.getAll = async (req, res) => {
+  return res.json('yeehaw')
   const output = {};
   const results = await db.query(`
     SELECT

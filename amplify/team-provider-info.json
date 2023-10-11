@@ -15,7 +15,7 @@
       "function": {
         "apiLambda": {
           "deploymentBucketName": "amplify-minelist-staging-45348-deployment",
-          "s3Key": "amplify-builds/apiLambda-6c417146414d46647336-build.zip"
+          "s3Key": "amplify-builds/apiLambda-50646c317a49526e4c70-build.zip"
         }
       },
       "api": {
