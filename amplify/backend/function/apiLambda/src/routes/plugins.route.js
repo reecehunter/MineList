@@ -4,7 +4,7 @@ const uploadFile = require("../helper/imageUploading");
 const errorHandler = require("../helper/errorHandler");
 
 module.exports = (app) => {
-  app.get("/api", (req, res) => res.json('this worked'))
+  app.get("/api", (req, res) => res.json('api route worked'))
   app.get("/api/plugins", pluginsController.getAll);
   app.get("/api/plugins/:id", pluginsController.getOne);
   app.get("/api/plugins/detailed/:vanityURL", pluginsController.getOneWithRelatedData);
