@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-minelist-staging-45348-authRole",
+      "UnauthRoleArn": "arn:aws:iam::906113986347:role/amplify-minelist-staging-45348-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::906113986347:role/amplify-minelist-staging-45348-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-minelist-staging-45348-deployment",
+      "UnauthRoleName": "amplify-minelist-staging-45348-unauthRole",
+      "StackName": "amplify-minelist-staging-45348",
+      "StackId": "arn:aws:cloudformation:us-east-1:906113986347:stack/amplify-minelist-staging-45348/2a6a2510-67f2-11ee-b894-0aead009415f",
+      "AmplifyAppId": "d32fy487jlnaqg"
+    },
+    "categories": {
+      "function": {
+        "apiLambda": {}
+      }
+    }
+  }
+}
