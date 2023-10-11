@@ -106,7 +106,7 @@ const HomePage = () => {
     API.get("pluginAPI", "/plugins", {})
       .then(res => {
         console.log(res)
-        setPluginData(res.data)
+        setPluginData(res)
       })
       .catch(err => console.error(err))
     // const fetchData = async () => {

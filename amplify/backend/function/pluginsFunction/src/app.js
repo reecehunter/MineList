@@ -29,7 +29,7 @@ app.get('/plugins', function(req, res) {
     versions: ['1.20'],
     platforms: ['Paper'],
   }]
-  res.json({ plugins })
+  res.json(plugins)
 })
 
 // Start the app
