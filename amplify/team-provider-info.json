@@ -19,7 +19,7 @@
         },
         "pluginsFunction": {
           "deploymentBucketName": "amplify-minelist-staging-45348-deployment",
-          "s3Key": "amplify-builds/pluginsFunction-6f4a695736514d6c2b67-build.zip"
+          "s3Key": "amplify-builds/pluginsFunction-6f614c6c753032714972-build.zip"
         }
       },
       "api": {

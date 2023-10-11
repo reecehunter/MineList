@@ -104,7 +104,10 @@ const HomePage = () => {
 
   useEffect(() => {
     API.get("pluginAPI", "/plugins", {})
-      .then(res => console.log(res))
+      .then(res => {
+        console.log(res)
+        setPluginData(res.data)
+      })
       .catch(err => console.error(err))
     // const fetchData = async () => {
     //   const res = await axios.get(`${config.api_url}/api/plugins`);
