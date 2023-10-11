@@ -20,7 +20,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const config = require("./config/config");
 const port = config.port;
-const app = express()
+const app = express();
 
 app.use(awsServerlessExpressMiddleware.eventContext(), express.json(), express.urlencoded({ extended: true }), cookieParser(), cors({ origin: "http://localhost:3000", credentials: true }));
 
