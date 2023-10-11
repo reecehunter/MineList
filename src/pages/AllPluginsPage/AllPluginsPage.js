@@ -10,6 +10,7 @@ import PlusSquare from "../../components/icons/PlusSquare";
 import Calendar from "../../components/icons/Calendar";
 import config from "../../config/config";
 import SelectCheckbox from "../../components/Input/SelectCheckbox/SelectCheckbox";
+import { API } from "aws-amplify";
 
 const HomePage = () => {
   const [pluginData, setPluginData] = useState([]);
@@ -102,12 +103,15 @@ const HomePage = () => {
   }
 
   useEffect(() => {
-    const fetchData = async () => {
-      const res = await axios.get(`${config.api_url}/api/plugins`);
-      setPluginData(res.data);
-      setFilteredPluginData(res.data);
-    };
-    fetchData();
+    API.get("minelistBackend", "/api/plugins", {})
+      .then(res => console.log(res))
+      .catch(err => console.error(err))
+    // const fetchData = async () => {
+    //   const res = await axios.get(`${config.api_url}/api/plugins`);
+    //   setPluginData(res.data);
+    //   setFilteredPluginData(res.data);
+    // };
+    // fetchData();
   }, []);
 
   useEffect(() => filterSearch(), [searchQuery]);

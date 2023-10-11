@@ -11,7 +11,7 @@ See the License for the specific language governing permissions and limitations 
 
 // declare a new express app
 const express = require('express')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const fs = require('fs');
 const https = require('https');

@@ -13,7 +13,13 @@
     },
     "categories": {
       "function": {
-        "apiLambda": {}
+        "apiLambda": {
+          "deploymentBucketName": "amplify-minelist-staging-45348-deployment",
+          "s3Key": "amplify-builds/apiLambda-6c417146414d46647336-build.zip"
+        }
+      },
+      "api": {
+        "minelistBackend": {}
       }
     }
   }
