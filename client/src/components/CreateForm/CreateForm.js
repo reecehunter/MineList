@@ -214,7 +214,7 @@ const CreateForm = (props) => {
             </label>
             <div className={styles.typeOptions}>
               <input type="type" defaultValue={type} onChange={handleChange} hidden />
-              <SelectOption name="Server" selected={type === "Server"} onClick={() => setType("Server")} />
+              {/* <SelectOption name="Server" selected={type === "Server"} onClick={() => setType("Server")} /> */}
               <SelectOption name="Plugin" selected={type === "Plugin"} onClick={() => setType("Plugin")} />
             </div>
           </div>

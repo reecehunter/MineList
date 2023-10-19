@@ -82,6 +82,7 @@ const SingleServerPage = () => {
   }
 
   function handleChange(event) {
+    console.log(event.target.value)
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,

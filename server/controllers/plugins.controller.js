@@ -210,7 +210,7 @@ module.exports.editOne = async (req, res) => {
         req.params.id,
       ]);
     } else {
-      await connection.query("UPDATE plugins SET name=?, description=?, longDescription=? WHERE vanity_url=?;", [req.body.title, req.body.summary, req.body.description, req.params.id]);
+      const r = await connection.query("UPDATE plugins SET name=?, description=?, longDescription=? WHERE id=?;", [req.body.title, req.body.summary, req.body.description, req.params.id]);
     }
 
     // Update the plugin tags
@@ -297,6 +297,6 @@ module.exports.createUpdate = async (req, res) => {
 
 module.exports.addDownload = async (req, res) => {
   const id = req.params.id;
-  const result = await db.query(`UPDATE plugins SET downloads=downloads+1 WHERE id=${id};`);
+  const result = await db.query(`UPDATE plugins SET downloads=downloads+1 WHERE vanity_url='${id}';`);
   return res.json(result);
 };

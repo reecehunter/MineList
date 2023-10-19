@@ -8,6 +8,7 @@ const s3 = new S3Client({
     secretAccessKey: config.aws.s3.secretAccessKey,
   },
   region: config.aws.s3.region,
+  // endpoint: config.aws.s3.endpoint
 });
 
 const s3Storage = multerS3({

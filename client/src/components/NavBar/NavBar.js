@@ -8,7 +8,6 @@ import Button from "../Button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import ProfileNav from "../../components/ProfileNav/ProfileNav";
 import User from "../icons/User";
-import Sun from "../icons/Sun";
 import Toast from "../Toast/Toast";
 
 const NavBar = () => {
@@ -17,43 +16,14 @@ const NavBar = () => {
   const [hoveringProfile, setHoveringProfile] = useState(false);
   const [toasts, setToasts] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
-  const [cssColors, setCssColors] = useState({});
 
   function removeToast(e, message) {
     setTimeout(() => setToasts([...toasts].filter((toast) => toast.message !== message)), 0);
   }
 
-  function toggleDarkMode() {
-    const root = document.querySelector(":root");
-    if (darkMode) {
-      for (const key of Object.keys(cssColors)) {
-        root.style.setProperty(key, cssColors[key]);
-      }
-    } else {
-      for (const key of Object.keys(cssColors)) {
-        console.log(root.style.getPropertyValue(`${key}-Light`));
-        root.style.setProperty(key, root.style.getPropertyValue(`${key}-Light`));
-      }
-    }
-  }
-
   useEffect(() => {
     checkAuth((isAuthRes) => setIsAuthenticated(isAuthRes));
-    setCssColors({
-      "--primaryColor": "#eaeaea",
-      "--secondaryColor": "#1684df",
-      "--tertiaryColor": "#12202f",
-      "--quaternaryColor": "rgb(116, 116, 116)",
-      "--septenaryColor": "#1c3248",
-      "--octonaryColor": "#132639",
-      "--secondaryOverlay": "rgba(22, 133, 223, 0.3)",
-      "--dangerColor": "#f35353",
-      "--backgroundColor": "#03101d",
-    });
   }, []);
-
-  useEffect(() => toggleDarkMode(), [darkMode]);
 
   return (
     <>
@@ -65,9 +35,9 @@ const NavBar = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-light" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link onClick={() => navigate("/servers")} className="link link-primaryy">
+              {/* <Nav.Link onClick={() => navigate("/servers")} className="link link-primaryy">
                 Servers
-              </Nav.Link>
+              </Nav.Link> */}
               <Nav.Link onClick={() => navigate("/plugins")} className="link link-primaryy">
                 Plugins
               </Nav.Link>
@@ -78,9 +48,9 @@ const NavBar = () => {
           </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <div className={styles.rightSide}>
-              <div className={styles.darkModeButton} onClick={() => setDarkMode((prev) => !prev)}>
+              {/* <div className={styles.darkModeButton} onClick={() => setDarkMode((prev) => !prev)}>
                 <Sun color="var(--primaryColor)" />
-              </div>
+              </div> */}
               {isAuthenticated ? (
                 <ProfileNav show={showPopup} isAuthenticated={isAuthenticated} />
               ) : (

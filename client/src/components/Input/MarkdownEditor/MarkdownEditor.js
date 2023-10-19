@@ -38,7 +38,10 @@ const MarkdownEditor = (props) => {
     }
   }, [previewMode]);
 
-  useEffect(() => resetTextAreaHeight(), []);
+  useEffect(() => {
+    setTextValue(defaultTextValue);
+    resetTextAreaHeight();
+  }, []);
 
   return (
     <div>

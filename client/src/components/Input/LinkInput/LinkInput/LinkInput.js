@@ -7,8 +7,6 @@ import TextInput from "../../TextInput/TextInput";
 const LinkInput = (props) => {
   const { defaultTitle = "", defaultURL = "", onTitleChange, onURLChange, onDelete } = props;
 
-  useEffect(() => console.log(defaultTitle), [defaultTitle]);
-
   return (
     <div className={styles.link}>
       <TextInput type="text" defaultValue={defaultTitle} placeholder="Link Title" onChange={onTitleChange} />

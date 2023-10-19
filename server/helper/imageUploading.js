@@ -22,7 +22,7 @@ const uploadFile = multer({
     checkFileType(file, callback);
   },
   limits: {
-    fileSize: 1024 * 1024 * 2, // 2MB file size
+    fileSize: 1024 * 1024 * 10, // 10MB file size
   },
 });
 

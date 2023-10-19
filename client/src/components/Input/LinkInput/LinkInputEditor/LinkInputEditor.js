@@ -33,11 +33,10 @@ const LinkInputEditor = (props) => {
     });
   }
 
-  useEffect(() => setLinks({ ...links, defaultLinks }), []);
+  useEffect(() => setLinks({ ...links, ...defaultLinks }), []);
 
   return (
     <div className={styles.container}>
-      <label htmlFor="link">Links</label>
       {Object.values(links).map((link, index) => (
         <LinkInput
           key={index}
